@@ -642,9 +642,9 @@ export function LandingNew() {
           <div className="foot-inner">
             <div className="brand" style={{ fontSize: '1.35rem', color: '#fff' }}>Aprend<span className="ia">IA</span></div>
             <div className="foot-links">
-              <a href="#">Privacidad</a>
-              <a href="#">Términos</a>
-              <a href="#">Contacto</a>
+              <a href="/privacy">Privacidad</a>
+              <a href="/terms">Términos</a>
+              <a href="mailto:hola@aprendia.store">Contacto</a>
             </div>
           </div>
           <div className="foot-guarantee">
