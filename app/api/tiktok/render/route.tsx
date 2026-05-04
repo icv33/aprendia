@@ -11,13 +11,6 @@ const TYPE_COLORS: Record<string, string> = {
 
 const FALLBACK_BG = 'linear-gradient(160deg, #080D1A 0%, #0C1525 60%, #080D1A 100%)'
 
-async function loadFont(name: string): Promise<ArrayBuffer | null> {
-  try {
-    return await fetch(new URL(`./${name}`, import.meta.url)).then(r => r.arrayBuffer())
-  } catch {
-    return null
-  }
-}
 
 function HighlightText({
   text, accent, fontSize, fontWeight, baseColor = '#ffffff', letterSpacing = 0, center = false,
@@ -80,18 +73,6 @@ export async function GET(req: Request) {
   const accent = TYPE_COLORS[postType] ?? '#00FFB2'
   const hasBg  = bgUrl.startsWith('http')
 
-  const [font700, font700i, font800] = await Promise.all([
-    loadFont('poppins-700.woff2'),
-    loadFont('poppins-700i.woff2'),
-    loadFont('poppins-800.woff2'),
-  ])
-
-  const fonts = [
-    font700  && { name: 'Poppins', data: font700,  weight: 700 as const, style: 'normal'  as const },
-    font700i && { name: 'Poppins', data: font700i, weight: 700 as const, style: 'italic' as const },
-    font800  && { name: 'Poppins', data: font800,  weight: 800 as const, style: 'normal'  as const },
-  ].filter(Boolean) as { name: string; data: ArrayBuffer; weight: 700 | 800; style: 'normal' | 'italic' }[]
-
   let element: React.ReactElement
 
   if (slideType === 'cover') {
@@ -114,7 +95,7 @@ export async function GET(req: Request) {
             letterSpacing={-2}
           />
           {subtitulo ? (
-            <div style={{ fontFamily: 'Poppins', fontSize: 34, color: 'rgba(255,255,255,0.58)', fontWeight: 400, lineHeight: 1.4, display: 'flex' }}>
+            <div style={{ fontSize: 34, color: 'rgba(255,255,255,0.58)', fontWeight: 400, lineHeight: 1.4, display: 'flex' }}>
               {subtitulo}
             </div>
           ) : null}
@@ -122,7 +103,7 @@ export async function GET(req: Request) {
 
         <div style={{ position: 'absolute', bottom: 52, left: 64, display: 'flex', alignItems: 'center', gap: 10 }}>
           <div style={{ width: 6, height: 6, borderRadius: '50%', background: accent, display: 'flex' }} />
-          <span style={{ fontFamily: 'Poppins', fontSize: 22, fontWeight: 700, color: 'rgba(255,255,255,0.38)', letterSpacing: 1 }}>aprendia.store</span>
+          <span style={{ fontSize: 22, fontWeight: 700, color: 'rgba(255,255,255,0.38)', letterSpacing: 1 }}>aprendia.store</span>
         </div>
       </div>
     )
@@ -139,8 +120,8 @@ export async function GET(req: Request) {
         <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 5, background: accent, display: 'flex' }} />
 
         <div style={{ position: 'absolute', top: 48, left: 56, display: 'flex', alignItems: 'baseline', gap: 4 }}>
-          <span style={{ fontFamily: 'Poppins', fontSize: 110, fontWeight: 800, color: '#ffffff', lineHeight: 1 }}>{num}</span>
-          <span style={{ fontFamily: 'Poppins', fontSize: 60, fontWeight: 800, color: accent, lineHeight: 1 }}>.</span>
+          <span style={{ fontSize: 110, fontWeight: 800, color: '#ffffff', lineHeight: 1 }}>{num}</span>
+          <span style={{ fontSize: 60, fontWeight: 800, color: accent, lineHeight: 1 }}>.</span>
         </div>
 
         <div style={{ position: 'absolute', bottom: 130, left: 64, right: 64, display: 'flex', flexDirection: 'column', gap: 24 }}>
@@ -183,10 +164,10 @@ export async function GET(req: Request) {
           />
 
           <div style={{ display: 'flex', alignItems: 'center', background: accent, borderRadius: 100, padding: '20px 56px' }}>
-            <span style={{ fontFamily: 'Poppins', fontSize: 30, fontWeight: 800, color: '#080D1A' }}>↓ Link en bio</span>
+            <span style={{ fontSize: 30, fontWeight: 800, color: '#080D1A' }}>↓ Link en bio</span>
           </div>
 
-          <div style={{ fontFamily: 'Poppins', fontSize: 26, fontWeight: 800, color: 'rgba(255,255,255,0.28)', display: 'flex' }}>
+          <div style={{ fontSize: 26, fontWeight: 800, color: 'rgba(255,255,255,0.28)', display: 'flex' }}>
             Aprend<span style={{ color: accent }}>IA</span>
           </div>
         </div>
@@ -197,7 +178,6 @@ export async function GET(req: Request) {
   return new ImageResponse(element, {
     width: 1080,
     height: 1080,
-    fonts: fonts.length > 0 ? fonts : undefined,
     headers: forDownload
       ? { 'Content-Disposition': `attachment; filename="aprendia-${slideType}-${num}.png"` }
       : {},
