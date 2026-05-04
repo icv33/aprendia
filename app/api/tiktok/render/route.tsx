@@ -16,6 +16,8 @@ const TYPE_LABELS: Record<string, string> = {
   caso_practico: 'CASO REAL',
 }
 
+const FALLBACK_BG = 'linear-gradient(160deg, #080D1A 0%, #0C1525 60%, #080D1A 100%)'
+
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url)
   const slideType = searchParams.get('slideType') ?? 'content'
@@ -25,78 +27,116 @@ export async function GET(req: Request) {
   const subtitulo = searchParams.get('subtitulo') ?? ''
   const cta       = searchParams.get('cta') ?? ''
   const num       = parseInt(searchParams.get('num') ?? '1')
+  const bgUrl     = searchParams.get('bg') ?? ''
   const forDownload = searchParams.get('dl') === '1'
 
   const accent = TYPE_COLORS[postType] ?? '#00FFB2'
-  const bg = 'linear-gradient(160deg, #080D1A 0%, #0C1525 60%, #080D1A 100%)'
+  const hasBg  = bgUrl.startsWith('http')
 
   let element: React.ReactElement
 
   if (slideType === 'cover') {
     element = (
-      <div style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%', background: bg, padding: '72px', position: 'relative' }}>
-        {/* Glow */}
-        <div style={{ position: 'absolute', top: -80, right: -80, width: 440, height: 440, borderRadius: '50%', background: `radial-gradient(circle, ${accent}22 0%, transparent 65%)`, display: 'flex' }} />
-        <div style={{ position: 'absolute', bottom: 60, left: -60, width: 300, height: 300, borderRadius: '50%', background: `radial-gradient(circle, ${accent}10 0%, transparent 65%)`, display: 'flex' }} />
+      <div style={{ position: 'relative', width: 1080, height: 1080, display: 'flex', overflow: 'hidden' }}>
+        {/* Background */}
+        {hasBg ? (
+          <img src={bgUrl} style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' }} />
+        ) : (
+          <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: FALLBACK_BG, display: 'flex' }} />
+        )}
 
-        {/* Tag pill */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10, background: `${accent}22`, border: `1.5px solid ${accent}44`, borderRadius: 100, padding: '10px 22px', width: 'fit-content' }}>
-          <div style={{ width: 10, height: 10, borderRadius: '50%', background: accent, display: 'flex' }} />
-          <span style={{ color: accent, fontSize: 22, fontWeight: 700, letterSpacing: 2 }}>{TYPE_LABELS[postType] ?? postType.toUpperCase()}</span>
+        {/* Dark overlay */}
+        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'linear-gradient(to bottom, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.5) 50%, rgba(0,0,0,0.82) 100%)', display: 'flex' }} />
+
+        {/* Tag top-left */}
+        <div style={{ position: 'absolute', top: 56, left: 60, display: 'flex', alignItems: 'center', gap: 10, background: `${accent}28`, border: `1.5px solid ${accent}55`, borderRadius: 100, padding: '8px 20px' }}>
+          <div style={{ width: 9, height: 9, borderRadius: '50%', background: accent, display: 'flex' }} />
+          <span style={{ color: accent, fontSize: 20, fontWeight: 700, letterSpacing: 2 }}>{TYPE_LABELS[postType]}</span>
         </div>
 
-        {/* Title */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 24, flex: 1, justifyContent: 'center', marginTop: 32 }}>
-          <div style={{ fontSize: titulo.length > 28 ? 76 : 92, fontWeight: 900, color: '#fff', lineHeight: 1.04, letterSpacing: -2 }}>{titulo}</div>
+        {/* Title + subtitle - bottom left */}
+        <div style={{ position: 'absolute', bottom: 100, left: 60, right: 60, display: 'flex', flexDirection: 'column', gap: 20 }}>
+          <div style={{ fontSize: titulo.length > 25 ? 78 : 92, fontWeight: 900, color: '#ffffff', lineHeight: 1.05, letterSpacing: -2 }}>
+            {titulo}
+          </div>
           {subtitulo ? (
-            <div style={{ fontSize: 30, color: 'rgba(255,255,255,0.45)', fontWeight: 400, lineHeight: 1.5 }}>{subtitulo}</div>
+            <div style={{ fontSize: 32, color: 'rgba(255,255,255,0.65)', fontWeight: 400, lineHeight: 1.4, display: 'flex' }}>
+              {subtitulo}
+            </div>
           ) : null}
         </div>
 
-        {/* Bottom */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div style={{ fontSize: 26, fontWeight: 800, color: '#fff' }}>Aprend<span style={{ color: accent }}>IA</span></div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 22, color: 'rgba(255,255,255,0.35)', fontWeight: 500 }}>Desliza →</div>
+        {/* Bottom bar */}
+        <div style={{ position: 'absolute', bottom: 44, left: 60, right: 60, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div style={{ fontSize: 24, fontWeight: 700, color: 'rgba(255,255,255,0.5)', display: 'flex' }}>Desliza →</div>
+          <div style={{ fontSize: 26, fontWeight: 700, color: 'rgba(255,255,255,0.55)', display: 'flex' }}>@aprendia.ia</div>
         </div>
       </div>
     )
+
   } else if (slideType === 'content') {
     element = (
-      <div style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%', background: bg, padding: '72px', position: 'relative' }}>
-        {/* Subtle accent glow */}
-        <div style={{ position: 'absolute', top: 0, right: 0, width: 350, height: 350, borderRadius: '50%', background: `radial-gradient(circle, ${accent}0D 0%, transparent 70%)`, display: 'flex' }} />
+      <div style={{ position: 'relative', width: 1080, height: 1080, display: 'flex', overflow: 'hidden' }}>
+        {/* Background */}
+        {hasBg ? (
+          <img src={bgUrl} style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' }} />
+        ) : (
+          <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: FALLBACK_BG, display: 'flex' }} />
+        )}
 
-        {/* Number badge */}
-        <div style={{ display: 'flex', width: 76, height: 76, borderRadius: '50%', background: accent, alignItems: 'center', justifyContent: 'center', fontSize: 34, fontWeight: 900, color: '#080D1A', flexShrink: 0 }}>{num}</div>
+        {/* Gradient overlay — heavier at bottom */}
+        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'linear-gradient(to bottom, rgba(0,0,0,0.08) 0%, rgba(0,0,0,0.4) 45%, rgba(0,0,0,0.88) 100%)', display: 'flex' }} />
 
-        {/* Content */}
-        <div style={{ display: 'flex', flexDirection: 'column', flex: 1, gap: 28, justifyContent: 'center', marginTop: 40 }}>
-          <div style={{ fontSize: titulo.length > 22 ? 60 : 72, fontWeight: 800, color: '#fff', lineHeight: 1.1 }}>{titulo}</div>
-          <div style={{ fontSize: 34, color: 'rgba(255,255,255,0.62)', lineHeight: 1.55, fontWeight: 400 }}>{contenido}</div>
+        {/* Number — top left, large */}
+        <div style={{ position: 'absolute', top: 52, left: 56, display: 'flex' }}>
+          <span style={{ fontSize: 120, fontWeight: 900, color: '#ffffff', lineHeight: 1, opacity: 0.92 }}>{num}.</span>
         </div>
 
-        {/* Bottom bar */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: 32, borderTop: `2px solid ${accent}28` }}>
-          <div style={{ width: 56, height: 5, background: accent, borderRadius: 3, display: 'flex' }} />
-          <div style={{ fontSize: 22, fontWeight: 600, color: 'rgba(255,255,255,0.28)' }}>@aprendia.ia</div>
+        {/* Content — bottom */}
+        <div style={{ position: 'absolute', bottom: 90, left: 60, right: 60, display: 'flex', flexDirection: 'column', gap: 18 }}>
+          <div style={{ fontSize: titulo.length > 22 ? 58 : 70, fontWeight: 800, color: '#ffffff', lineHeight: 1.1 }}>
+            {titulo}
+          </div>
+          <div style={{ fontSize: 34, color: 'rgba(255,255,255,0.78)', lineHeight: 1.55, fontWeight: 400, display: 'flex' }}>
+            {contenido}
+          </div>
+        </div>
+
+        {/* Handle bottom-right */}
+        <div style={{ position: 'absolute', bottom: 44, right: 60, display: 'flex' }}>
+          <span style={{ fontSize: 24, fontWeight: 600, color: 'rgba(255,255,255,0.45)' }}>@aprendia.ia</span>
         </div>
       </div>
     )
+
   } else {
     // CTA slide
     element = (
-      <div style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%', background: bg, padding: '72px', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+      <div style={{ position: 'relative', width: 1080, height: 1080, display: 'flex', overflow: 'hidden' }}>
+        {/* Background */}
+        {hasBg ? (
+          <img src={bgUrl} style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' }} />
+        ) : (
+          <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: FALLBACK_BG, display: 'flex' }} />
+        )}
+
+        {/* Heavy dark overlay */}
+        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.78)', display: 'flex' }} />
+
         {/* Center glow */}
-        <div style={{ position: 'absolute', width: 560, height: 560, borderRadius: '50%', background: `radial-gradient(circle, ${accent}18 0%, transparent 65%)`, display: 'flex' }} />
+        <div style={{ position: 'absolute', top: '50%', left: '50%', width: 600, height: 600, borderRadius: '50%', background: `radial-gradient(circle, ${accent}18 0%, transparent 65%)`, display: 'flex', transform: 'translate(-50%,-50%)' }} />
 
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 44, textAlign: 'center', position: 'relative' }}>
-          <div style={{ fontSize: cta.length > 38 ? 54 : 64, fontWeight: 800, color: '#fff', lineHeight: 1.2, textAlign: 'center' }}>{cta}</div>
+        {/* Centered content */}
+        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 48, padding: '0 80px', textAlign: 'center' }}>
+          <div style={{ fontSize: cta.length > 40 ? 54 : 64, fontWeight: 800, color: '#ffffff', lineHeight: 1.2, textAlign: 'center', display: 'flex', flexDirection: 'column' }}>
+            {cta}
+          </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: 14, background: accent, borderRadius: 100, padding: '18px 48px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', background: accent, borderRadius: 100, padding: '18px 52px' }}>
             <span style={{ fontSize: 30, fontWeight: 800, color: '#080D1A' }}>↓ Link en bio</span>
           </div>
 
-          <div style={{ fontSize: 26, fontWeight: 800, color: 'rgba(255,255,255,0.25)' }}>
+          <div style={{ fontSize: 26, fontWeight: 800, color: 'rgba(255,255,255,0.3)', display: 'flex' }}>
             Aprend<span style={{ color: accent }}>IA</span>
           </div>
         </div>
@@ -108,7 +148,7 @@ export async function GET(req: Request) {
     width: 1080,
     height: 1080,
     headers: forDownload
-      ? { 'Content-Disposition': `attachment; filename="aprendia-slide-${slideType}-${num}.png"` }
+      ? { 'Content-Disposition': `attachment; filename="aprendia-${slideType}-${num}.png"` }
       : {},
   })
 }

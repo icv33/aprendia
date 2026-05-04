@@ -5,8 +5,9 @@ import { useRouter } from 'next/navigation'
 import { TikTokSlide, TikTokPostType } from '@/lib/supabase'
 import { TYPE_META, SCHEDULE_SLOTS } from '@/lib/tiktok'
 
-function buildRenderUrl(slide: TikTokSlide, type: TikTokPostType): string {
+function buildRenderUrl(slide: TikTokSlide, type: TikTokPostType, bgUrl?: string): string {
   const p = new URLSearchParams({ type })
+  if (bgUrl) p.set('bg', bgUrl)
   if (slide.type === 'cover') {
     p.set('slideType', 'cover')
     p.set('titulo', slide.titulo)
@@ -203,50 +204,53 @@ export function GeneratorClient() {
             </div>
           )}
 
-          {slides && status !== 'generating' && postType && (
-            <>
-              {/* Large preview */}
-              <div style={{ background: '#fff', border: '1px solid #E2E8F0', borderRadius: 16, padding: 20 }}>
-                <div style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: '.88rem', color: '#0F172A', marginBottom: 16 }}>
-                  Vista previa — slide {activeSlide + 1} de {slides.length}
+          {slides && status !== 'generating' && postType && (() => {
+            const bgUrl = slides[0]?.type === 'cover' ? slides[0].background_url : undefined
+            return (
+              <>
+                {/* Large preview */}
+                <div style={{ background: '#fff', border: '1px solid #E2E8F0', borderRadius: 16, padding: 20 }}>
+                  <div style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: '.88rem', color: '#0F172A', marginBottom: 16 }}>
+                    Vista previa — slide {activeSlide + 1} de {slides.length}
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'center' }}>
+                    <img
+                      key={buildRenderUrl(slides[activeSlide], postType, bgUrl)}
+                      src={buildRenderUrl(slides[activeSlide], postType, bgUrl)}
+                      alt="slide preview"
+                      style={{ width: 360, height: 360, borderRadius: 12, border: '1px solid #E2E8F0', objectFit: 'cover' }}
+                    />
+                  </div>
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'center' }}>
-                  <img
-                    key={buildRenderUrl(slides[activeSlide], postType)}
-                    src={buildRenderUrl(slides[activeSlide], postType)}
-                    alt="slide preview"
-                    style={{ width: 360, height: 360, borderRadius: 12, border: '1px solid #E2E8F0', objectFit: 'cover' }}
-                  />
-                </div>
-              </div>
 
-              {/* Slide strip */}
-              <div style={{ background: '#fff', border: '1px solid #E2E8F0', borderRadius: 16, padding: 16 }}>
-                <div style={{ display: 'flex', gap: 10, overflowX: 'auto', paddingBottom: 4 }}>
-                  {slides.map((slide, i) => (
-                    <div
-                      key={i}
-                      onClick={() => setActiveSlide(i)}
-                      style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5, cursor: 'pointer', flexShrink: 0 }}
-                    >
-                      <img
-                        src={buildRenderUrl(slide, postType)}
-                        alt={`slide ${i + 1}`}
-                        style={{
-                          width: 88, height: 88, borderRadius: 8, objectFit: 'cover',
-                          border: activeSlide === i ? `2.5px solid ${TYPE_META[postType].color}` : '1.5px solid #E2E8F0',
-                          transition: 'border .15s',
-                        }}
-                      />
-                      <span style={{ fontSize: 10, color: activeSlide === i ? TYPE_META[postType].color : '#94A3B8', fontWeight: 600 }}>
-                        {slide.type === 'cover' ? 'COVER' : slide.type === 'cta' ? 'CTA' : `#${slide.num}`}
-                      </span>
-                    </div>
-                  ))}
+                {/* Slide strip */}
+                <div style={{ background: '#fff', border: '1px solid #E2E8F0', borderRadius: 16, padding: 16 }}>
+                  <div style={{ display: 'flex', gap: 10, overflowX: 'auto', paddingBottom: 4 }}>
+                    {slides.map((slide, i) => (
+                      <div
+                        key={i}
+                        onClick={() => setActiveSlide(i)}
+                        style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5, cursor: 'pointer', flexShrink: 0 }}
+                      >
+                        <img
+                          src={buildRenderUrl(slide, postType, bgUrl)}
+                          alt={`slide ${i + 1}`}
+                          style={{
+                            width: 88, height: 88, borderRadius: 8, objectFit: 'cover',
+                            border: activeSlide === i ? `2.5px solid ${TYPE_META[postType].color}` : '1.5px solid #E2E8F0',
+                            transition: 'border .15s',
+                          }}
+                        />
+                        <span style={{ fontSize: 10, color: activeSlide === i ? TYPE_META[postType].color : '#94A3B8', fontWeight: 600 }}>
+                          {slide.type === 'cover' ? 'COVER' : slide.type === 'cta' ? 'CTA' : `#${slide.num}`}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            </>
-          )}
+              </>
+            )
+          })()}
 
           {!slides && status === 'idle' && (
             <div style={{ background: '#fff', border: '1px solid #E2E8F0', borderRadius: 16, padding: '80px 20px', textAlign: 'center' }}>

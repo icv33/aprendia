@@ -1,6 +1,32 @@
 import Anthropic from '@anthropic-ai/sdk'
 import { TikTokSlide, TikTokPostType } from './supabase'
 
+const PEXELS_QUERIES: Record<TikTokPostType, string> = {
+  truco:         'laptop workspace minimal desk tech setup',
+  vida_facil:    'morning coffee laptop lifestyle productive home',
+  mito:          'person thinking laptop focus work concentration',
+  caso_practico: 'office desk work productivity professional setup',
+}
+
+async function fetchPexelsPhoto(query: string): Promise<string | null> {
+  const apiKey = process.env.PEXELS_API_KEY
+  if (!apiKey) return null
+  try {
+    const page = Math.floor(Math.random() * 3) + 1
+    const res = await fetch(
+      `https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&per_page=15&page=${page}`,
+      { headers: { Authorization: apiKey } }
+    )
+    if (!res.ok) return null
+    const data = await res.json()
+    if (!data.photos?.length) return null
+    const photo = data.photos[Math.floor(Math.random() * data.photos.length)]
+    return photo.src.portrait ?? photo.src.large ?? null
+  } catch {
+    return null
+  }
+}
+
 const SYSTEM_PROMPT = `Eres experto en marketing de contenido viral para TikTok en español.
 Generas contenido educativo sobre IA que sea práctico, directo y que enganche.
 Siempre respondes SOLO con JSON válido, sin markdown ni explicaciones adicionales.`
@@ -105,8 +131,10 @@ export async function generateTikTokSlides(type: TikTokPostType): Promise<TikTok
 
   const data = JSON.parse(jsonMatch[0])
 
+  const bgUrl = await fetchPexelsPhoto(PEXELS_QUERIES[type])
+
   const slides: TikTokSlide[] = [
-    { type: 'cover', titulo: data.titulo_portada, subtitulo: data.subtitulo_portada },
+    { type: 'cover', titulo: data.titulo_portada, subtitulo: data.subtitulo_portada, background_url: bgUrl ?? undefined },
     ...data.slides.slice(0, 5).map((s: { titulo: string; contenido: string }, i: number) => ({
       type: 'content' as const,
       num: i + 1,

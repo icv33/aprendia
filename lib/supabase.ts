@@ -38,7 +38,7 @@ export type TikTokPostType = 'truco' | 'vida_facil' | 'mito' | 'caso_practico'
 export type TikTokPostStatus = 'draft' | 'approved' | 'scheduled' | 'published' | 'error'
 
 export type TikTokSlide =
-  | { type: 'cover'; titulo: string; subtitulo?: string }
+  | { type: 'cover'; titulo: string; subtitulo?: string; background_url?: string }
   | { type: 'content'; num: number; titulo: string; contenido: string }
   | { type: 'cta'; cta: string }
 

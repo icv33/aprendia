@@ -10,9 +10,10 @@ type Props = {
   initialSettings: TikTokSettings
 }
 
-function buildRenderUrl(slide: TikTokSlide, type: TikTokPostType, dl = false): string {
+function buildRenderUrl(slide: TikTokSlide, type: TikTokPostType, dl = false, bgUrl?: string): string {
   const p = new URLSearchParams({ type })
   if (dl) p.set('dl', '1')
+  if (bgUrl) p.set('bg', bgUrl)
 
   if (slide.type === 'cover') {
     p.set('slideType', 'cover')
@@ -30,8 +31,8 @@ function buildRenderUrl(slide: TikTokSlide, type: TikTokPostType, dl = false): s
   return `/api/tiktok/render?${p.toString()}`
 }
 
-function SlideThumbnail({ slide, type, size = 120 }: { slide: TikTokSlide; type: TikTokPostType; size?: number }) {
-  const url = buildRenderUrl(slide, type)
+function SlideThumbnail({ slide, type, size = 120, bgUrl }: { slide: TikTokSlide; type: TikTokPostType; size?: number; bgUrl?: string }) {
+  const url = buildRenderUrl(slide, type, false, bgUrl)
   return (
     <img
       src={url}
@@ -48,6 +49,7 @@ function PostCard({ post, onDelete }: { post: TikTokPost; onDelete: (id: string)
   const [deleting, setDeleting] = useState(false)
   const meta = TYPE_META[post.type]
   const cover = post.slides[0]
+  const bgUrl = cover?.type === 'cover' ? cover.background_url : undefined
 
   const handleDelete = async () => {
     if (!confirm('¿Eliminar este post?')) return
@@ -68,7 +70,7 @@ function PostCard({ post, onDelete }: { post: TikTokPost; onDelete: (id: string)
     <div style={{ background: '#fff', border: '1px solid #E2E8F0', borderRadius: 16, overflow: 'hidden' }}>
       {/* Main row */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '16px 20px' }}>
-        {cover && <SlideThumbnail slide={cover} type={post.type} size={72} />}
+        {cover && <SlideThumbnail slide={cover} type={post.type} size={72} bgUrl={bgUrl} />}
 
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
@@ -107,13 +109,13 @@ function PostCard({ post, onDelete }: { post: TikTokPost; onDelete: (id: string)
               {post.slides.map((slide, i) => (
                 <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
                   <a
-                    href={buildRenderUrl(slide, post.type, true)}
+                    href={buildRenderUrl(slide, post.type, true, bgUrl)}
                     target="_blank"
                     rel="noreferrer"
                     download
                     title="Descargar slide"
                   >
-                    <SlideThumbnail slide={slide} type={post.type} size={140} />
+                    <SlideThumbnail slide={slide} type={post.type} size={140} bgUrl={bgUrl} />
                   </a>
                   <span style={{ fontSize: 10, color: '#94A3B8', fontWeight: 600 }}>
                     {slide.type === 'cover' ? 'PORTADA' : slide.type === 'cta' ? 'CTA' : `SLIDE ${slide.num}`}
