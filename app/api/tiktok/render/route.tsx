@@ -1,6 +1,14 @@
 export const runtime = 'edge'
 
 import { ImageResponse } from 'next/og'
+import { f700, f700i, f800 } from './fonts'
+
+function b64ToBuffer(b64: string): ArrayBuffer {
+  const bin = atob(b64)
+  const buf = new Uint8Array(bin.length)
+  for (let i = 0; i < bin.length; i++) buf[i] = bin.charCodeAt(i)
+  return buf.buffer
+}
 
 const TYPE_COLORS: Record<string, string> = {
   truco:         '#00FFB2',
@@ -42,7 +50,7 @@ function HighlightText({
         <span key={i} style={{
           fontFamily: 'Poppins',
           fontSize,
-          fontWeight,
+          fontWeight: t.hi ? 700 : fontWeight,
           color: t.hi ? accent : baseColor,
           fontStyle: t.hi ? 'italic' : 'normal',
           lineHeight: 1.05,
@@ -72,6 +80,12 @@ export async function GET(req: Request) {
 
   const accent = TYPE_COLORS[postType] ?? '#00FFB2'
   const hasBg  = bgUrl.startsWith('http')
+
+  const fonts = [
+    { name: 'Poppins', data: b64ToBuffer(f700),  weight: 700 as const, style: 'normal' as const },
+    { name: 'Poppins', data: b64ToBuffer(f700i), weight: 700 as const, style: 'italic' as const },
+    { name: 'Poppins', data: b64ToBuffer(f800),  weight: 800 as const, style: 'normal' as const },
+  ]
 
   let element: React.ReactElement
 
@@ -178,6 +192,7 @@ export async function GET(req: Request) {
   return new ImageResponse(element, {
     width: 1080,
     height: 1080,
+    fonts,
     headers: forDownload
       ? { 'Content-Disposition': `attachment; filename="aprendia-${slideType}-${num}.png"` }
       : {},
