@@ -11,14 +11,11 @@ const TYPE_COLORS: Record<string, string> = {
 
 const FALLBACK_BG = 'linear-gradient(160deg, #080D1A 0%, #0C1525 60%, #080D1A 100%)'
 
-async function fetchFont(weight: number, italic: boolean): Promise<ArrayBuffer | null> {
+async function fetchFont(baseUrl: string, weight: number, italic: boolean): Promise<ArrayBuffer | null> {
   try {
-    const variant = italic ? `${weight}-italic` : `${weight}-normal`
-    const url = `https://cdn.jsdelivr.net/npm/@fontsource/poppins/files/poppins-latin-${variant}.woff2`
-    const controller = new AbortController()
-    const timer = setTimeout(() => controller.abort(), 3000)
-    const res = await fetch(url, { signal: controller.signal })
-    clearTimeout(timer)
+    const name = italic ? `poppins-${weight}i.woff2` : `poppins-${weight}.woff2`
+    const url = new URL(`/fonts/${name}`, baseUrl).href
+    const res = await fetch(url)
     if (!res.ok) return null
     return await res.arrayBuffer()
   } catch {
@@ -87,10 +84,11 @@ export async function GET(req: Request) {
   const accent = TYPE_COLORS[postType] ?? '#00FFB2'
   const hasBg  = bgUrl.startsWith('http')
 
+  const base = new URL(req.url).origin
   const [font700, font700i, font800] = await Promise.all([
-    fetchFont(700, false),
-    fetchFont(700, true),
-    fetchFont(800, false),
+    fetchFont(base, 700, false),
+    fetchFont(base, 700, true),
+    fetchFont(base, 800, false),
   ])
 
   const fonts = [
