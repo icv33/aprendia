@@ -1,76 +1,85 @@
 export const dynamic = 'force-dynamic'
 
 import { createServerSupabase } from '@/lib/supabase'
-import { ShoppingBag, Mail, CheckCircle } from 'lucide-react'
+import { ShoppingBag, CheckCircle, Clock } from 'lucide-react'
 
 export const metadata = { title: 'Ventas | AprendIA' }
+
+function packFromAmount(amount: number) {
+  if (amount >= 50) return { label: 'Pro', color: '#8B5CF6', bg: 'rgba(139,92,246,.1)' }
+  if (amount >= 25) return { label: 'Completo', color: '#3B82F6', bg: 'rgba(59,130,246,.1)' }
+  return { label: 'Esencial', color: '#007A40', bg: 'rgba(0,255,178,.12)' }
+}
 
 export default async function VentasPage() {
   const supabase = createServerSupabase()
   const { data: orders } = await supabase
     .from('orders')
-    .select(`*, ebooks(title)`)
+    .select('*')
     .order('created_at', { ascending: false })
 
-  const revenue = orders?.filter(o => o.status === 'paid').reduce((sum, o) => sum + Number(o.amount), 0) ?? 0
+  const paid = orders?.filter(o => o.status === 'paid') ?? []
+  const revenue = paid.reduce((sum, o) => sum + Number(o.amount), 0)
 
   return (
     <div>
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-slate-900">Ventas</h1>
-        <p className="text-slate-500 text-sm mt-1">
-          {orders?.length ?? 0} ventas · {revenue.toFixed(2)}€ en total
+      <div style={{ marginBottom: 32 }}>
+        <h1 style={{ fontFamily: "'Syne', sans-serif", fontSize: 24, fontWeight: 800, color: '#0F172A', margin: 0 }}>Ventas</h1>
+        <p style={{ color: '#64748B', fontSize: 14, marginTop: 4 }}>
+          {paid.length} ventas · <strong style={{ color: '#0F172A' }}>{revenue.toFixed(2)}€</strong> en total
         </p>
       </div>
 
-      {!orders?.length ? (
-        <div className="text-center py-20 bg-white rounded-2xl border border-slate-100">
-          <ShoppingBag size={40} className="mx-auto mb-4 text-slate-300" />
-          <p className="text-slate-500 font-medium">Sin ventas todavía</p>
-          <p className="text-slate-400 text-sm mt-1">Publica tu primer ebook para empezar a vender</p>
+      {!paid.length ? (
+        <div style={{ background: '#fff', borderRadius: 16, border: '1px solid #E2E8F0', padding: '80px 20px', textAlign: 'center' }}>
+          <ShoppingBag size={36} color="#CBD5E1" style={{ margin: '0 auto 14px' }} />
+          <p style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, color: '#64748B', marginBottom: 6 }}>Sin ventas todavía</p>
+          <p style={{ fontSize: 13, color: '#94A3B8' }}>Cuando alguien compre aparecerá aquí</p>
         </div>
       ) : (
-        <div className="bg-white rounded-2xl border border-slate-100 overflow-hidden">
-          <table className="w-full text-sm">
+        <div style={{ background: '#fff', borderRadius: 16, border: '1px solid #E2E8F0', overflow: 'hidden' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
             <thead>
-              <tr className="border-b border-slate-100 bg-slate-50">
-                <th className="text-left px-5 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Cliente</th>
-                <th className="text-left px-5 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Ebook</th>
-                <th className="text-left px-5 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Importe</th>
-                <th className="text-left px-5 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">PDF</th>
-                <th className="text-left px-5 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Fecha</th>
+              <tr style={{ borderBottom: '1px solid #F1F5F9', background: '#F8FAFC' }}>
+                {['Cliente', 'Pack', 'Importe', 'PDF', 'Fecha'].map(h => (
+                  <th key={h} style={{ textAlign: 'left', padding: '12px 20px', fontSize: 11, fontWeight: 700, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '.05em' }}>{h}</th>
+                ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
-              {orders.map((order) => (
-                <tr key={order.id} className="hover:bg-slate-50/50 transition-colors">
-                  <td className="px-5 py-4">
-                    <p className="font-medium text-slate-900">{order.customer_name ?? '—'}</p>
-                    <p className="text-xs text-slate-500 flex items-center gap-1 mt-0.5">
-                      <Mail size={10} />
-                      {order.customer_email}
-                    </p>
-                  </td>
-                  <td className="px-5 py-4 text-slate-700">
-                    {(order.ebooks as { title: string } | null)?.title ?? '—'}
-                  </td>
-                  <td className="px-5 py-4 font-semibold text-slate-900">{Number(order.amount).toFixed(2)}€</td>
-                  <td className="px-5 py-4">
-                    {order.pdf_sent ? (
-                      <span className="flex items-center gap-1 text-emerald-600 text-xs font-medium">
-                        <CheckCircle size={12} /> Enviado
+            <tbody>
+              {paid.map((order, i) => {
+                const pack = packFromAmount(Number(order.amount))
+                return (
+                  <tr key={order.id} style={{ borderBottom: i < paid.length - 1 ? '1px solid #F8FAFC' : 'none' }}>
+                    <td style={{ padding: '14px 20px' }}>
+                      <p style={{ fontWeight: 600, color: '#0F172A', margin: 0 }}>{order.customer_name ?? '—'}</p>
+                      <p style={{ fontSize: 11, color: '#94A3B8', marginTop: 2 }}>{order.customer_email}</p>
+                    </td>
+                    <td style={{ padding: '14px 20px' }}>
+                      <span style={{ display: 'inline-flex', alignItems: 'center', padding: '3px 10px', borderRadius: 100, fontSize: 11, fontWeight: 700, fontFamily: "'Syne', sans-serif", background: pack.bg, color: pack.color }}>
+                        {pack.label}
                       </span>
-                    ) : (
-                      <span className="text-slate-400 text-xs">Pendiente</span>
-                    )}
-                  </td>
-                  <td className="px-5 py-4 text-slate-500 text-xs">
-                    {new Date(order.created_at).toLocaleDateString('es-ES', {
-                      day: '2-digit', month: 'short', year: 'numeric',
-                    })}
-                  </td>
-                </tr>
-              ))}
+                    </td>
+                    <td style={{ padding: '14px 20px', fontFamily: "'Syne', sans-serif", fontWeight: 700, color: '#0F172A' }}>
+                      {Number(order.amount).toFixed(2)}€
+                    </td>
+                    <td style={{ padding: '14px 20px' }}>
+                      {order.pdf_sent ? (
+                        <span style={{ display: 'flex', alignItems: 'center', gap: 5, color: '#007A40', fontSize: 12, fontWeight: 600 }}>
+                          <CheckCircle size={13} /> Enviado
+                        </span>
+                      ) : (
+                        <span style={{ display: 'flex', alignItems: 'center', gap: 5, color: '#94A3B8', fontSize: 12 }}>
+                          <Clock size={13} /> Pendiente
+                        </span>
+                      )}
+                    </td>
+                    <td style={{ padding: '14px 20px', color: '#94A3B8', fontSize: 12 }}>
+                      {new Date(order.created_at).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' })}
+                    </td>
+                  </tr>
+                )
+              })}
             </tbody>
           </table>
         </div>

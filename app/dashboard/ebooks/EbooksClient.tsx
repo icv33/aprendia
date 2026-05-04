@@ -3,13 +3,13 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Ebook } from '@/lib/supabase'
-import { Plus, CheckCircle, XCircle, Globe, Trash2, Loader2, BookOpen, FileText } from 'lucide-react'
+import { Plus, CheckCircle, XCircle, Trash2, Loader2, BookOpen, FileText, Sparkles } from 'lucide-react'
 
-const STATUS_LABELS: Record<string, { label: string; cls: string }> = {
-  pending:  { label: 'Pendiente',  cls: 'bg-amber-100 text-amber-700' },
-  approved: { label: 'Aprobado',   cls: 'bg-blue-100 text-blue-700' },
-  published:{ label: 'Publicado',  cls: 'bg-emerald-100 text-emerald-700' },
-  rejected: { label: 'Rechazado',  cls: 'bg-red-100 text-red-700' },
+const STATUS: Record<string, { label: string; color: string; bg: string }> = {
+  pending:   { label: 'Pendiente',  color: '#D97706', bg: 'rgba(245,158,11,.1)' },
+  approved:  { label: 'Aprobado',   color: '#3B82F6', bg: 'rgba(59,130,246,.1)' },
+  published: { label: 'Publicado',  color: '#007A40', bg: 'rgba(0,255,178,.12)' },
+  rejected:  { label: 'Rechazado',  color: '#EF4444', bg: 'rgba(239,68,68,.1)' },
 }
 
 export function EbooksClient({ ebooks }: { ebooks: Ebook[] }) {
@@ -17,7 +17,6 @@ export function EbooksClient({ ebooks }: { ebooks: Ebook[] }) {
   const [showGen, setShowGen] = useState(false)
   const [topic, setTopic] = useState('')
   const [audience, setAudience] = useState('')
-  const [price, setPrice] = useState('9.99')
   const [generating, setGenerating] = useState(false)
   const [updating, setUpdating] = useState<string | null>(null)
 
@@ -27,7 +26,7 @@ export function EbooksClient({ ebooks }: { ebooks: Ebook[] }) {
     await fetch('/api/generate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ topic, audience, price }),
+      body: JSON.stringify({ topic, audience, price: 27 }),
     })
     setGenerating(false)
     setShowGen(false)
@@ -48,7 +47,7 @@ export function EbooksClient({ ebooks }: { ebooks: Ebook[] }) {
   }
 
   const deleteEbook = async (id: string) => {
-    if (!confirm('¿Seguro que quieres eliminar este ebook?')) return
+    if (!confirm('¿Eliminar este contenido?')) return
     setUpdating(id)
     await fetch(`/api/ebooks/${id}`, { method: 'DELETE' })
     setUpdating(null)
@@ -57,145 +56,146 @@ export function EbooksClient({ ebooks }: { ebooks: Ebook[] }) {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-8">
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 32, gap: 16 }}>
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Ebooks</h1>
-          <p className="text-slate-500 text-sm mt-1">Gestiona y genera tus guías digitales</p>
+          <h1 style={{ fontFamily: "'Syne', sans-serif", fontSize: 24, fontWeight: 800, color: '#0F172A', margin: 0 }}>Contenido</h1>
+          <p style={{ color: '#64748B', fontSize: 14, marginTop: 4 }}>Genera y gestiona el PDF del eBook con IA</p>
         </div>
         <button
           onClick={() => setShowGen(true)}
-          className="gradient-bg text-white font-semibold px-4 py-2 rounded-xl text-sm flex items-center gap-2 hover:opacity-90 transition-all"
+          style={{ display: 'flex', alignItems: 'center', gap: 8, background: '#00FFB2', color: '#0F172A', fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 13, padding: '10px 18px', borderRadius: 12, border: 'none', cursor: 'pointer', whiteSpace: 'nowrap', transition: 'all .2s' }}
+          onMouseEnter={e => (e.currentTarget.style.background = '#00CC8F')}
+          onMouseLeave={e => (e.currentTarget.style.background = '#00FFB2')}
         >
-          <Plus size={16} />
+          <Sparkles size={15} />
           Generar con IA
         </button>
       </div>
 
-      {/* Generator modal */}
-      {showGen && (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl">
-            <h2 className="font-bold text-slate-900 text-lg mb-4">Generar ebook con IA</h2>
+      {/* Info box */}
+      <div style={{ background: 'rgba(0,255,178,.06)', border: '1px solid rgba(0,255,178,.2)', borderRadius: 12, padding: '14px 18px', marginBottom: 24, fontSize: 13, color: '#047857', lineHeight: 1.6 }}>
+        <strong>¿Cómo funciona?</strong> La IA genera el contenido del eBook (estructura, módulos, prompts, FAQs). Tú lo revisas, lo apruebas y subes el PDF a Supabase. Los 3 packs (Esencial, Completo, Pro) usan el mismo PDF base.
+      </div>
 
-            <div className="space-y-4">
+      {/* Modal generar */}
+      {showGen && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(15,23,42,.5)', backdropFilter: 'blur(4px)', zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16 }}>
+          <div style={{ background: '#fff', borderRadius: 20, padding: 28, width: '100%', maxWidth: 440, boxShadow: '0 24px 60px rgba(15,23,42,.15)' }}>
+            <h2 style={{ fontFamily: "'Syne', sans-serif", fontSize: 18, fontWeight: 800, color: '#0F172A', marginBottom: 6 }}>Generar contenido con IA</h2>
+            <p style={{ fontSize: 13, color: '#64748B', marginBottom: 24 }}>Claude generará la estructura completa del eBook</p>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
               <div>
-                <label className="block text-xs font-medium text-slate-700 mb-1.5">Tema del ebook</label>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#374151', marginBottom: 6 }}>Tema del eBook</label>
                 <input
                   value={topic}
-                  onChange={(e) => setTopic(e.target.value)}
-                  placeholder="ej: Automatizar tareas con ChatGPT"
-                  className="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400"
+                  onChange={e => setTopic(e.target.value)}
+                  placeholder="ej: Automatizar tareas con ChatGPT en 2025"
+                  style={{ width: '100%', padding: '10px 14px', borderRadius: 10, border: '1px solid #E2E8F0', fontSize: 13, outline: 'none', boxSizing: 'border-box' }}
+                  onFocus={e => (e.target.style.borderColor = '#00FFB2')}
+                  onBlur={e => (e.target.style.borderColor = '#E2E8F0')}
                 />
               </div>
               <div>
-                <label className="block text-xs font-medium text-slate-700 mb-1.5">Audiencia objetivo</label>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#374151', marginBottom: 6 }}>Audiencia objetivo</label>
                 <input
                   value={audience}
-                  onChange={(e) => setAudience(e.target.value)}
-                  placeholder="ej: Freelancers que quieren ahorrar tiempo"
-                  className="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400"
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-medium text-slate-700 mb-1.5">Precio (€)</label>
-                <input
-                  type="number"
-                  value={price}
-                  onChange={(e) => setPrice(e.target.value)}
-                  min="1"
-                  step="0.01"
-                  className="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400"
+                  onChange={e => setAudience(e.target.value)}
+                  placeholder="ej: Freelancers y emprendedores sin conocimientos técnicos"
+                  style={{ width: '100%', padding: '10px 14px', borderRadius: 10, border: '1px solid #E2E8F0', fontSize: 13, outline: 'none', boxSizing: 'border-box' }}
+                  onFocus={e => (e.target.style.borderColor = '#00FFB2')}
+                  onBlur={e => (e.target.style.borderColor = '#E2E8F0')}
                 />
               </div>
             </div>
 
-            <div className="flex gap-3 mt-6">
+            <div style={{ display: 'flex', gap: 10, marginTop: 24 }}>
               <button
                 onClick={() => setShowGen(false)}
-                className="flex-1 border border-slate-200 text-slate-700 font-medium py-2.5 rounded-xl text-sm hover:bg-slate-50 transition-all"
+                style={{ flex: 1, border: '1px solid #E2E8F0', background: '#fff', color: '#374151', fontWeight: 600, padding: '11px', borderRadius: 12, fontSize: 13, cursor: 'pointer' }}
               >
                 Cancelar
               </button>
               <button
                 onClick={generate}
                 disabled={generating || !topic.trim() || !audience.trim()}
-                className="flex-1 gradient-bg text-white font-semibold py-2.5 rounded-xl text-sm hover:opacity-90 transition-all disabled:opacity-60 flex items-center justify-center gap-2"
+                style={{ flex: 1, background: generating ? '#94A3B8' : '#00FFB2', color: '#0F172A', fontFamily: "'Syne', sans-serif", fontWeight: 700, padding: '11px', borderRadius: 12, fontSize: 13, border: 'none', cursor: generating ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
               >
-                {generating ? <><Loader2 size={14} className="animate-spin" /> Generando...</> : 'Generar'}
+                {generating ? <><Loader2 size={14} style={{ animation: 'spin 1s linear infinite' }} /> Generando...</> : '✨ Generar'}
               </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* Ebooks list */}
+      {/* Lista */}
       {ebooks.length === 0 ? (
-        <div className="text-center py-20 bg-white rounded-2xl border border-slate-100">
-          <BookOpen size={40} className="mx-auto mb-4 text-slate-300" />
-          <p className="text-slate-500 font-medium">No hay ebooks todavía</p>
-          <p className="text-slate-400 text-sm mt-1">Genera tu primer ebook con IA</p>
+        <div style={{ background: '#fff', borderRadius: 16, border: '1px solid #E2E8F0', padding: '80px 20px', textAlign: 'center' }}>
+          <BookOpen size={36} color="#CBD5E1" style={{ margin: '0 auto 14px' }} />
+          <p style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, color: '#64748B', marginBottom: 6 }}>Sin contenido todavía</p>
+          <p style={{ fontSize: 13, color: '#94A3B8' }}>Genera tu primer eBook con IA</p>
         </div>
       ) : (
-        <div className="space-y-3">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
           {ebooks.map((eb) => {
-            const st = STATUS_LABELS[eb.status] ?? STATUS_LABELS.pending
+            const st = STATUS[eb.status] ?? STATUS.pending
             const isUpdating = updating === eb.id
 
             return (
-              <div key={eb.id} className="bg-white rounded-2xl border border-slate-100 p-5 flex items-start gap-4">
-                <div className="w-10 h-10 gradient-bg rounded-xl flex items-center justify-center shrink-0">
-                  <FileText size={16} className="text-white" />
+              <div key={eb.id} style={{ background: '#fff', borderRadius: 14, border: '1px solid #E2E8F0', padding: '18px 20px', display: 'flex', alignItems: 'center', gap: 16 }}>
+                <div style={{ width: 40, height: 40, borderRadius: 10, background: 'rgba(0,255,178,.12)', border: '1px solid rgba(0,255,178,.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <FileText size={16} color="#007A40" />
                 </div>
 
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <h3 className="font-semibold text-slate-900 truncate">{eb.title}</h3>
-                    <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${st.cls}`}>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+                    <h3 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 14, color: '#0F172A', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{eb.title}</h3>
+                    <span style={{ fontSize: 11, fontWeight: 700, padding: '2px 9px', borderRadius: 100, background: st.bg, color: st.color, whiteSpace: 'nowrap' }}>
                       {st.label}
                     </span>
                   </div>
-                  <p className="text-sm text-slate-500 mt-0.5 truncate">{eb.tagline}</p>
-                  <p className="text-xs text-slate-400 mt-1">
-                    {eb.price}€ · {new Date(eb.created_at).toLocaleDateString('es-ES')}
-                    {eb.status === 'published' && (
-                      <a href={`/productos/${eb.slug}`} target="_blank" className="text-indigo-500 ml-2 hover:underline">
-                        Ver landing →
-                      </a>
-                    )}
+                  <p style={{ fontSize: 12, color: '#94A3B8', marginTop: 3, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    {eb.tagline} · {new Date(eb.created_at).toLocaleDateString('es-ES')}
                   </p>
                 </div>
 
-                <div className="flex items-center gap-2 shrink-0">
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexShrink: 0 }}>
                   {isUpdating ? (
-                    <Loader2 size={16} className="animate-spin text-slate-400" />
+                    <Loader2 size={16} color="#94A3B8" style={{ animation: 'spin 1s linear infinite' }} />
                   ) : (
                     <>
                       {eb.status === 'pending' && (
                         <>
                           <button onClick={() => updateStatus(eb.id, 'published')} title="Aprobar y publicar"
-                            className="p-1.5 rounded-lg hover:bg-emerald-50 text-slate-400 hover:text-emerald-600 transition-colors">
+                            style={{ padding: 6, borderRadius: 8, border: 'none', background: 'transparent', cursor: 'pointer', color: '#94A3B8', transition: 'all .15s' }}
+                            onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(0,255,178,.1)'; (e.currentTarget as HTMLButtonElement).style.color = '#007A40' }}
+                            onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; (e.currentTarget as HTMLButtonElement).style.color = '#94A3B8' }}
+                          >
                             <CheckCircle size={16} />
                           </button>
                           <button onClick={() => updateStatus(eb.id, 'rejected')} title="Rechazar"
-                            className="p-1.5 rounded-lg hover:bg-red-50 text-slate-400 hover:text-red-500 transition-colors">
+                            style={{ padding: 6, borderRadius: 8, border: 'none', background: 'transparent', cursor: 'pointer', color: '#94A3B8', transition: 'all .15s' }}
+                            onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(239,68,68,.08)'; (e.currentTarget as HTMLButtonElement).style.color = '#EF4444' }}
+                            onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; (e.currentTarget as HTMLButtonElement).style.color = '#94A3B8' }}
+                          >
                             <XCircle size={16} />
                           </button>
                         </>
                       )}
-                      {eb.status === 'approved' && (
+                      {(eb.status === 'approved' || eb.status === 'rejected') && (
                         <button onClick={() => updateStatus(eb.id, 'published')} title="Publicar"
-                          className="p-1.5 rounded-lg hover:bg-emerald-50 text-slate-400 hover:text-emerald-600 transition-colors">
-                          <Globe size={16} />
-                        </button>
-                      )}
-                      {eb.status === 'rejected' && (
-                        <button onClick={() => updateStatus(eb.id, 'pending')} title="Volver a pendiente"
-                          className="p-1.5 rounded-lg hover:bg-amber-50 text-slate-400 hover:text-amber-600 transition-colors">
+                          style={{ padding: 6, borderRadius: 8, border: 'none', background: 'transparent', cursor: 'pointer', color: '#94A3B8', transition: 'all .15s' }}
+                          onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(0,255,178,.1)'; (e.currentTarget as HTMLButtonElement).style.color = '#007A40' }}
+                          onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; (e.currentTarget as HTMLButtonElement).style.color = '#94A3B8' }}
+                        >
                           <CheckCircle size={16} />
                         </button>
                       )}
                       <button onClick={() => deleteEbook(eb.id)} title="Eliminar"
-                        className="p-1.5 rounded-lg hover:bg-red-50 text-slate-400 hover:text-red-500 transition-colors">
+                        style={{ padding: 6, borderRadius: 8, border: 'none', background: 'transparent', cursor: 'pointer', color: '#94A3B8', transition: 'all .15s' }}
+                        onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(239,68,68,.08)'; (e.currentTarget as HTMLButtonElement).style.color = '#EF4444' }}
+                        onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; (e.currentTarget as HTMLButtonElement).style.color = '#94A3B8' }}
+                      >
                         <Trash2 size={16} />
                       </button>
                     </>
@@ -206,6 +206,8 @@ export function EbooksClient({ ebooks }: { ebooks: Ebook[] }) {
           })}
         </div>
       )}
+
+      <style>{`@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`}</style>
     </div>
   )
 }

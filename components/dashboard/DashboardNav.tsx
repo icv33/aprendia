@@ -7,7 +7,7 @@ import { LayoutDashboard, BookOpen, ShoppingBag, LogOut, ExternalLink } from 'lu
 
 const links = [
   { href: '/dashboard', label: 'Resumen', icon: LayoutDashboard },
-  { href: '/dashboard/ebooks', label: 'Ebooks', icon: BookOpen },
+  { href: '/dashboard/ebooks', label: 'Contenido', icon: BookOpen },
   { href: '/dashboard/ventas', label: 'Ventas', icon: ShoppingBag },
 ]
 
@@ -15,49 +15,59 @@ export function DashboardNav() {
   const path = usePathname()
 
   return (
-    <header className="bg-white border-b border-slate-200 sticky top-0 z-40">
-      <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
-        <div className="flex items-center gap-6">
-          <Link href="/dashboard" className="flex items-center gap-2 mr-4">
-            <div className="w-7 h-7 rounded-lg gradient-bg flex items-center justify-center">
-              <span className="text-white font-bold text-xs">A</span>
+    <header style={{ background: '#fff', borderBottom: '1px solid #E2E8F0', position: 'sticky', top: 0, zIndex: 40 }}>
+      <div style={{ maxWidth: 1120, margin: '0 auto', padding: '0 24px', height: 60, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
+          <Link href="/dashboard" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 8 }}>
+            <div style={{ width: 30, height: 30, borderRadius: 8, background: '#00FFB2', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <span style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: 13, color: '#0F172A' }}>A</span>
             </div>
-            <span className="font-semibold text-slate-900 text-sm">
-              Aprend<span className="gradient-text">IA</span>
-              <span className="text-slate-400 font-normal ml-1">· Panel</span>
+            <span style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 15, color: '#0F172A' }}>
+              Aprend<span style={{ color: '#00CC8F' }}>IA</span>
+              <span style={{ color: '#94A3B8', fontWeight: 400, marginLeft: 4 }}>· Panel</span>
             </span>
           </Link>
 
-          <nav className="hidden sm:flex items-center gap-1">
-            {links.map(({ href, label, icon: Icon }) => (
-              <Link
-                key={href}
-                href={href}
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm transition-colors ${
-                  path === href
-                    ? 'bg-indigo-50 text-indigo-700 font-medium'
-                    : 'text-slate-600 hover:bg-slate-100'
-                }`}
-              >
-                <Icon size={14} />
-                {label}
-              </Link>
-            ))}
+          <nav style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+            {links.map(({ href, label, icon: Icon }) => {
+              const active = path === href
+              return (
+                <Link
+                  key={href}
+                  href={href}
+                  style={{
+                    display: 'flex', alignItems: 'center', gap: 6,
+                    padding: '6px 12px', borderRadius: 8, fontSize: 13, textDecoration: 'none',
+                    fontWeight: active ? 600 : 400,
+                    background: active ? 'rgba(0,255,178,.1)' : 'transparent',
+                    color: active ? '#007A40' : '#64748B',
+                    transition: 'all .15s',
+                  }}
+                >
+                  <Icon size={14} />
+                  {label}
+                </Link>
+              )
+            })}
           </nav>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
           <a
-            href="/productos"
+            href="/"
             target="_blank"
-            className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-slate-700 px-2 py-1.5 rounded-lg hover:bg-slate-100 transition-colors"
+            style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: '#64748B', padding: '6px 10px', borderRadius: 8, textDecoration: 'none', transition: 'all .15s' }}
+            onMouseEnter={e => (e.currentTarget.style.background = '#F8FAFC')}
+            onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
           >
             <ExternalLink size={12} />
-            Ver tienda
+            Ver web
           </a>
           <button
             onClick={() => signOut({ callbackUrl: '/login' })}
-            className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-red-600 px-2 py-1.5 rounded-lg hover:bg-red-50 transition-colors"
+            style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: '#64748B', padding: '6px 10px', borderRadius: 8, border: 'none', background: 'transparent', cursor: 'pointer', transition: 'all .15s' }}
+            onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = '#FEF2F2'; (e.currentTarget as HTMLButtonElement).style.color = '#EF4444' }}
+            onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; (e.currentTarget as HTMLButtonElement).style.color = '#64748B' }}
           >
             <LogOut size={12} />
             Salir
