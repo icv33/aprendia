@@ -109,8 +109,9 @@ async function uploadSlidesToStorage(
 
 function buildCaption(slides: TikTokSlide[]): string {
   const cover = slides.find(s => s.type === 'cover') as Extract<TikTokSlide, { type: 'cover' }> | undefined
-  const title = (cover?.titulo ?? '').replace(/<<|>>/g, '')
-  return `${title}\n\n#IA #InteligenciaArtificial #ChatGPT #Productividad #AprendeIA`
+  const title = (cover?.titulo ?? '').replace(/<<|>>/g, '').slice(0, 80)
+  const tags = '#IA #InteligenciaArtificial #ChatGPT #Productividad #AprendeIA'
+  return `${title} ${tags}`.slice(0, 150)
 }
 
 async function callPublishAPI(accessToken: string, photoUrls: string[], caption: string): Promise<string> {
@@ -125,7 +126,8 @@ async function callPublishAPI(accessToken: string, photoUrls: string[], caption:
         title: caption,
         privacy_level: 'PUBLIC_TO_EVERYONE',
         disable_comment: false,
-        auto_add_music: true,
+        disable_duet: false,
+        disable_stitch: false,
       },
       source_info: {
         source: 'PULL_FROM_URL',
