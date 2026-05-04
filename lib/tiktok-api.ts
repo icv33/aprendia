@@ -126,7 +126,7 @@ async function callPublishAPI(accessToken: string, photoUrls: string[], caption:
       photo_cover_index: 0,
     },
     media_type: 'PHOTO',
-    post_mode: 'DIRECT_POST',
+    post_mode: 'MEDIA_UPLOAD',
   }
   console.log('[TikTok] request body:', JSON.stringify(body))
 
