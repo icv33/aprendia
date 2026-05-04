@@ -200,12 +200,12 @@ export function TikTokMain({ initialPosts, initialSettings, isConnected }: Props
   return (
     <>
       {/* Topbar */}
-      <header style={{ height: 60, flexShrink: 0, background: '#fff', borderBottom: '1px solid #E2E8F0', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 28px' }}>
-        <div>
+      <header className="tiktok-topbar" style={{ flexShrink: 0, background: '#fff', borderBottom: '1px solid #E2E8F0', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 28px', height: 60 }}>
+        <div className="tiktok-topbar-left">
           <div style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: '1.05rem', color: '#0F172A' }}>TikTok</div>
           <div style={{ fontSize: '.8rem', color: '#64748B' }}>{queue.length} en cola · {history.length} publicados</div>
         </div>
-        <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+        <div className="tiktok-topbar-actions" style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
 
           {/* TikTok connection status */}
           {connected ? (
@@ -257,7 +257,7 @@ export function TikTokMain({ initialPosts, initialSettings, isConnected }: Props
         </div>
       )}
 
-      <div style={{ flex: 1, overflowY: 'auto', padding: '24px 28px' }}>
+      <div className="dash-main-scroll" style={{ flex: 1, overflowY: 'auto', padding: '24px 28px' }}>
         <div style={{ display: 'flex', gap: 4, background: '#F1F5F9', borderRadius: 10, padding: 4, width: 'fit-content', marginBottom: 20 }}>
           {(['queue', 'history'] as const).map(t => (
             <button
