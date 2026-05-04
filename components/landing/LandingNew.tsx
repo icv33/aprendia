@@ -13,14 +13,14 @@ const FAQS = [
   { q: '¿Necesito saber programar para usar el eBook?', a: 'No. AprendIA está diseñado específicamente para personas sin conocimientos técnicos. Todas las herramientas que se mencionan son no-code — utilizas interfaces visuales simples, como cualquier app del móvil. Si sabes copiar y pegar, puedes hacerlo.' },
   { q: '¿En cuánto tiempo veo resultados?', a: 'La mayoría de los lectores ya ahorra tiempo en las primeras horas de lectura gracias a los prompts listos. Para automatizaciones más elaboradas, el plazo habitual es de 1 a 7 días. Los resultados económicos varían según el modelo elegido.' },
   { q: '¿Cómo funciona la garantía?', a: 'Si por cualquier motivo el contenido no cumple lo que prometemos, te devolvemos el 100% del importe. Sin preguntas, sin burocracia, sin plazos que cumplir. Tu satisfacción es nuestra única condición.' },
-  { q: '¿El eBook se actualiza? Las herramientas de IA cambian muy rápido.', a: '¡Sí! Todas las actualizaciones son vitalicias y gratuitas para los planes Completo y Pro. Cuando publicamos nuevas versiones con herramientas actualizadas, las recibes automáticamente por email. Un único pago para un recurso que evoluciona con la IA.' },
-  { q: '¿Cuál es la diferencia entre los tres planes?', a: 'El Esencial incluye el eBook completo con 30 prompts clave — perfecto para empezar. El Completo añade la biblioteca de 80+ prompts, la guía de automatizaciones no-code y el mapa de ingresos — es nuestro más popular. El Pro incluye todo lo anterior más comunidad privada, email directo al autor, templates listos y soporte prioritario.' },
+  { q: '¿El eBook se actualiza? Las herramientas de IA cambian muy rápido.', a: '¡Sí! Todas las actualizaciones son vitalicias y gratuitas para los planes Pro y Élite. Cuando publicamos nuevas versiones con herramientas actualizadas, las recibes automáticamente por email. Un único pago para un recurso que evoluciona con la IA.' },
+  { q: '¿Cuál es la diferencia entre los tres planes?', a: 'El Starter incluye el eBook base con 30 prompts — perfecto para empezar desde cero. El Pro añade 2 eBooks especializados (secretario IA y negocio en 7 días), 80+ prompts y comunidad de WhatsApp. El Élite incluye todo lo anterior más comunidad privada, mentoría directa por email y templates de negocio listos.' },
   { q: '¿Funciona para cualquier tipo de negocio o profesión?', a: 'Sí. AprendIA tiene aplicaciones para freelancers, emprendedores, trabajadores por cuenta ajena, dueños de pequeñas empresas y creadores de contenido. Los principios y herramientas son adaptables a prácticamente cualquier contexto profesional.' },
   { q: '¿Cómo recibo el eBook tras la compra?', a: 'El acceso es inmediato. Justo después de confirmar el pago, recibes un email con el enlace de descarga. Disponible en PDF optimizado para cualquier dispositivo.' },
 ]
 
 export function LandingNew() {
-  const [activeTab, setActiveTab] = useState<'esencial' | 'completo' | 'pro'>('esencial')
+  const [activeTab, setActiveTab] = useState<'starter' | 'pro' | 'elite'>('starter')
   const [openFaq, setOpenFaq] = useState<number | null>(null)
 
   useEffect(() => {
@@ -97,7 +97,7 @@ export function LandingNew() {
               </div>
               <div className="reveal d3">
                 <div className="hero-actions">
-                  <a href="/api/checkout?pack=completo" className="lp-btn lp-btn-primary lp-btn-lg">Quiero el eBook ahora →</a>
+                  <a href="/api/checkout?pack=pro" className="lp-btn lp-btn-primary lp-btn-lg">Quiero el eBook ahora →</a>
                   <a href="#how" className="lp-btn lp-btn-secondary">Ver cómo funciona</a>
                 </div>
               </div>
@@ -174,34 +174,17 @@ export function LandingNew() {
             <p className="t-md reveal d2">Mientras otros automatizan con IA y facturan casi en piloto automático, la mayoría sigue perdiendo horas en tareas que no aportan valor real.</p>
           </div>
           <div className="prob-grid">
-            <div className="prob-card reveal d1">
-              <div className="prob-ico">⏳</div>
-              <div>
-                <h3>Las tareas repetitivas devoran tu tiempo</h3>
-                <p>Responder emails, hacer informes, buscar datos, formatear documentos... 3 a 5 horas al día que desaparecen sin generar valor real.</p>
+            {[
+              { ico: '⏳', title: 'Las tareas repetitivas devoran tu tiempo', desc: 'Responder emails, hacer informes, buscar datos, formatear documentos... 3 a 5 horas al día que desaparecen sin generar valor real.' },
+              { ico: '😰', title: 'Sientes que te estás quedando atrás', desc: 'La IA avanza rapidísimo y parece complicada. Sin una guía clara, es difícil saber por dónde empezar cuando no sabes programar.' },
+              { ico: '💸', title: 'Oportunidades de ingresos que se escapan', desc: 'Freelancers y emprendedores que dominan la IA cobran 3× más por el mismo trabajo. Tú todavía no eres uno de ellos.' },
+              { ico: '🤯', title: 'Demasiada información, poca claridad', desc: 'YouTube, Twitter, cursos de pago… contenido desperdigado por todas partes, sin un camino estructurado y práctico que seguir.' },
+            ].map((c, i) => (
+              <div key={i} className={`prob-card reveal d${i + 1}`}>
+                <div className="prob-ico">{c.ico}</div>
+                <div><h3>{c.title}</h3><p>{c.desc}</p></div>
               </div>
-            </div>
-            <div className="prob-card reveal d2">
-              <div className="prob-ico">😰</div>
-              <div>
-                <h3>Sientes que te estás quedando atrás</h3>
-                <p>La IA avanza rapidísimo y parece complicada. Sin una guía clara, es difícil saber por dónde empezar cuando no sabes programar.</p>
-              </div>
-            </div>
-            <div className="prob-card reveal d3">
-              <div className="prob-ico">💸</div>
-              <div>
-                <h3>Oportunidades de ingresos que se escapan</h3>
-                <p>Freelancers y emprendedores que dominan la IA cobran 3× más por el mismo trabajo. Tú todavía no eres uno de ellos.</p>
-              </div>
-            </div>
-            <div className="prob-card reveal d4">
-              <div className="prob-ico">🤯</div>
-              <div>
-                <h3>Demasiada información, poca claridad</h3>
-                <p>YouTube, Twitter, cursos de pago… contenido desperdigado por todas partes, sin un camino estructurado y práctico que seguir.</p>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
@@ -228,10 +211,7 @@ export function LandingNew() {
                       <polyline points="2,7 5,10 11,3" stroke="#00CC8F" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </div>
-                  <div>
-                    <h4>{item.title}</h4>
-                    <p>{item.desc}</p>
-                  </div>
+                  <div><h4>{item.title}</h4><p>{item.desc}</p></div>
                 </div>
               ))}
             </div>
@@ -332,8 +312,8 @@ export function LandingNew() {
           </div>
           <div className="how-steps">
             {[
-              { n: '1', title: 'Compra y accede', desc: 'Descarga instantánea tras la compra. Accede desde cualquier dispositivo — móvil, tablet u ordenador. Sin esperas.' },
-              { n: '2', title: 'Elige tu camino y copia los templates', desc: 'Automatización personal, profesional o ingresos. Elige tu ruta, copia los prompts y flujos preconfigurados — solo adáptalos a tu contexto.' },
+              { n: '1', title: 'Elige tu pack y compra', desc: 'Descarga instantánea tras la compra. Accede desde cualquier dispositivo — móvil, tablet u ordenador. Sin esperas.' },
+              { n: '2', title: 'Aplica los prompts y templates', desc: 'Copia los prompts y flujos preconfigurados de tu pack. Solo adáptalos a tu contexto — sin configuraciones técnicas.' },
               { n: '3', title: 'Automatiza, escala y gana', desc: 'Comprueba los resultados desde el primer día. Ahorra horas cada semana y empieza a generar tus primeros ingresos con IA.' },
             ].map((s, i) => (
               <div key={i} className={`how-step reveal d${i + 1}`}>
@@ -355,22 +335,23 @@ export function LandingNew() {
             <p className="t-md reveal d2" style={{ color: 'rgba(255,255,255,.5)' }}>Elige tu pack y descubre exactamente qué llevas.</p>
           </div>
           <div className="inc-tabs reveal d1">
-            {(['esencial', 'completo', 'pro'] as const).map((tab) => (
+            {(['starter', 'pro', 'elite'] as const).map((tab) => (
               <button
                 key={tab}
                 className={`inc-tab${activeTab === tab ? ' active' : ''}`}
                 onClick={() => setActiveTab(tab)}
               >
-                {tab === 'esencial' ? 'Esencial — 17€' : tab === 'completo' ? 'Completo — 27€ ⭐' : 'Pro — 57€'}
+                {tab === 'starter' ? 'Starter — 17€' : tab === 'pro' ? 'Pro — 37€ ⭐' : 'Élite — 97€'}
               </button>
             ))}
           </div>
           <div className="inc-panels">
-            <div className={`inc-panel${activeTab === 'esencial' ? ' active' : ''}`}>
+            {/* STARTER */}
+            <div className={`inc-panel${activeTab === 'starter' ? ' active' : ''}`}>
               {[
-                { ico: '📘', title: 'eBook completo (240 páginas)', desc: 'De lo básico a lo avanzado: herramientas, prompts, automatizaciones y monetización con IA' },
-                { ico: '🧩', title: '30 prompts esenciales', desc: 'Los prompts más utilizados para tareas cotidianas: emails, resúmenes, contenido y más' },
-                { ico: '🔄', title: 'Acceso vitalicio', desc: 'Descarga el eBook y accede para siempre desde tu cuenta. Sin suscripciones.' },
+                { ico: '📘', title: 'eBook base — AprendIA (200+ páginas)', desc: 'Fundamentos, herramientas clave, primeros pasos con IA. De cero a productivo en un fin de semana.' },
+                { ico: '🧩', title: '30 prompts esenciales', desc: 'Los prompts más utilizados para tareas cotidianas: emails, resúmenes, contenido y más.' },
+                { ico: '🔄', title: 'Acceso vitalicio', desc: 'Descarga el eBook y accede para siempre. Sin suscripciones ni costes ocultos.' },
                 { ico: '🛡️', title: 'Garantía de satisfacción', desc: 'Si el contenido no cumple lo prometido, te devolvemos el dinero. Sin preguntas.' },
               ].map((item, i) => (
                 <div key={i} className="inc-item">
@@ -379,28 +360,32 @@ export function LandingNew() {
                 </div>
               ))}
             </div>
-            <div className={`inc-panel${activeTab === 'completo' ? ' active' : ''}`}>
-              {[
-                { ico: '📘', title: 'eBook completo (240 páginas)', desc: 'De lo básico a lo avanzado: herramientas, prompts, automatizaciones y monetización con IA' },
-                { ico: '🧩', title: 'Biblioteca de 80+ prompts', desc: 'Templates listos para negocios, creación de contenido, atención al cliente y mucho más' },
-                { ico: '🔁', title: 'Guía de automatizaciones no-code', desc: 'Paso a paso para configurar flujos en Make, Zapier y n8n sin escribir código' },
-                { ico: '💼', title: 'Mapa de ingresos con IA', desc: '7 modelos de negocio detallados con ejemplos reales y cómo arrancar hoy mismo' },
-                { ico: '🔄', title: 'Actualizaciones vitalicias', desc: 'Nuevas herramientas, prompts y estrategias entregadas automáticamente. Pagas una vez.' },
-                { ico: '🛡️', title: 'Garantía de satisfacción', desc: 'Si el contenido no cumple lo prometido, te devolvemos el dinero. Sin preguntas.' },
-              ].map((item, i) => (
-                <div key={i} className="inc-item">
-                  <div className="inc-ico">{item.ico}</div>
-                  <div><h4>{item.title}</h4><p>{item.desc}</p></div>
-                </div>
-              ))}
-            </div>
+
+            {/* PRO */}
             <div className={`inc-panel${activeTab === 'pro' ? ' active' : ''}`}>
               {[
-                { ico: '📦', title: 'Todo lo del plan Completo', desc: 'eBook + 80+ prompts + guía no-code + mapa de ingresos + actualizaciones vitalicias' },
-                { ico: '👥', title: 'Comunidad privada', desc: 'Acceso al grupo exclusivo donde compartimos casos de uso, prompts y estrategias actualizadas' },
-                { ico: '📧', title: 'Email directo al autor', desc: 'Consulta tus dudas directamente. Respuesta garantizada en menos de 48h.' },
-                { ico: '🗂️', title: 'Templates de negocio listos', desc: 'Plantillas de propuestas, contratos, emails y procesos, listas para adaptar a tu sector' },
-                { ico: '⚡', title: 'Soporte prioritario', desc: 'Acceso a soporte dedicado para resolver cualquier duda de implementación' },
+                { ico: '📘', title: 'eBook base — AprendIA (200+ páginas)', desc: 'Fundamentos, herramientas clave y primeros pasos con IA incluidos.' },
+                { ico: '🤖', title: 'eBook — Tu Secretario IA', desc: 'Cómo montar un asistente personal que gestione emails, agenda, recordatorios y tareas repetitivas por ti.' },
+                { ico: '🚀', title: 'eBook — Negocio en 7 Días', desc: 'Cómo lanzar un negocio digital usando IA desde cero: idea, validación, producto y primeras ventas.' },
+                { ico: '🧩', title: 'Biblioteca de 80+ prompts', desc: 'Templates listos por categorías: negocios, contenido, atención al cliente, copywriting y más.' },
+                { ico: '💬', title: 'Comunidad de WhatsApp', desc: 'Grupo exclusivo con actualizaciones, nuevos prompts, casos reales y acceso directo a la comunidad.' },
+                { ico: '🛡️', title: 'Garantía de satisfacción', desc: 'Si el contenido no cumple lo prometido, te devolvemos el dinero. Sin preguntas.' },
+              ].map((item, i) => (
+                <div key={i} className="inc-item">
+                  <div className="inc-ico">{item.ico}</div>
+                  <div><h4>{item.title}</h4><p>{item.desc}</p></div>
+                </div>
+              ))}
+            </div>
+
+            {/* ÉLITE */}
+            <div className={`inc-panel${activeTab === 'elite' ? ' active' : ''}`}>
+              {[
+                { ico: '📦', title: 'Todo lo del pack Pro', desc: 'eBook base + Tu Secretario IA + Negocio en 7 Días + 80+ prompts + comunidad WhatsApp.' },
+                { ico: '👑', title: 'Comunidad privada exclusiva', desc: 'Acceso a un grupo más pequeño y selecto (Discord o Telegram) donde se comparten estrategias avanzadas.' },
+                { ico: '📧', title: 'Mentoría directa por email', desc: 'Consulta tus dudas directamente al autor. Respuesta garantizada en menos de 48h.' },
+                { ico: '🗂️', title: 'Templates de negocio listos', desc: 'Plantillas de propuestas, contratos, emails de ventas y procesos — listas para adaptar a tu sector.' },
+                { ico: '⚡', title: 'Actualizaciones priority', desc: 'Eres el primero en recibir nuevo contenido, herramientas y estrategias cuando se publican.' },
                 { ico: '🛡️', title: 'Garantía de satisfacción', desc: 'Si el contenido no cumple lo prometido, te devolvemos el dinero. Sin preguntas.' },
               ].map((item, i) => (
                 <div key={i} className="inc-item">
@@ -422,72 +407,71 @@ export function LandingNew() {
             <p className="t-md reveal d2">Sin suscripciones. Sin costes ocultos. Pago único, acceso vitalicio.</p>
           </div>
           <div className="price-cards">
-            {/* ESENCIAL */}
+            {/* STARTER */}
             <div className="price-card reveal d1">
-              <div className="price-name">Esencial</div>
-              <p className="price-desc">Para quien quiere empezar a usar IA en su día a día</p>
+              <div className="price-name">Starter</div>
+              <p className="price-desc">Para quien quiere empezar a usar IA desde cero</p>
               <div className="price-row">
                 <span className="p-amount">17</span><span className="p-currency">€</span>
               </div>
               <div className="p-before">antes 47€</div>
               <hr className="price-hr" />
               <div className="price-feats">
-                <div className="pf"><span className="pf-ok">✓</span> eBook completo (240 págs)</div>
+                <div className="pf"><span className="pf-ok">✓</span> eBook base (200+ págs)</div>
                 <div className="pf"><span className="pf-ok">✓</span> 30 prompts esenciales</div>
                 <div className="pf"><span className="pf-ok">✓</span> Acceso vitalicio</div>
                 <div className="pf"><span className="pf-ok">✓</span> Garantía de satisfacción</div>
+                <div className="pf pf-off"><span>✗</span> eBooks especializados</div>
                 <div className="pf pf-off"><span>✗</span> Biblioteca 80+ prompts</div>
-                <div className="pf pf-off"><span>✗</span> Guía automatizaciones no-code</div>
-                <div className="pf pf-off"><span>✗</span> Mapa de ingresos con IA</div>
+                <div className="pf pf-off"><span>✗</span> Comunidad WhatsApp</div>
               </div>
               <div className="price-cta">
-                <a href="/api/checkout?pack=esencial" className="lp-btn lp-btn-secondary" style={{ width: '100%', justifyContent: 'center' }}>Empezar ahora</a>
+                <a href="/api/checkout?pack=starter" className="lp-btn lp-btn-secondary" style={{ width: '100%', justifyContent: 'center' }}>Empezar ahora</a>
               </div>
             </div>
 
-            {/* COMPLETO (FEATURED) */}
+            {/* PRO (FEATURED) */}
             <div className="price-card feat reveal d2">
               <div className="price-badge">⭐ Más popular</div>
-              <div className="price-name">Completo</div>
-              <p className="price-desc">Para quien quiere automatizar y generar ingresos</p>
+              <div className="price-name">Pro</div>
+              <p className="price-desc">Para quien quiere resultados concretos y rápidos</p>
               <div className="price-row">
-                <span className="p-amount" style={{ color: 'var(--primary)' }}>27</span><span className="p-currency">€</span>
+                <span className="p-amount" style={{ color: 'var(--primary)' }}>37</span><span className="p-currency">€</span>
               </div>
               <div className="p-before">antes 97€</div>
               <hr className="price-hr" />
               <div className="price-feats">
-                <div className="pf"><span className="pf-ok">✓</span> eBook completo (240 págs)</div>
+                <div className="pf"><span className="pf-ok">✓</span> eBook base (200+ págs)</div>
+                <div className="pf"><span className="pf-ok">✓</span> eBook Tu Secretario IA</div>
+                <div className="pf"><span className="pf-ok">✓</span> eBook Negocio en 7 Días</div>
                 <div className="pf"><span className="pf-ok">✓</span> Biblioteca 80+ prompts</div>
-                <div className="pf"><span className="pf-ok">✓</span> Guía automatizaciones no-code</div>
-                <div className="pf"><span className="pf-ok">✓</span> Mapa de ingresos con IA</div>
-                <div className="pf"><span className="pf-ok">✓</span> Actualizaciones vitalicias</div>
+                <div className="pf"><span className="pf-ok">✓</span> Comunidad WhatsApp</div>
                 <div className="pf"><span className="pf-ok">✓</span> Garantía de satisfacción</div>
-                <div className="pf pf-off"><span>✗</span> Comunidad privada</div>
               </div>
               <div className="price-cta">
-                <a href="/api/checkout?pack=completo" className="lp-btn lp-btn-primary lp-btn-lg" style={{ width: '100%', justifyContent: 'center' }}>Quiero el pack completo →</a>
+                <a href="/api/checkout?pack=pro" className="lp-btn lp-btn-primary lp-btn-lg" style={{ width: '100%', justifyContent: 'center' }}>Quiero el Pro →</a>
               </div>
             </div>
 
-            {/* PRO */}
+            {/* ÉLITE */}
             <div className="price-card reveal d3">
-              <div className="price-name">Pro</div>
-              <p className="price-desc">Para quien quiere resultados acelerados y acompañamiento</p>
+              <div className="price-name">Élite</div>
+              <p className="price-desc">Para quien va en serio y quiere el nivel máximo</p>
               <div className="price-row">
-                <span className="p-amount">57</span><span className="p-currency">€</span>
+                <span className="p-amount">97</span><span className="p-currency">€</span>
               </div>
-              <div className="p-before">antes 197€</div>
+              <div className="p-before">antes 297€</div>
               <hr className="price-hr" />
               <div className="price-feats">
-                <div className="pf"><span className="pf-ok">✓</span> Todo lo del plan Completo</div>
-                <div className="pf"><span className="pf-ok">✓</span> Comunidad privada</div>
-                <div className="pf"><span className="pf-ok">✓</span> Email directo al autor</div>
+                <div className="pf"><span className="pf-ok">✓</span> Todo lo del pack Pro</div>
+                <div className="pf"><span className="pf-ok">✓</span> Comunidad privada exclusiva</div>
+                <div className="pf"><span className="pf-ok">✓</span> Mentoría directa por email</div>
                 <div className="pf"><span className="pf-ok">✓</span> Templates de negocio listos</div>
-                <div className="pf"><span className="pf-ok">✓</span> Soporte prioritario</div>
+                <div className="pf"><span className="pf-ok">✓</span> Actualizaciones priority</div>
                 <div className="pf"><span className="pf-ok">✓</span> Garantía de satisfacción</div>
               </div>
               <div className="price-cta">
-                <a href="/api/checkout?pack=pro" className="lp-btn lp-btn-secondary" style={{ width: '100%', justifyContent: 'center' }}>Quiero el Pro</a>
+                <a href="/api/checkout?pack=elite" className="lp-btn lp-btn-secondary" style={{ width: '100%', justifyContent: 'center' }}>Quiero el Élite</a>
               </div>
             </div>
           </div>
@@ -509,15 +493,15 @@ export function LandingNew() {
           </div>
           <div className="testi-grid">
             {[
-              { stars: '★★★★★', txt: 'Automaticé la atención al cliente de mi tienda online con IA y reduje 3 horas de trabajo al día. En 2 semanas ya había recuperado el precio del eBook', av: 'M', color: '#6366F1', name: 'María Fernández', role: 'Emprendedora Digital, Madrid', res: '+900€/mes' },
-              { stars: '★★★★★', txt: 'Soy diseñador y jamás supe programar. Con AprendIA aprendí a automatizar presupuestos, contratos y mi portfolio. Ahora cobro el doble por los mismos proyectos', av: 'J', color: '#EC4899', name: 'Javier Morales', role: 'Diseñador Freelance, Barcelona', res: '2× más clientes' },
-              { stars: '★★★★★', txt: 'El capítulo de generación de ingresos me cambió la vida. Lancé un servicio de copywriting con IA y facturé 1.400€ en el primer mes. Lo recomiendo sin dudar', av: 'A', color: '#10B981', name: 'Ana Belén Ruiz', role: 'Copywriter, Valencia', res: '1.400€ en 30 días' },
-              { stars: '★★★★★', txt: 'Trabajo en RRHH y automaticé el cribado de CVs, el onboarding y los informes mensuales. Mi jefe flipó. La promoción llegó poco después', av: 'R', color: '#F59E0B', name: 'Roberto Sánchez', role: 'Analista de RRHH, Sevilla', res: 'Ascendido' },
-              { stars: '★★★★★', txt: 'Pensé que sería otro eBook superficial. Me equivoqué de lleno. El contenido es denso, práctico y directo. Ya he implementado 5 automatizaciones en mi empresa', av: 'F', color: '#3B82F6', name: 'Felipe Castro', role: 'Fundador de Startup, Bilbao', res: '5 automatizaciones activas' },
-              { stars: '★★★★★', txt: 'Madre soltera, sin tiempo ni dinero para cursos caros. AprendIA me enseñó a crear un canal de contenido monetizado con IA. Hoy es mi fuente de ingresos principal', av: 'L', color: '#8B5CF6', name: 'Laura González', role: 'Creadora de Contenido, Málaga', res: 'Ingreso principal' },
+              { txt: 'Automaticé la atención al cliente de mi tienda online con IA y reduje 3 horas de trabajo al día. En 2 semanas ya había recuperado el precio del eBook', av: 'M', color: '#6366F1', name: 'María Fernández', role: 'Emprendedora Digital, Madrid', res: '+900€/mes' },
+              { txt: 'Soy diseñador y jamás supe programar. Con AprendIA aprendí a automatizar presupuestos, contratos y mi portfolio. Ahora cobro el doble por los mismos proyectos', av: 'J', color: '#EC4899', name: 'Javier Morales', role: 'Diseñador Freelance, Barcelona', res: '2× más clientes' },
+              { txt: 'El eBook de Negocio en 7 Días me cambió la vida. Lancé un servicio de copywriting con IA y facturé 1.400€ en el primer mes. Lo recomiendo sin dudar', av: 'A', color: '#10B981', name: 'Ana Belén Ruiz', role: 'Copywriter, Valencia', res: '1.400€ en 30 días' },
+              { txt: 'Trabajo en RRHH y automaticé el cribado de CVs, el onboarding y los informes mensuales con el pack Pro. Mi jefe flipó. La promoción llegó poco después', av: 'R', color: '#F59E0B', name: 'Roberto Sánchez', role: 'Analista de RRHH, Sevilla', res: 'Ascendido' },
+              { txt: 'Pensé que sería otro eBook superficial. Me equivoqué de lleno. El contenido es denso, práctico y directo. Ya he implementado 5 automatizaciones en mi empresa', av: 'F', color: '#3B82F6', name: 'Felipe Castro', role: 'Fundador de Startup, Bilbao', res: '5 automatizaciones activas' },
+              { txt: 'Madre soltera, sin tiempo ni dinero para cursos caros. Con el pack Élite y la mentoría directa lancé un canal de contenido monetizado. Hoy es mi ingreso principal', av: 'L', color: '#8B5CF6', name: 'Laura González', role: 'Creadora de Contenido, Málaga', res: 'Ingreso principal' },
             ].map((t, i) => (
               <div key={i} className={`testi-card reveal d${(i % 3) + 1}`}>
-                <div className="testi-stars">{t.stars}</div>
+                <div className="testi-stars">★★★★★</div>
                 <p className="testi-txt">{t.txt}</p>
                 <div className="testi-author">
                   <div className="testi-av" style={{ background: t.color }}>{t.av}</div>
@@ -574,7 +558,7 @@ export function LandingNew() {
             El siguiente paso es tuyo — sin riesgos, con garantía de satisfacción.
           </p>
           <div className="reveal d3">
-            <a href="/api/checkout?pack=completo" className="lp-btn lp-btn-primary lp-btn-xl">Quiero el AprendIA ahora →</a>
+            <a href="/api/checkout?pack=pro" className="lp-btn lp-btn-primary lp-btn-xl">Quiero el AprendIA ahora →</a>
           </div>
           <div className="cta-g reveal d4">
             🛡️ Si el contenido no cumple lo prometido, te devolvemos el dinero

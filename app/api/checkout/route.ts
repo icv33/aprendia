@@ -2,20 +2,20 @@ import { NextRequest, NextResponse } from 'next/server'
 import { stripe } from '@/lib/stripe'
 
 const PACKS = {
-  esencial: {
-    name: 'AprendIA Esencial',
-    description: 'eBook completo (240 págs) + 30 prompts esenciales + acceso vitalicio',
+  starter: {
+    name: 'AprendIA Starter',
+    description: 'eBook base + 30 prompts esenciales + acceso vitalicio + garantía',
     amount: 1700,
-  },
-  completo: {
-    name: 'AprendIA Completo',
-    description: 'eBook + 80+ prompts + guía no-code + mapa de ingresos + actualizaciones vitalicias',
-    amount: 2700,
   },
   pro: {
     name: 'AprendIA Pro',
-    description: 'Todo lo del Completo + comunidad privada + email directo + templates + soporte prioritario',
-    amount: 5700,
+    description: 'Todo lo del Starter + 2 eBooks especializados + 80+ prompts + comunidad WhatsApp',
+    amount: 3700,
+  },
+  elite: {
+    name: 'AprendIA Élite',
+    description: 'Todo lo del Pro + comunidad privada + mentoría directa + templates de negocio',
+    amount: 9700,
   },
 } as const
 
@@ -23,7 +23,7 @@ export async function GET(req: NextRequest) {
   const pack = req.nextUrl.searchParams.get('pack') as keyof typeof PACKS | null
 
   if (!pack || !(pack in PACKS)) {
-    return NextResponse.json({ error: 'Pack inválido. Usa: esencial, completo o pro' }, { status: 400 })
+    return NextResponse.json({ error: 'Pack inválido. Usa: starter, pro o elite' }, { status: 400 })
   }
 
   const { name, description, amount } = PACKS[pack]

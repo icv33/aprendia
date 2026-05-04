@@ -6,9 +6,9 @@ import { ShoppingBag, CheckCircle, Clock } from 'lucide-react'
 export const metadata = { title: 'Ventas | AprendIA' }
 
 function packFromAmount(amount: number) {
-  if (amount >= 50) return { label: 'Pro', color: '#8B5CF6', bg: 'rgba(139,92,246,.1)' }
-  if (amount >= 25) return { label: 'Completo', color: '#3B82F6', bg: 'rgba(59,130,246,.1)' }
-  return { label: 'Esencial', color: '#007A40', bg: 'rgba(0,255,178,.12)' }
+  if (amount >= 90) return { label: 'Élite', color: '#8B5CF6', bg: 'rgba(139,92,246,.1)' }
+  if (amount >= 30) return { label: 'Pro', color: '#3B82F6', bg: 'rgba(59,130,246,.1)' }
+  return { label: 'Starter', color: '#007A40', bg: 'rgba(0,255,178,.12)' }
 }
 
 export default async function VentasPage() {

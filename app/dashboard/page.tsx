@@ -7,9 +7,9 @@ import Link from 'next/link'
 export const metadata = { title: 'Resumen | AprendIA' }
 
 function packFromAmount(amount: number) {
-  if (amount >= 50) return 'Pro'
-  if (amount >= 25) return 'Completo'
-  return 'Esencial'
+  if (amount >= 90) return 'Élite'
+  if (amount >= 30) return 'Pro'
+  return 'Starter'
 }
 
 export default async function DashboardPage() {
@@ -24,8 +24,8 @@ export default async function DashboardPage() {
   const revenue = paid.reduce((sum, o) => sum + Number(o.amount), 0)
   const pendingPdf = paid.filter(o => !o.pdf_sent).length
 
-  const packCounts = { Esencial: 0, Completo: 0, Pro: 0 }
-  paid.forEach(o => { packCounts[packFromAmount(Number(o.amount))]++ })
+  const packCounts = { Starter: 0, Pro: 0, 'Élite': 0 }
+  paid.forEach(o => { packCounts[packFromAmount(Number(o.amount)) as keyof typeof packCounts]++ })
 
   const today = new Date().toDateString()
   const todaySales = paid.filter(o => new Date(o.created_at).toDateString() === today).length
@@ -62,11 +62,11 @@ export default async function DashboardPage() {
         <h2 style={{ fontFamily: "'Syne', sans-serif", fontSize: 15, fontWeight: 700, color: '#0F172A', marginBottom: 20 }}>Ventas por pack</h2>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
           {([
-            { pack: 'Pro', price: '57€', color: '#8B5CF6', bg: 'rgba(139,92,246,.1)' },
-            { pack: 'Completo', price: '27€', color: '#3B82F6', bg: 'rgba(59,130,246,.1)' },
-            { pack: 'Esencial', price: '17€', color: '#007A40', bg: 'rgba(0,255,178,.12)' },
+            { pack: 'Élite', price: '97€', color: '#8B5CF6', bg: 'rgba(139,92,246,.1)' },
+            { pack: 'Pro', price: '37€', color: '#3B82F6', bg: 'rgba(59,130,246,.1)' },
+            { pack: 'Starter', price: '17€', color: '#007A40', bg: 'rgba(0,255,178,.12)' },
           ] as const).map(({ pack, price, color, bg }) => {
-            const count = packCounts[pack]
+            const count = packCounts[pack as keyof typeof packCounts]
             const pct = paid.length > 0 ? (count / paid.length) * 100 : 0
             return (
               <div key={pack}>
