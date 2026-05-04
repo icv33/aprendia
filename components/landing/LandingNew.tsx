@@ -68,7 +68,7 @@ export function LandingNew() {
           <li><a href="#benefits">Beneficios</a></li>
           <li><a href="#pricing">Precios</a></li>
           <li><a href="#faq">FAQ</a></li>
-          <li><a href="#pricing" className="lp-nav-cta">Quiero el eBook →</a></li>
+          <li><a href="#pricing" className="lp-nav-cta">Quiero aprender →</a></li>
         </ul>
       </nav>
 
@@ -97,7 +97,7 @@ export function LandingNew() {
               </div>
               <div className="reveal d3">
                 <div className="hero-actions">
-                  <a href="/api/checkout?pack=pro" className="lp-btn lp-btn-primary lp-btn-lg">Quiero el eBook ahora →</a>
+                  <a href="/api/checkout?pack=pro" className="lp-btn lp-btn-primary lp-btn-lg">Quiero aprender ahora →</a>
                   <a href="#how" className="lp-btn lp-btn-secondary">Ver cómo funciona</a>
                 </div>
               </div>
@@ -426,7 +426,7 @@ export function LandingNew() {
                 <div className="pf pf-off"><span>✗</span> Comunidad WhatsApp</div>
               </div>
               <div className="price-cta">
-                <a href="/api/checkout?pack=starter" className="lp-btn lp-btn-secondary" style={{ width: '100%', justifyContent: 'center' }}>Empezar ahora</a>
+                <a href="/api/checkout?pack=starter" className="lp-btn lp-btn-secondary" style={{ width: '100%', justifyContent: 'center' }}>Quiero el Starter →</a>
               </div>
             </div>
 
@@ -558,7 +558,7 @@ export function LandingNew() {
             El siguiente paso es tuyo — sin riesgos, con garantía de satisfacción.
           </p>
           <div className="reveal d3">
-            <a href="/api/checkout?pack=pro" className="lp-btn lp-btn-primary lp-btn-xl">Quiero el AprendIA ahora →</a>
+            <a href="/api/checkout?pack=pro" className="lp-btn lp-btn-primary lp-btn-xl">Quiero aprender con AprendIA →</a>
           </div>
           <div className="cta-g reveal d4">
             🛡️ Si el contenido no cumple lo prometido, te devolvemos el dinero
@@ -588,7 +588,7 @@ export function LandingNew() {
 
       {/* ── STICKY CTA (solo mobile) ── */}
       <div className="sticky-cta" id="stickyCta">
-        <a href="#pricing">⚡ Quiero el eBook — desde 17€ →</a>
+        <a href="#pricing">⚡ Quiero aprender — desde 17€ →</a>
         <div className="sticky-cta-sub">🛡️ Garantía de satisfacción · Acceso inmediato</div>
       </div>
     </div>
