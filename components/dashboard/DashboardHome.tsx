@@ -222,7 +222,7 @@ function KpiCard({ icon, iconBg, label, value, trend }: {
         )}
       </div>
       <div>
-        <div style={{ fontFamily: "'Syne', sans-serif", fontSize: '1.85rem', fontWeight: 800, lineHeight: 1, letterSpacing: '-.02em', color: '#0F172A' }}>{value}</div>
+        <div style={{ fontFamily: "var(--font-space-grotesk, 'Space Grotesk', sans-serif)", fontSize: '1.85rem', fontWeight: 700, lineHeight: 1, letterSpacing: '-.02em', color: '#0F172A' }}>{value}</div>
         <div style={{ fontSize: '.78rem', color: '#64748B', marginTop: 4 }}>{label}</div>
       </div>
     </div>
@@ -364,14 +364,14 @@ export function DashboardHome({ orders, pendingContent }: Props) {
 
             <div style={{ paddingTop: 12, borderTop: '1px solid #F1F5F9', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div style={{ fontSize: '.78rem', color: '#64748B' }}>Total facturado</div>
-              <div style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: '1.1rem', color: '#0F172A' }}>{fmt(packTotal)}</div>
+              <div style={{ fontFamily: "var(--font-space-grotesk, 'Space Grotesk', sans-serif)", fontWeight: 700, fontSize: '1.1rem', color: '#0F172A' }}>{fmt(packTotal)}</div>
             </div>
 
             {/* Conversion mini */}
             <div style={{ background: 'linear-gradient(145deg, #0F172A, #1E293B)', borderRadius: 14, padding: '16px 18px', display: 'flex', flexDirection: 'column', gap: 8, position: 'relative', overflow: 'hidden' }}>
               <div style={{ position: 'absolute', top: -40, right: -40, width: 120, height: 120, borderRadius: '50%', background: 'radial-gradient(circle, rgba(0,255,178,.12) 0%, transparent 70%)' }} />
               <div style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: '.85rem', color: 'rgba(255,255,255,.6)' }}>Pack más vendido</div>
-              <div style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: '1.4rem', color: '#fff', letterSpacing: '-.01em' }}>
+              <div style={{ fontFamily: "var(--font-space-grotesk, 'Space Grotesk', sans-serif)", fontWeight: 700, fontSize: '1.4rem', color: '#fff', letterSpacing: '-.01em' }}>
                 {data.kpis.ventas === 0 ? '—' : (
                   (() => {
                     const max = Math.max(data.packs.starter, data.packs.pro, data.packs.elite)
