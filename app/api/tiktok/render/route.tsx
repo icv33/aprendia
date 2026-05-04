@@ -11,15 +11,21 @@ const TYPE_COLORS: Record<string, string> = {
 
 const FALLBACK_BG = 'linear-gradient(160deg, #080D1A 0%, #0C1525 60%, #080D1A 100%)'
 
-async function fetchGoogleFont(weight: number, italic: boolean): Promise<ArrayBuffer> {
-  const ital = italic ? 1 : 0
-  const css = await fetch(
-    `https://fonts.googleapis.com/css2?family=Poppins:ital,wght@${ital},${weight}`,
-    { headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36' } }
-  ).then(r => r.text())
-  const url = css.match(/src: url\((.+?)\) format\('woff2'\)/)?.[1]
-  if (!url) throw new Error(`Poppins ${weight} ${italic} not found`)
-  return fetch(url).then(r => r.arrayBuffer())
+async function fetchGoogleFont(weight: number, italic: boolean): Promise<ArrayBuffer | null> {
+  try {
+    const ital = italic ? 1 : 0
+    const css = await fetch(
+      `https://fonts.googleapis.com/css2?family=Poppins:ital,wght@${ital},${weight}&display=swap`,
+      { headers: { 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36' } }
+    ).then(r => r.text())
+    // grab last woff2 url (latin subset)
+    const matches = [...css.matchAll(/url\((.+?)\) format\('woff2'\)/g)]
+    const url = matches[matches.length - 1]?.[1]
+    if (!url) return null
+    return await fetch(url).then(r => r.arrayBuffer())
+  } catch {
+    return null
+  }
 }
 
 function HighlightText({
@@ -88,6 +94,11 @@ export async function GET(req: Request) {
     fetchGoogleFont(700, true),
     fetchGoogleFont(800, false),
   ])
+
+  const fonts: { name: string; data: ArrayBuffer; weight: number; style: 'normal' | 'italic' }[] = []
+  if (font700)  fonts.push({ name: 'Poppins', data: font700,  weight: 700, style: 'normal' })
+  if (font700i) fonts.push({ name: 'Poppins', data: font700i, weight: 700, style: 'italic' })
+  if (font800)  fonts.push({ name: 'Poppins', data: font800,  weight: 800, style: 'normal' })
 
   let element: React.ReactElement
 
@@ -194,11 +205,7 @@ export async function GET(req: Request) {
   return new ImageResponse(element, {
     width: 1080,
     height: 1080,
-    fonts: [
-      { name: 'Poppins', data: font700,  weight: 700, style: 'normal' },
-      { name: 'Poppins', data: font700i, weight: 700, style: 'italic' },
-      { name: 'Poppins', data: font800,  weight: 800, style: 'normal' },
-    ],
+    fonts: fonts.length > 0 ? fonts : undefined,
     headers: forDownload
       ? { 'Content-Disposition': `attachment; filename="aprendia-${slideType}-${num}.png"` }
       : {},
