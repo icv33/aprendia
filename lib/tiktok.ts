@@ -32,13 +32,14 @@ Generas contenido educativo sobre IA que sea impactante, directo y que engancha 
 Siempre respondes SOLO con JSON válido, sin markdown ni explicaciones adicionales.
 
 REGLAS DE FORMATO DE TEXTO:
-- Marca 1-2 palabras o frases clave por campo con <<dobles ángulos>>. Máximo 3 palabras seguidas.
-- Ejemplo: "El <<error fatal>> que cometes con ChatGPT" o "<<Ahorra 2 horas>> al día con este truco"
-- Los textos de contenido deben ser MUY cortos: máximo 15 palabras. Una sola idea por slide.
-- Sin párrafos. Sin explicaciones largas. Directo al grano.`
+- En CADA campo de texto, marca EXACTAMENTE 1 palabra o frase corta (máximo 2 palabras) con <<dobles ángulos>>.
+- Solo la palabra MÁS importante del texto. No más de una marca por campo.
+- Ejemplo correcto: "El <<error fatal>> que cometes con ChatGPT"
+- Ejemplo incorrecto: "El <<error fatal>> que <<todos cometen>> con ChatGPT" (demasiadas marcas)
+- Los textos de contenido: máximo 15 palabras. Una sola idea por slide. Sin párrafos.`
 
 const HIGHLIGHT_RULE = `
-Recuerda: marca 1-2 palabras clave con <<dobles ángulos>> en titulo_portada, en cada titulo y en cada contenido.`
+Recuerda: EXACTAMENTE 1 marca <<palabra>> por campo. Solo la palabra más impactante.`
 
 const PROMPTS: Record<TikTokPostType, string> = {
   truco: `Genera un carrusel de TikTok sobre UN truco específico y útil de ChatGPT o Claude.
