@@ -115,28 +115,32 @@ function buildCaption(slides: TikTokSlide[]): string {
 }
 
 async function callPublishAPI(accessToken: string, photoUrls: string[], caption: string): Promise<string> {
+  const body = {
+    post_info: {
+      title: caption,
+      privacy_level: 'SELF_ONLY',
+    },
+    source_info: {
+      source: 'PULL_FROM_URL',
+      photo_images: photoUrls,
+      photo_cover_index: 0,
+    },
+    media_type: 'PHOTO',
+    post_mode: 'DIRECT_POST',
+  }
+  console.log('[TikTok] request body:', JSON.stringify(body))
+
   const res = await fetch('https://open.tiktokapis.com/v2/post/publish/content/init/', {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${accessToken}`,
       'Content-Type': 'application/json; charset=UTF-8',
     },
-    body: JSON.stringify({
-      post_info: {
-        title: caption,
-        privacy_level: 'SELF_ONLY',
-      },
-      source_info: {
-        source: 'PULL_FROM_URL',
-        photo_images: photoUrls,
-        photo_cover_index: 0,
-      },
-      media_type: 'PHOTO',
-      post_mode: 'DIRECT_POST',
-    }),
+    body: JSON.stringify(body),
   })
   const data = await res.json()
-  if (data.error?.code !== 'ok') throw new Error(data.error?.message ?? 'TikTok API error')
+  console.log('[TikTok] response:', JSON.stringify(data))
+  if (data.error?.code !== 'ok') throw new Error(`TikTok error ${data.error?.code}: ${data.error?.message} — ${JSON.stringify(data)}`)
   return data.data.publish_id as string
 }
 
