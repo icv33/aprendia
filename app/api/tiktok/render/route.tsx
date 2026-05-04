@@ -46,30 +46,27 @@ export async function GET(req: Request) {
         )}
 
         {/* Dark overlay */}
-        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'linear-gradient(to bottom, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.5) 50%, rgba(0,0,0,0.82) 100%)', display: 'flex' }} />
+        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.45) 40%, rgba(0,0,0,0.88) 100%)', display: 'flex' }} />
 
-        {/* Tag top-left */}
-        <div style={{ position: 'absolute', top: 56, left: 60, display: 'flex', alignItems: 'center', gap: 10, background: `${accent}28`, border: `1.5px solid ${accent}55`, borderRadius: 100, padding: '8px 20px' }}>
-          <div style={{ width: 9, height: 9, borderRadius: '50%', background: accent, display: 'flex' }} />
-          <span style={{ color: accent, fontSize: 20, fontWeight: 700, letterSpacing: 2 }}>{TYPE_LABELS[postType]}</span>
-        </div>
+        {/* Accent line — top */}
+        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 5, background: accent, display: 'flex' }} />
 
-        {/* Title + subtitle - bottom left */}
-        <div style={{ position: 'absolute', bottom: 100, left: 60, right: 60, display: 'flex', flexDirection: 'column', gap: 20 }}>
-          <div style={{ fontSize: titulo.length > 25 ? 78 : 92, fontWeight: 900, color: '#ffffff', lineHeight: 1.05, letterSpacing: -2 }}>
+        {/* Title + subtitle */}
+        <div style={{ position: 'absolute', bottom: 160, left: 64, right: 64, display: 'flex', flexDirection: 'column', gap: 22 }}>
+          <div style={{ fontSize: titulo.length > 25 ? 80 : 96, fontWeight: 900, color: '#ffffff', lineHeight: 1.0, letterSpacing: -3 }}>
             {titulo}
           </div>
           {subtitulo ? (
-            <div style={{ fontSize: 32, color: 'rgba(255,255,255,0.65)', fontWeight: 400, lineHeight: 1.4, display: 'flex' }}>
+            <div style={{ fontSize: 34, color: 'rgba(255,255,255,0.6)', fontWeight: 400, lineHeight: 1.4, display: 'flex' }}>
               {subtitulo}
             </div>
           ) : null}
         </div>
 
-        {/* Bottom bar */}
-        <div style={{ position: 'absolute', bottom: 44, left: 60, right: 60, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div style={{ fontSize: 24, fontWeight: 700, color: 'rgba(255,255,255,0.5)', display: 'flex' }}>Desliza →</div>
-          <div style={{ fontSize: 26, fontWeight: 700, color: 'rgba(255,255,255,0.55)', display: 'flex' }}>@aprendia.ia</div>
+        {/* Bottom — brand only */}
+        <div style={{ position: 'absolute', bottom: 52, left: 64, display: 'flex', alignItems: 'center', gap: 10 }}>
+          <div style={{ width: 6, height: 6, borderRadius: '50%', background: accent, display: 'flex' }} />
+          <span style={{ fontSize: 22, fontWeight: 700, color: 'rgba(255,255,255,0.4)', letterSpacing: 1 }}>aprendia.store</span>
         </div>
       </div>
     )
@@ -87,24 +84,23 @@ export async function GET(req: Request) {
         {/* Gradient overlay — heavier at bottom */}
         <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'linear-gradient(to bottom, rgba(0,0,0,0.08) 0%, rgba(0,0,0,0.4) 45%, rgba(0,0,0,0.88) 100%)', display: 'flex' }} />
 
-        {/* Number — top left, large */}
-        <div style={{ position: 'absolute', top: 52, left: 56, display: 'flex' }}>
-          <span style={{ fontSize: 120, fontWeight: 900, color: '#ffffff', lineHeight: 1, opacity: 0.92 }}>{num}.</span>
+        {/* Accent line — top */}
+        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 5, background: accent, display: 'flex' }} />
+
+        {/* Number — top left */}
+        <div style={{ position: 'absolute', top: 48, left: 56, display: 'flex', alignItems: 'baseline', gap: 4 }}>
+          <span style={{ fontSize: 110, fontWeight: 900, color: '#ffffff', lineHeight: 1, opacity: 0.95 }}>{num}</span>
+          <span style={{ fontSize: 60, fontWeight: 900, color: accent, lineHeight: 1 }}>.</span>
         </div>
 
-        {/* Content — bottom */}
-        <div style={{ position: 'absolute', bottom: 90, left: 60, right: 60, display: 'flex', flexDirection: 'column', gap: 18 }}>
-          <div style={{ fontSize: titulo.length > 22 ? 58 : 70, fontWeight: 800, color: '#ffffff', lineHeight: 1.1 }}>
+        {/* Content — positioned higher */}
+        <div style={{ position: 'absolute', bottom: 130, left: 64, right: 64, display: 'flex', flexDirection: 'column', gap: 20 }}>
+          <div style={{ fontSize: titulo.length > 22 ? 60 : 72, fontWeight: 800, color: '#ffffff', lineHeight: 1.1 }}>
             {titulo}
           </div>
-          <div style={{ fontSize: 34, color: 'rgba(255,255,255,0.78)', lineHeight: 1.55, fontWeight: 400, display: 'flex' }}>
+          <div style={{ fontSize: 36, color: 'rgba(255,255,255,0.72)', lineHeight: 1.5, fontWeight: 400, display: 'flex' }}>
             {contenido}
           </div>
-        </div>
-
-        {/* Handle bottom-right */}
-        <div style={{ position: 'absolute', bottom: 44, right: 60, display: 'flex' }}>
-          <span style={{ fontSize: 24, fontWeight: 600, color: 'rgba(255,255,255,0.45)' }}>@aprendia.ia</span>
         </div>
       </div>
     )
