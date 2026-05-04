@@ -127,14 +127,31 @@ Devuelve exactamente este JSON (sin markdown, solo el objeto):
 IMPORTANTE: exactamente 5 slides. Tono informal (tuteo). Sin emojis en los textos.${HIGHLIGHT_RULE}`,
 }
 
-export async function generateTikTokSlides(type: TikTokPostType): Promise<TikTokSlide[]> {
+function slidesToExample(slides: TikTokSlide[]): string {
+  const cover   = slides.find(s => s.type === 'cover')   as Extract<TikTokSlide, { type: 'cover' }>   | undefined
+  const content = slides.filter(s => s.type === 'content') as Extract<TikTokSlide, { type: 'content' }>[]
+  const cta     = slides.find(s => s.type === 'cta')     as Extract<TikTokSlide, { type: 'cta' }>     | undefined
+  return JSON.stringify({
+    titulo_portada:    cover?.titulo ?? '',
+    subtitulo_portada: cover?.subtitulo ?? '',
+    slides: content.map(s => ({ titulo: s.titulo, contenido: s.contenido })),
+    cta: cta?.cta ?? '',
+  })
+}
+
+export async function generateTikTokSlides(type: TikTokPostType, likedExamples: TikTokSlide[][] = []): Promise<TikTokSlide[]> {
   const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY! })
+
+  const examplesBlock = likedExamples.length > 0
+    ? `\n\nEJEMPLOS DE POSTS QUE HAN FUNCIONADO BIEN (úsalos como referencia de estilo y calidad, no copies el contenido):\n` +
+      likedExamples.map((s, i) => `EJEMPLO ${i + 1}:\n${slidesToExample(s)}`).join('\n\n') + '\n'
+    : ''
 
   const message = await client.messages.create({
     model: 'claude-sonnet-4-6',
     max_tokens: 1200,
     system: SYSTEM_PROMPT,
-    messages: [{ role: 'user', content: PROMPTS[type] }],
+    messages: [{ role: 'user', content: PROMPTS[type] + examplesBlock }],
   })
 
   const text = message.content[0].type === 'text' ? message.content[0].text : ''

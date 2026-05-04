@@ -5,8 +5,9 @@ import { useRouter } from 'next/navigation'
 import { TikTokSlide, TikTokPostType } from '@/lib/supabase'
 import { TYPE_META, SCHEDULE_SLOTS } from '@/lib/tiktok'
 
-function buildRenderUrl(slide: TikTokSlide, type: TikTokPostType, bgUrl?: string): string {
+function buildRenderUrl(slide: TikTokSlide, type: TikTokPostType, dl = false, bgUrl?: string): string {
   const p = new URLSearchParams({ type })
+  if (dl) p.set('dl', '1')
   if (bgUrl) p.set('bg', bgUrl)
   if (slide.type === 'cover') {
     p.set('slideType', 'cover')
@@ -32,6 +33,8 @@ export function GeneratorClient() {
   const [scheduleTime, setScheduleTime] = useState<string>(SCHEDULE_SLOTS[0])
   const [error, setError] = useState('')
   const [activeSlide, setActiveSlide] = useState(0)
+  const [feedback, setFeedback] = useState<'like' | 'dislike' | null>(null)
+  const [feedbackSent, setFeedbackSent] = useState(false)
 
   const generate = async () => {
     if (!postType) return
@@ -39,6 +42,8 @@ export function GeneratorClient() {
     setSlides(null)
     setError('')
     setActiveSlide(0)
+    setFeedback(null)
+    setFeedbackSent(false)
     try {
       const res = await fetch('/api/tiktok/generate', {
         method: 'POST',
@@ -53,6 +58,17 @@ export function GeneratorClient() {
       setError('Error de conexión. Inténtalo de nuevo.')
       setStatus('idle')
     }
+  }
+
+  const sendFeedback = async (rating: 'like' | 'dislike') => {
+    if (!slides || !postType || feedbackSent) return
+    setFeedback(rating)
+    setFeedbackSent(true)
+    await fetch('/api/tiktok/feedback', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: postType, slides, rating }),
+    })
   }
 
   const approve = async () => {
@@ -206,25 +222,103 @@ export function GeneratorClient() {
 
           {slides && status !== 'generating' && postType && (() => {
             const bgUrl = slides[0]?.type === 'cover' ? slides[0].background_url : undefined
+            const activeUrl = buildRenderUrl(slides[activeSlide], postType, false, bgUrl)
+            const activeDownloadUrl = buildRenderUrl(slides[activeSlide], postType, true, bgUrl)
+            const slideLabel = slides[activeSlide].type === 'cover' ? 'portada' : slides[activeSlide].type === 'cta' ? 'cta' : `slide-${(slides[activeSlide] as Extract<TikTokSlide, { type: 'content' }>).num}`
+
             return (
               <>
                 {/* Large preview */}
                 <div style={{ background: '#fff', border: '1px solid #E2E8F0', borderRadius: 16, padding: 20 }}>
-                  <div style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: '.88rem', color: '#0F172A', marginBottom: 16 }}>
-                    Vista previa — slide {activeSlide + 1} de {slides.length}
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+                    <div style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: '.88rem', color: '#0F172A' }}>
+                      Vista previa — slide {activeSlide + 1} de {slides.length}
+                    </div>
+                    {/* Feedback + download */}
+                    <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                      {/* Thumbs */}
+                      <div style={{ display: 'flex', gap: 4 }}>
+                        <button
+                          onClick={() => sendFeedback('like')}
+                          title="Me gusta este post"
+                          style={{
+                            width: 34, height: 34, borderRadius: 8, border: 'none', cursor: feedbackSent ? 'default' : 'pointer',
+                            background: feedback === 'like' ? 'rgba(0,255,178,.15)' : '#F8FAFC',
+                            fontSize: 16, transition: 'all .15s',
+                            opacity: feedbackSent && feedback !== 'like' ? 0.35 : 1,
+                          }}
+                        >👍</button>
+                        <button
+                          onClick={() => sendFeedback('dislike')}
+                          title="No me gusta este post"
+                          style={{
+                            width: 34, height: 34, borderRadius: 8, border: 'none', cursor: feedbackSent ? 'default' : 'pointer',
+                            background: feedback === 'dislike' ? 'rgba(239,68,68,.12)' : '#F8FAFC',
+                            fontSize: 16, transition: 'all .15s',
+                            opacity: feedbackSent && feedback !== 'dislike' ? 0.35 : 1,
+                          }}
+                        >👎</button>
+                      </div>
+                      {/* Download active slide */}
+                      <a
+                        href={activeDownloadUrl}
+                        download={`aprendia-${slideLabel}.png`}
+                        target="_blank"
+                        rel="noreferrer"
+                        title="Descargar slide actual"
+                        style={{
+                          display: 'flex', alignItems: 'center', gap: 5,
+                          padding: '7px 12px', borderRadius: 8, textDecoration: 'none',
+                          background: '#F1F5F9', color: '#64748B',
+                          fontSize: 12, fontWeight: 600,
+                        }}
+                      >
+                        ↓ PNG
+                      </a>
+                    </div>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'center' }}>
                     <img
-                      key={buildRenderUrl(slides[activeSlide], postType, bgUrl)}
-                      src={buildRenderUrl(slides[activeSlide], postType, bgUrl)}
+                      key={activeUrl}
+                      src={activeUrl}
                       alt="slide preview"
                       style={{ width: 360, height: 360, borderRadius: 12, border: '1px solid #E2E8F0', objectFit: 'cover' }}
                     />
                   </div>
+                  {feedbackSent && (
+                    <p style={{ fontSize: 11, color: '#94A3B8', textAlign: 'center', marginTop: 10 }}>
+                      {feedback === 'like' ? '👍 Guardado — lo usaré como referencia' : '👎 Anotado — mejoraré el estilo'}
+                    </p>
+                  )}
                 </div>
 
                 {/* Slide strip */}
                 <div style={{ background: '#fff', border: '1px solid #E2E8F0', borderRadius: 16, padding: 16 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+                    <div style={{ fontSize: 12, fontWeight: 600, color: '#64748B' }}>Todas las slides</div>
+                    <div style={{ display: 'flex', gap: 6 }}>
+                      {slides.map((slide, i) => {
+                        const label = slide.type === 'cover' ? 'portada' : slide.type === 'cta' ? 'cta' : `slide-${(slide as Extract<TikTokSlide, { type: 'content' }>).num}`
+                        return (
+                          <a
+                            key={i}
+                            href={buildRenderUrl(slide, postType, true, bgUrl)}
+                            download={`aprendia-${label}.png`}
+                            target="_blank"
+                            rel="noreferrer"
+                            title={`Descargar ${label}`}
+                            onClick={e => e.stopPropagation()}
+                            style={{
+                              display: 'flex', alignItems: 'center', justifyContent: 'center',
+                              width: 26, height: 26, borderRadius: 6,
+                              background: '#F1F5F9', color: '#64748B', textDecoration: 'none',
+                              fontSize: 11, fontWeight: 700,
+                            }}
+                          >↓</a>
+                        )
+                      })}
+                    </div>
+                  </div>
                   <div style={{ display: 'flex', gap: 10, overflowX: 'auto', paddingBottom: 4 }}>
                     {slides.map((slide, i) => (
                       <div
@@ -233,7 +327,7 @@ export function GeneratorClient() {
                         style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5, cursor: 'pointer', flexShrink: 0 }}
                       >
                         <img
-                          src={buildRenderUrl(slide, postType, bgUrl)}
+                          src={buildRenderUrl(slide, postType, false, bgUrl)}
                           alt={`slide ${i + 1}`}
                           style={{
                             width: 88, height: 88, borderRadius: 8, objectFit: 'cover',
