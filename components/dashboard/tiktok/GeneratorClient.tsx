@@ -35,6 +35,7 @@ export function GeneratorClient() {
   const [activeSlide, setActiveSlide] = useState(0)
   const [feedback, setFeedback] = useState<'like' | 'dislike' | null>(null)
   const [feedbackSent, setFeedbackSent] = useState(false)
+  const [downloading, setDownloading] = useState(false)
 
   const generate = async () => {
     if (!postType) return
@@ -57,6 +58,29 @@ export function GeneratorClient() {
     } catch {
       setError('Error de conexión. Inténtalo de nuevo.')
       setStatus('idle')
+    }
+  }
+
+  const downloadAll = async () => {
+    if (!slides || !postType || downloading) return
+    setDownloading(true)
+    try {
+      const bgUrl = slides[0]?.type === 'cover' ? (slides[0] as Extract<TikTokSlide, { type: 'cover' }>).background_url : undefined
+      const res = await fetch('/api/tiktok/zip', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ slides, type: postType, bgUrl }),
+      })
+      if (!res.ok) return
+      const blob = await res.blob()
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = 'aprendia-slides.zip'
+      a.click()
+      URL.revokeObjectURL(url)
+    } finally {
+      setDownloading(false)
     }
   }
 
@@ -296,7 +320,19 @@ export function GeneratorClient() {
                 <div style={{ background: '#fff', border: '1px solid #E2E8F0', borderRadius: 16, padding: 16 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
                     <div style={{ fontSize: 12, fontWeight: 600, color: '#64748B' }}>Todas las slides</div>
-                    <div style={{ display: 'flex', gap: 6 }}>
+                    <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+                      <button
+                        onClick={downloadAll}
+                        disabled={downloading}
+                        style={{
+                          display: 'flex', alignItems: 'center', gap: 5,
+                          padding: '6px 12px', borderRadius: 8, border: 'none', cursor: 'pointer',
+                          background: '#0F172A', color: '#fff',
+                          fontSize: 12, fontWeight: 700, opacity: downloading ? 0.6 : 1,
+                        }}
+                      >
+                        {downloading ? '⏳ Generando...' : '↓ Descargar todo'}
+                      </button>
                       {slides.map((slide, i) => {
                         const label = slide.type === 'cover' ? 'portada' : slide.type === 'cta' ? 'cta' : `slide-${(slide as Extract<TikTokSlide, { type: 'content' }>).num}`
                         return (
