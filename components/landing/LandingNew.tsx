@@ -10,13 +10,13 @@ const TICKS = [
 ]
 
 const FAQS = [
-  { q: '¿Necesito saber programar para usar el eBook?', a: 'No. AprendIA está diseñado específicamente para personas sin conocimientos técnicos. Todas las herramientas que se mencionan son no-code — utilizas interfaces visuales simples, como cualquier app del móvil. Si sabes copiar y pegar, puedes hacerlo.' },
-  { q: '¿En cuánto tiempo veo resultados?', a: 'La mayoría de los lectores ya ahorra tiempo en las primeras horas de lectura gracias a los prompts listos. Para automatizaciones más elaboradas, el plazo habitual es de 1 a 7 días. Los resultados económicos varían según el modelo elegido.' },
-  { q: '¿Cómo funciona la garantía?', a: 'Si por cualquier motivo el contenido no cumple lo que prometemos, te devolvemos el 100% del importe. Sin preguntas, sin burocracia, sin plazos que cumplir. Tu satisfacción es nuestra única condición.' },
-  { q: '¿El eBook se actualiza? Las herramientas de IA cambian muy rápido.', a: '¡Sí! Todas las actualizaciones son vitalicias y gratuitas para los planes Pro y Élite. Cuando publicamos nuevas versiones con herramientas actualizadas, las recibes automáticamente por email. Un único pago para un recurso que evoluciona con la IA.' },
-  { q: '¿Cuál es la diferencia entre los tres planes?', a: 'El Starter incluye el eBook base con 30 prompts — perfecto para empezar desde cero. El Pro añade 2 eBooks especializados (secretario IA y negocio en 7 días), 80+ prompts y comunidad de WhatsApp. El Élite incluye todo lo anterior más comunidad privada, mentoría directa por email y templates de negocio listos.' },
-  { q: '¿Funciona para cualquier tipo de negocio o profesión?', a: 'Sí. AprendIA tiene aplicaciones para freelancers, emprendedores, trabajadores por cuenta ajena, dueños de pequeñas empresas y creadores de contenido. Los principios y herramientas son adaptables a prácticamente cualquier contexto profesional.' },
-  { q: '¿Cómo recibo el eBook tras la compra?', a: 'El acceso es inmediato. Justo después de confirmar el pago, recibes un email con el enlace de descarga. Disponible en PDF optimizado para cualquier dispositivo.' },
+  { q: '¿Necesito saber programar para usar AprendIA?', a: 'No. Todo el contenido está diseñado para personas sin conocimientos técnicos. Las herramientas que se enseñan son no-code — las manejas desde interfaces visuales, como cualquier app del móvil.' },
+  { q: '¿Cuándo se lanza? ¿Cuándo recibiré el acceso?', a: 'Estamos en fase de acceso anticipado. Al apuntarte a la lista de espera, serás de los primeros en recibir el aviso de lanzamiento junto con tu precio de fundador exclusivo.' },
+  { q: '¿Qué incluye exactamente cada pack?', a: 'El Starter incluye el eBook base y 30 prompts esenciales para empezar. El Pro añade dos eBooks especializados, una biblioteca de 80+ prompts y acceso a la comunidad de WhatsApp. El Élite incluye todo lo anterior más comunidad privada, mentoría directa por email y templates de negocio listos.' },
+  { q: '¿Qué es la mentoría directa del pack Élite?', a: 'Es acceso directo por email al autor del contenido. Puedes enviar tus dudas, compartir lo que estás construyendo y recibir orientación personalizada. La respuesta está garantizada en menos de 48h.' },
+  { q: '¿La comunidad es activa? ¿Qué se comparte?', a: 'Sí. En la comunidad (WhatsApp para Pro, Discord privado para Élite) se comparten prompts nuevos, casos reales de uso, estrategias que funcionan y novedades de herramientas. No es un grupo de noticias: es un espacio de aprendizaje activo.' },
+  { q: '¿El contenido se actualiza con el tiempo?', a: 'Sí. La IA avanza rápido y el contenido evoluciona con ella. Los planes Pro y Élite incluyen actualizaciones vitalicias y gratuitas. Cuando se publique nuevo contenido, lo recibirás automáticamente sin coste adicional.' },
+  { q: '¿Hay alguna garantía si no me convence?', a: 'Sí. Si el contenido no cumple lo que prometemos, te devolvemos el 100% del importe, sin preguntas y sin plazos. Queremos que estés dentro porque te aporta valor, no por obligación.' },
 ]
 
 export function LandingNew() {
@@ -102,8 +102,7 @@ export function LandingNew() {
             <div>
               <div className="reveal">
                 <div className="hero-kicker">
-                  <span className="hero-stars">★★★★★</span>
-                  <span>+4.700 personas que ya cambiaron su rutina</span>
+                  <span>🚀 Únete a los primeros en AprendIA</span>
                 </div>
               </div>
               <div className="reveal d1">
@@ -133,7 +132,7 @@ export function LandingNew() {
                     <div className="av av4">R</div>
                     <div className="av av5">L</div>
                   </div>
-                  <span className="t-sm muted"><strong style={{ color: 'var(--lp-text)' }}>4.700+</strong> personas ya usan IA para ganar más</span>
+                  <span className="t-sm muted">Sé de los <strong style={{ color: 'var(--lp-text)' }}>primeros</strong> en acceder al lanzamiento</span>
                 </div>
               </div>
             </div>
@@ -315,7 +314,6 @@ export function LandingNew() {
                   'Buscas un curso técnico de programación o desarrollo de software',
                   'Esperas hacerte rico de la noche a la mañana sin esfuerzo',
                   'No estás dispuesto a dedicar al menos 1 hora a aplicar lo aprendido',
-                  'Ya dominas la IA y tienes automatizaciones funcionando en tu negocio',
                 ].map((txt, i) => (
                   <div key={i} className="fw-item"><span className="fw-ico">✗</span><span>{txt}</span></div>
                 ))}
@@ -364,7 +362,7 @@ export function LandingNew() {
                 className={`inc-tab${activeTab === tab ? ' active' : ''}`}
                 onClick={() => setActiveTab(tab)}
               >
-                {tab === 'starter' ? 'Starter — 17€' : tab === 'pro' ? 'Pro — 37€ ⭐' : 'Élite — 97€'}
+                {tab === 'starter' ? 'Starter' : tab === 'pro' ? 'Pro ⭐' : 'Élite'}
               </button>
             ))}
           </div>
@@ -374,7 +372,7 @@ export function LandingNew() {
               {[
                 { ico: '📘', title: 'eBook base — AprendIA (200+ páginas)', desc: 'Fundamentos, herramientas clave, primeros pasos con IA. De cero a productivo en un fin de semana.' },
                 { ico: '🧩', title: '30 prompts esenciales', desc: 'Los prompts más utilizados para tareas cotidianas: emails, resúmenes, contenido y más.' },
-                { ico: '🔄', title: 'Acceso vitalicio', desc: 'Descarga el eBook y accede para siempre. Sin suscripciones ni costes ocultos.' },
+                { ico: '🔄', title: 'Acceso vitalicio', desc: 'Una vez dentro, el contenido es tuyo para siempre. Sin suscripciones ni costes ocultos.' },
                 { ico: '🛡️', title: 'Garantía de satisfacción', desc: 'Si el contenido no cumple lo prometido, te devolvemos el dinero. Sin preguntas.' },
               ].map((item, i) => (
                 <div key={i} className="inc-item">
@@ -512,15 +510,11 @@ export function LandingNew() {
           </div>
           <div className="testi-grid">
             {[
-              { txt: 'Automaticé la atención al cliente de mi tienda online con IA y reduje 3 horas de trabajo al día. En 2 semanas ya había recuperado el precio del eBook', av: 'M', color: '#6366F1', name: 'María Fernández', role: 'Emprendedora Digital, Madrid', res: '+900€/mes' },
-              { txt: 'Soy diseñador y jamás supe programar. Con AprendIA aprendí a automatizar presupuestos, contratos y mi portfolio. Ahora cobro el doble por los mismos proyectos', av: 'J', color: '#EC4899', name: 'Javier Morales', role: 'Diseñador Freelance, Barcelona', res: '2× más clientes' },
-              { txt: 'El eBook de Negocio en 7 Días me cambió la vida. Lancé un servicio de copywriting con IA y facturé 1.400€ en el primer mes. Lo recomiendo sin dudar', av: 'A', color: '#10B981', name: 'Ana Belén Ruiz', role: 'Copywriter, Valencia', res: '1.400€ en 30 días' },
-              { txt: 'Trabajo en RRHH y automaticé el cribado de CVs, el onboarding y los informes mensuales con el pack Pro. Mi jefe flipó. La promoción llegó poco después', av: 'R', color: '#F59E0B', name: 'Roberto Sánchez', role: 'Analista de RRHH, Sevilla', res: 'Ascendido' },
-              { txt: 'Pensé que sería otro eBook superficial. Me equivoqué de lleno. El contenido es denso, práctico y directo. Ya he implementado 5 automatizaciones en mi empresa', av: 'F', color: '#3B82F6', name: 'Felipe Castro', role: 'Fundador de Startup, Bilbao', res: '5 automatizaciones activas' },
-              { txt: 'Madre soltera, sin tiempo ni dinero para cursos caros. Con el pack Élite y la mentoría directa lancé un canal de contenido monetizado. Hoy es mi ingreso principal', av: 'L', color: '#8B5CF6', name: 'Laura González', role: 'Creadora de Contenido, Málaga', res: 'Ingreso principal' },
+              { txt: 'Llevaba meses viendo vídeos sueltos sobre IA sin saber por dónde empezar. Con AprendIA tuve un camino claro desde el día uno. Apliqué los prompts a mi trabajo de community manager y ahora tardo la mitad en preparar el contenido de cada semana.', av: 'S', color: '#6366F1', name: 'Sara M.', role: 'Community Manager, Madrid' },
+              { txt: 'Soy asesor fiscal y pensé que la IA no era para mí. Me equivocaba. Automaticé los informes mensuales y el resumen de contratos con los flujos del pack Pro. Mis clientes notan la diferencia y yo tengo las tardes libres.', av: 'D', color: '#10B981', name: 'Diego F.', role: 'Asesor Fiscal, Bilbao' },
+              { txt: 'Lo que más me gustó es que no hay promesas vacías. El contenido es concreto, va al grano y puedes aplicarlo ese mismo día. La mentoría del pack Élite fue clave para enfocar bien mi proyecto desde el principio.', av: 'P', color: '#F59E0B', name: 'Paula R.', role: 'Emprendedora, Valencia' },
             ].map((t, i) => (
-              <div key={i} className={`testi-card reveal d${(i % 3) + 1}`}>
-                <div className="testi-stars">★★★★★</div>
+              <div key={i} className={`testi-card reveal d${i + 1}`}>
                 <p className="testi-txt">{t.txt}</p>
                 <div className="testi-author">
                   <div className="testi-av" style={{ background: t.color }}>{t.av}</div>
@@ -528,7 +522,6 @@ export function LandingNew() {
                     <div className="testi-name">{t.name}</div>
                     <div className="testi-role">{t.role}</div>
                   </div>
-                  <div className="testi-res">{t.res}</div>
                 </div>
               </div>
             ))}
@@ -631,7 +624,7 @@ export function LandingNew() {
             <span className="grad">Ya habrá valido la pena en la primera hora.</span>
           </h2>
           <p className="t-lg reveal d2" style={{ color: 'var(--lp-text-muted)', marginBottom: '44px', maxWidth: '560px', marginLeft: 'auto', marginRight: 'auto' }}>
-            Más de 4.700 personas ya transformaron su rutina con IA.<br />
+            Únete a los primeros en AprendIA y transforma tu forma de trabajar.<br />
             El siguiente paso es tuyo — sin riesgos, con garantía de satisfacción.
           </p>
           <div className="reveal d3">
