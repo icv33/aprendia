@@ -133,6 +133,7 @@ async function callPublishAPI(accessToken: string, photoUrls: string[], caption:
         photo_cover_index: 0,
       },
       media_type: 'PHOTO',
+      post_mode: 'DIRECT_POST',
     }),
   })
   const data = await res.json()
