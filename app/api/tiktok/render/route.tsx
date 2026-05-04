@@ -175,7 +175,7 @@ export async function GET(req: Request) {
           </div>
 
           <div style={{ fontSize: 24, fontWeight: 700, color: 'rgba(255,255,255,0.32)', display: 'flex', letterSpacing: 0.5 }}>
-            Aprende IA de verdad. Empieza hoy → link en bio
+            Aprende IA de verdad. Empieza hoy
           </div>
         </div>
       </div>
