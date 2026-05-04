@@ -95,10 +95,11 @@ export async function GET(req: Request) {
     fetchGoogleFont(800, false),
   ])
 
-  const fonts: { name: string; data: ArrayBuffer; weight: number; style: 'normal' | 'italic' }[] = []
-  if (font700)  fonts.push({ name: 'Poppins', data: font700,  weight: 700, style: 'normal' })
-  if (font700i) fonts.push({ name: 'Poppins', data: font700i, weight: 700, style: 'italic' })
-  if (font800)  fonts.push({ name: 'Poppins', data: font800,  weight: 800, style: 'normal' })
+  const fonts = [
+    font700  && { name: 'Poppins', data: font700,  weight: 700 as const, style: 'normal'  as const },
+    font700i && { name: 'Poppins', data: font700i, weight: 700 as const, style: 'italic' as const },
+    font800  && { name: 'Poppins', data: font800,  weight: 800 as const, style: 'normal'  as const },
+  ].filter(Boolean) as { name: string; data: ArrayBuffer; weight: 700 | 800; style: 'normal' | 'italic' }[]
 
   let element: React.ReactElement
 
