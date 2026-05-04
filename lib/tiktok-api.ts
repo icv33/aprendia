@@ -124,10 +124,7 @@ async function callPublishAPI(accessToken: string, photoUrls: string[], caption:
     body: JSON.stringify({
       post_info: {
         title: caption,
-        privacy_level: 'PUBLIC_TO_EVERYONE',
-        disable_comment: false,
-        disable_duet: false,
-        disable_stitch: false,
+        privacy_level: 'SELF_ONLY',
       },
       source_info: {
         source: 'PULL_FROM_URL',
