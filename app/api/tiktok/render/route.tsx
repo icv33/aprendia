@@ -11,13 +11,9 @@ const TYPE_COLORS: Record<string, string> = {
 
 const FALLBACK_BG = 'linear-gradient(160deg, #080D1A 0%, #0C1525 60%, #080D1A 100%)'
 
-async function fetchFont(baseUrl: string, weight: number, italic: boolean): Promise<ArrayBuffer | null> {
+async function loadFont(name: string): Promise<ArrayBuffer | null> {
   try {
-    const name = italic ? `poppins-${weight}i.woff2` : `poppins-${weight}.woff2`
-    const url = new URL(`/fonts/${name}`, baseUrl).href
-    const res = await fetch(url)
-    if (!res.ok) return null
-    return await res.arrayBuffer()
+    return await fetch(new URL(`./${name}`, import.meta.url)).then(r => r.arrayBuffer())
   } catch {
     return null
   }
@@ -84,11 +80,10 @@ export async function GET(req: Request) {
   const accent = TYPE_COLORS[postType] ?? '#00FFB2'
   const hasBg  = bgUrl.startsWith('http')
 
-  const base = new URL(req.url).origin
   const [font700, font700i, font800] = await Promise.all([
-    fetchFont(base, 700, false),
-    fetchFont(base, 700, true),
-    fetchFont(base, 800, false),
+    loadFont('poppins-700.woff2'),
+    loadFont('poppins-700i.woff2'),
+    loadFont('poppins-800.woff2'),
   ])
 
   const fonts = [
