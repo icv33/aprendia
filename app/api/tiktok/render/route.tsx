@@ -179,8 +179,8 @@ export async function GET(req: Request) {
             <span style={{ fontSize: 30, fontWeight: 800, color: '#080D1A' }}>↓ Link en bio</span>
           </div>
 
-          <div style={{ fontSize: 26, fontWeight: 800, color: 'rgba(255,255,255,0.28)', display: 'flex' }}>
-            Aprend<span style={{ color: accent }}>IA</span>
+          <div style={{ fontSize: 24, fontWeight: 700, color: 'rgba(255,255,255,0.32)', display: 'flex', letterSpacing: 0.5 }}>
+            ¿Quieres más? Sígueme y aprende <span style={{ color: accent, marginLeft: 6 }}>IA gratis</span>
           </div>
         </div>
       </div>
