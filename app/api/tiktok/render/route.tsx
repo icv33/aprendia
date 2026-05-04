@@ -1,5 +1,3 @@
-export const runtime = 'edge'
-
 import { ImageResponse } from 'next/og'
 import { f700, f700i, f800 } from './fonts'
 
