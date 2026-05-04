@@ -28,89 +28,102 @@ async function fetchPexelsPhoto(query: string): Promise<string | null> {
 }
 
 const SYSTEM_PROMPT = `Eres experto en marketing de contenido viral para TikTok en español.
-Generas contenido educativo sobre IA que sea práctico, directo y que enganche.
-Siempre respondes SOLO con JSON válido, sin markdown ni explicaciones adicionales.`
+Generas contenido educativo sobre IA que sea impactante, directo y que engancha desde el primer segundo.
+Siempre respondes SOLO con JSON válido, sin markdown ni explicaciones adicionales.
+
+REGLAS DE FORMATO DE TEXTO:
+- Marca 1-2 palabras o frases clave por campo con <<dobles ángulos>>. Máximo 3 palabras seguidas.
+- Ejemplo: "El <<error fatal>> que cometes con ChatGPT" o "<<Ahorra 2 horas>> al día con este truco"
+- Los textos de contenido deben ser MUY cortos: máximo 15 palabras. Una sola idea por slide.
+- Sin párrafos. Sin explicaciones largas. Directo al grano.`
+
+const HIGHLIGHT_RULE = `
+Recuerda: marca 1-2 palabras clave con <<dobles ángulos>> en titulo_portada, en cada titulo y en cada contenido.`
 
 const PROMPTS: Record<TikTokPostType, string> = {
   truco: `Genera un carrusel de TikTok sobre UN truco específico y útil de ChatGPT o Claude.
 
 El truco debe ser concreto, aplicable hoy mismo, sorprendente o poco conocido.
+El hook (titulo_portada) debe ser irresistible — que la gente no pueda no deslizar.
 
 Devuelve exactamente este JSON (sin markdown, solo el objeto):
 {
-  "titulo_portada": "TÍTULO EN MAYÚSCULAS CON GANCHO, MÁXIMO 7 PALABRAS",
-  "subtitulo_portada": "una línea descriptiva, max 10 palabras",
+  "titulo_portada": "TÍTULO EN MAYÚSCULAS CON GANCHO, MÁXIMO 7 PALABRAS, con <<palabras clave>> marcadas",
+  "subtitulo_portada": "una línea descriptiva, max 8 palabras",
   "slides": [
-    {"titulo": "título descriptivo max 5 palabras", "contenido": "explicación práctica y directa, max 35 palabras"},
+    {"titulo": "título impactante max 5 palabras con <<marca>>", "contenido": "1 idea directa, max 15 palabras, con <<palabra clave>>"},
     {"titulo": "...", "contenido": "..."},
     {"titulo": "...", "contenido": "..."},
     {"titulo": "...", "contenido": "..."},
     {"titulo": "...", "contenido": "..."}
   ],
-  "cta": "frase de cierre con call to action, max 12 palabras"
+  "cta": "frase urgente con call to action, max 10 palabras, con <<palabra clave>>"
 }
 
-IMPORTANTE: exactamente 5 slides. Tono informal (tuteo). Sin emojis en los textos.`,
+IMPORTANTE: exactamente 5 slides. Tono informal (tuteo). Sin emojis en los textos.${HIGHLIGHT_RULE}`,
 
   vida_facil: `Genera un carrusel de TikTok del estilo "X cosas que hago con IA para [resultado concreto]".
 
 El tema debe ser práctico y aplicable a la vida cotidiana o al trabajo diario.
+El hook debe generar envidia o curiosidad inmediata.
 
 Devuelve exactamente este JSON (sin markdown, solo el objeto):
 {
-  "titulo_portada": "TÍTULO EN MAYÚSCULAS CON GANCHO, MÁXIMO 7 PALABRAS",
-  "subtitulo_portada": "una línea descriptiva, max 10 palabras",
+  "titulo_portada": "TÍTULO EN MAYÚSCULAS CON GANCHO, MÁXIMO 7 PALABRAS, con <<palabras clave>> marcadas",
+  "subtitulo_portada": "una línea descriptiva, max 8 palabras",
   "slides": [
-    {"titulo": "título descriptivo max 5 palabras", "contenido": "explicación práctica, max 35 palabras"},
+    {"titulo": "título impactante max 5 palabras con <<marca>>", "contenido": "1 idea directa, max 15 palabras, con <<palabra clave>>"},
     {"titulo": "...", "contenido": "..."},
     {"titulo": "...", "contenido": "..."},
     {"titulo": "...", "contenido": "..."},
     {"titulo": "...", "contenido": "..."}
   ],
-  "cta": "frase de cierre con call to action, max 12 palabras"
+  "cta": "frase urgente con call to action, max 10 palabras, con <<palabra clave>>"
 }
 
-IMPORTANTE: exactamente 5 slides. Tono informal (tuteo). Sin emojis en los textos.`,
+IMPORTANTE: exactamente 5 slides. Tono informal (tuteo). Sin emojis en los textos.${HIGHLIGHT_RULE}`,
 
   mito: `Genera un carrusel de TikTok desmitificando UN error muy común que comete la gente al usar IA.
 
 El error debe ser algo que hace mucha gente, fácil de corregir y con impacto claro al corregirlo.
+El hook debe hacer que el lector piense "eso lo hago yo".
 
 Devuelve exactamente este JSON (sin markdown, solo el objeto):
 {
-  "titulo_portada": "TÍTULO EN MAYÚSCULAS QUE GENERE CURIOSIDAD, MÁXIMO 7 PALABRAS",
-  "subtitulo_portada": "una línea descriptiva, max 10 palabras",
+  "titulo_portada": "TÍTULO EN MAYÚSCULAS QUE GENERE VERGÜENZA O CURIOSIDAD, MÁXIMO 7 PALABRAS, con <<palabras clave>> marcadas",
+  "subtitulo_portada": "una línea descriptiva, max 8 palabras",
   "slides": [
-    {"titulo": "título descriptivo max 5 palabras", "contenido": "explicación del error o la corrección, max 35 palabras"},
+    {"titulo": "título impactante max 5 palabras con <<marca>>", "contenido": "1 idea directa, max 15 palabras, con <<palabra clave>>"},
     {"titulo": "...", "contenido": "..."},
     {"titulo": "...", "contenido": "..."},
     {"titulo": "...", "contenido": "..."},
     {"titulo": "...", "contenido": "..."}
   ],
-  "cta": "frase de cierre con call to action, max 12 palabras"
+  "cta": "frase urgente con call to action, max 10 palabras, con <<palabra clave>>"
 }
 
-IMPORTANTE: exactamente 5 slides. Tono informal (tuteo). Sin emojis en los textos.`,
+IMPORTANTE: exactamente 5 slides. Tono informal (tuteo). Sin emojis en los textos.${HIGHLIGHT_RULE}`,
 
   caso_practico: `Genera un carrusel de TikTok sobre cómo automatizar UNA tarea concreta del trabajo usando IA.
 
 La tarea debe ser algo que mucha gente hace manualmente, claramente mejorable con IA y que ahorre tiempo visible.
+El hook debe incluir un número concreto de tiempo ahorrado o resultado medible.
 
 Devuelve exactamente este JSON (sin markdown, solo el objeto):
 {
-  "titulo_portada": "TÍTULO EN MAYÚSCULAS CON GANCHO REAL, MÁXIMO 7 PALABRAS",
-  "subtitulo_portada": "una línea descriptiva, max 10 palabras",
+  "titulo_portada": "TÍTULO EN MAYÚSCULAS CON DATO CONCRETO, MÁXIMO 7 PALABRAS, con <<palabras clave>> marcadas",
+  "subtitulo_portada": "una línea descriptiva, max 8 palabras",
   "slides": [
-    {"titulo": "título descriptivo max 5 palabras", "contenido": "paso o insight del caso práctico, max 35 palabras"},
+    {"titulo": "título impactante max 5 palabras con <<marca>>", "contenido": "1 idea directa, max 15 palabras, con <<palabra clave>>"},
     {"titulo": "...", "contenido": "..."},
     {"titulo": "...", "contenido": "..."},
     {"titulo": "...", "contenido": "..."},
     {"titulo": "...", "contenido": "..."}
   ],
-  "cta": "frase de cierre con call to action, max 12 palabras"
+  "cta": "frase urgente con call to action, max 10 palabras, con <<palabra clave>>"
 }
 
-IMPORTANTE: exactamente 5 slides. Tono informal (tuteo). Sin emojis en los textos.`,
+IMPORTANTE: exactamente 5 slides. Tono informal (tuteo). Sin emojis en los textos.${HIGHLIGHT_RULE}`,
 }
 
 export async function generateTikTokSlides(type: TikTokPostType): Promise<TikTokSlide[]> {
@@ -125,7 +138,6 @@ export async function generateTikTokSlides(type: TikTokPostType): Promise<TikTok
 
   const text = message.content[0].type === 'text' ? message.content[0].text : ''
 
-  // Extract JSON — handle potential markdown code blocks
   const jsonMatch = text.match(/\{[\s\S]*\}/)
   if (!jsonMatch) throw new Error('No JSON in response')
 
