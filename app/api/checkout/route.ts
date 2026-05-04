@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { stripe } from '@/lib/stripe'
+import { rateLimit, ipKey } from '@/lib/ratelimit'
 
 const PACKS = {
   starter: {
@@ -20,6 +21,14 @@ const PACKS = {
 } as const
 
 export async function GET(req: NextRequest) {
+  const { allowed, retryAfterMs } = rateLimit(ipKey(req, 'checkout'), 10, 60_000)
+  if (!allowed) {
+    return NextResponse.json(
+      { error: 'Demasiadas peticiones. Espera un momento.' },
+      { status: 429, headers: { 'Retry-After': String(Math.ceil(retryAfterMs / 1000)) } },
+    )
+  }
+
   const pack = req.nextUrl.searchParams.get('pack') as keyof typeof PACKS | null
 
   if (!pack || !(pack in PACKS)) {

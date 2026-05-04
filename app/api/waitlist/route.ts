@@ -1,9 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServerSupabase } from '@/lib/supabase'
+import { rateLimit, ipKey } from '@/lib/ratelimit'
 
 const VALID_PACKS = ['starter', 'pro', 'elite', 'unsure']
 
 export async function POST(req: NextRequest) {
+  const { allowed, retryAfterMs } = rateLimit(ipKey(req, 'waitlist'), 5, 60_000)
+  if (!allowed) {
+    return NextResponse.json(
+      { error: 'Demasiadas peticiones. Espera un momento.' },
+      { status: 429, headers: { 'Retry-After': String(Math.ceil(retryAfterMs / 1000)) } },
+    )
+  }
+
   const { email, pack } = await req.json()
 
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email).trim())) {

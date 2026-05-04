@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { zipSync } from 'fflate'
 import { TikTokSlide, TikTokPostType } from '@/lib/supabase'
+import { rateLimit, ipKey } from '@/lib/ratelimit'
 
 function buildRenderUrl(base: string, slide: TikTokSlide, type: TikTokPostType, bgUrl?: string): string {
   const p = new URLSearchParams({ type })
@@ -29,6 +30,14 @@ function slideFilename(slide: TikTokSlide, i: number): string {
 }
 
 export async function POST(req: NextRequest) {
+  const { allowed, retryAfterMs } = rateLimit(ipKey(req, 'zip'), 5, 60_000)
+  if (!allowed) {
+    return NextResponse.json(
+      { error: 'Demasiadas peticiones. Espera un momento.' },
+      { status: 429, headers: { 'Retry-After': String(Math.ceil(retryAfterMs / 1000)) } },
+    )
+  }
+
   const { slides, type, bgUrl } = await req.json() as {
     slides: TikTokSlide[]
     type: TikTokPostType
