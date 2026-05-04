@@ -32,6 +32,35 @@ export type Ebook = {
   published_at: string | null
 }
 
+// ── TikTok ────────────────────────────────────────────────────────────────────
+
+export type TikTokPostType = 'truco' | 'vida_facil' | 'mito' | 'caso_practico'
+export type TikTokPostStatus = 'draft' | 'approved' | 'scheduled' | 'published' | 'error'
+
+export type TikTokSlide =
+  | { type: 'cover'; titulo: string; subtitulo?: string }
+  | { type: 'content'; num: number; titulo: string; contenido: string }
+  | { type: 'cta'; cta: string }
+
+export type TikTokPost = {
+  id: string
+  type: TikTokPostType
+  slides: TikTokSlide[]
+  status: TikTokPostStatus
+  scheduled_at: string | null
+  published_at: string | null
+  tiktok_url: string | null
+  created_at: string
+}
+
+export type TikTokSettings = {
+  id: number
+  auto_mode: boolean
+  updated_at: string
+}
+
+// ── Ebook ─────────────────────────────────────────────────────────────────────
+
 export type EbookContent = {
   subtitle: string
   promise: string

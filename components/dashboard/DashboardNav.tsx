@@ -12,6 +12,7 @@ const NAV_SECTIONS = [
       { href: '/dashboard/ebooks', label: 'Contenido', icon: '📦', exact: false },
       { href: '/dashboard/ventas', label: 'Ventas', icon: '🛒', exact: false },
       { href: '/dashboard/waitlist', label: 'Lista de espera', icon: '📋', exact: false },
+      { href: '/dashboard/tiktok', label: 'TikTok', icon: '🎵', exact: false },
     ],
   },
   {
