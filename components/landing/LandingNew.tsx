@@ -11,7 +11,7 @@ const TICKS = [
 
 const FAQS = [
   { q: '¿Necesito saber programar para usar AprendIA?', a: 'No. Todo el contenido está diseñado para personas sin conocimientos técnicos. Las herramientas que se enseñan son no-code — las manejas desde interfaces visuales, como cualquier app del móvil.' },
-  { q: '¿Cuándo se lanza? ¿Cuándo recibiré el acceso?', a: 'Estamos en fase de acceso anticipado. Al apuntarte a la lista de espera, serás de los primeros en recibir el aviso de lanzamiento junto con tu precio de fundador exclusivo.' },
+  { q: '¿Cuándo se lanza? ¿Cuándo recibiré el acceso?', a: 'Estamos en fase de acceso anticipado. Al apuntarte a la lista de espera, serás de los primeros en recibir el aviso de lanzamiento junto con tu precio de acceso anticipado exclusivo.' },
   { q: '¿Qué incluye exactamente cada pack?', a: 'El Starter incluye el eBook base y 30 prompts esenciales para empezar. El Pro añade dos eBooks especializados, una biblioteca de 80+ prompts y acceso a la comunidad de WhatsApp. El Élite incluye todo lo anterior más comunidad privada, mentoría directa por email y templates de negocio listos.' },
   { q: '¿Qué es la mentoría directa del pack Élite?', a: 'Es acceso directo por email al autor del contenido. Puedes enviar tus dudas, compartir lo que estás construyendo y recibir orientación personalizada. La respuesta está garantizada en menos de 48h.' },
   { q: '¿La comunidad es activa? ¿Qué se comparte?', a: 'Sí. En la comunidad (WhatsApp para Pro, Discord privado para Élite) se comparten prompts nuevos, casos reales de uso, estrategias que funcionan y novedades de herramientas. No es un grupo de noticias: es un espacio de aprendizaje activo.' },
@@ -425,7 +425,7 @@ export function LandingNew() {
           <div className="sec-hd">
             <div className="lp-pill reveal"><span className="dot" />Próximamente</div>
             <h2 className="t-h2 reveal d1">Elige tu nivel.<br /><span style={{ color: 'var(--lp-primary-dark)' }}>Empieza cuando quieras.</span></h2>
-            <p className="t-md reveal d2">Reserva tu plaza gratis hoy y consigue precio de fundador en el lanzamiento.</p>
+            <p className="t-md reveal d2">Reserva tu plaza gratis hoy y consigue precio de acceso anticipado en el lanzamiento.</p>
           </div>
           <div className="price-cards">
             {/* STARTER */}
@@ -494,7 +494,7 @@ export function LandingNew() {
             </div>
           </div>
           <div className="price-trust reveal">
-            <span>🎯 Precio de fundador exclusivo</span>
+            <span>🎯 Precio de acceso anticipado</span>
             <span>📱 Acceso inmediato al lanzar</span>
             <span>🛡️ Garantía de satisfacción</span>
           </div>
@@ -539,7 +539,7 @@ export function LandingNew() {
               <span style={{ color: 'var(--primary)' }}>Es completamente gratis.</span>
             </h2>
             <p className="t-md reveal d2" style={{ color: 'rgba(255,255,255,.5)', marginBottom: 0 }}>
-              Apúntate antes del lanzamiento y consigue precio de fundador + acceso a la comunidad.
+              Apúntate antes del lanzamiento y consigue precio de acceso anticipado + acceso a la comunidad.
             </p>
           </div>
 
