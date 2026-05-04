@@ -131,11 +131,6 @@ export async function GET(req: Request) {
         <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'linear-gradient(to bottom, rgba(0,0,0,0.08) 0%, rgba(0,0,0,0.4) 45%, rgba(0,0,0,0.88) 100%)', display: 'flex' }} />
         <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 5, background: accent, display: 'flex' }} />
 
-        <div style={{ position: 'absolute', top: 48, left: 56, display: 'flex', alignItems: 'baseline', gap: 4 }}>
-          <span style={{ fontSize: 110, fontWeight: 800, color: '#ffffff', lineHeight: 1 }}>{num}</span>
-          <span style={{ fontSize: 60, fontWeight: 800, color: accent, lineHeight: 1 }}>.</span>
-        </div>
-
         <div style={{ position: 'absolute', bottom: 130, left: 64, right: 64, display: 'flex', flexDirection: 'column', gap: 24 }}>
           <HighlightText
             text={titulo}
