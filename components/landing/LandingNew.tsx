@@ -91,7 +91,7 @@ export function LandingNew() {
           <li><a href="#benefits">Beneficios</a></li>
           <li><a href="#pricing">Precios</a></li>
           <li><a href="#faq">FAQ</a></li>
-          <li><a href="#pricing" className="lp-nav-cta">Quiero aprender →</a></li>
+          <li><a href="#waitlist" className="lp-nav-cta">Quiero aprender →</a></li>
         </ul>
       </nav>
 
@@ -120,7 +120,7 @@ export function LandingNew() {
               </div>
               <div className="reveal d3">
                 <div className="hero-actions">
-                  <a href="/api/checkout?pack=pro" className="lp-btn lp-btn-primary lp-btn-lg">Quiero aprender ahora →</a>
+                  <a href="#waitlist" className="lp-btn lp-btn-primary lp-btn-lg">Quiero aprender ahora →</a>
                   <a href="#how" className="lp-btn lp-btn-secondary">Ver cómo funciona</a>
                 </div>
               </div>
@@ -425,19 +425,18 @@ export function LandingNew() {
       <section id="pricing">
         <div className="wrap">
           <div className="sec-hd">
-            <div className="lp-pill reveal"><span className="dot" />Precios</div>
-            <h2 className="t-h2 reveal d1">Invierte una vez.<br /><span style={{ color: 'var(--lp-primary-dark)' }}>Benefíciate para siempre.</span></h2>
-            <p className="t-md reveal d2">Sin suscripciones. Sin costes ocultos. Pago único, acceso vitalicio.</p>
+            <div className="lp-pill reveal"><span className="dot" />Próximamente</div>
+            <h2 className="t-h2 reveal d1">Elige tu nivel.<br /><span style={{ color: 'var(--lp-primary-dark)' }}>Empieza cuando quieras.</span></h2>
+            <p className="t-md reveal d2">Reserva tu plaza gratis hoy y consigue precio de fundador en el lanzamiento.</p>
           </div>
           <div className="price-cards">
             {/* STARTER */}
             <div className="price-card reveal d1">
               <div className="price-name">Starter</div>
               <p className="price-desc">Para quien quiere empezar a usar IA desde cero</p>
-              <div className="price-row">
-                <span className="p-amount">17</span><span className="p-currency">€</span>
+              <div className="price-row" style={{ margin: '0 0 24px' }}>
+                <span style={{ fontFamily: 'var(--lp-font-d)', fontWeight: 700, fontSize: '.82rem', color: 'var(--lp-primary-dark)', background: 'rgba(0,255,178,.1)', padding: '5px 12px', borderRadius: 100 }}>Precio especial al lanzar</span>
               </div>
-              <div className="p-before">antes 47€</div>
               <hr className="price-hr" />
               <div className="price-feats">
                 <div className="pf"><span className="pf-ok">✓</span> eBook base (200+ págs)</div>
@@ -449,7 +448,7 @@ export function LandingNew() {
                 <div className="pf pf-off"><span>✗</span> Comunidad WhatsApp</div>
               </div>
               <div className="price-cta">
-                <a href="/api/checkout?pack=starter" className="lp-btn lp-btn-secondary" style={{ width: '100%', justifyContent: 'center' }}>Quiero el Starter →</a>
+                <a href="#waitlist" className="lp-btn lp-btn-secondary" style={{ width: '100%', justifyContent: 'center' }}>Reservar plaza →</a>
               </div>
             </div>
 
@@ -458,10 +457,9 @@ export function LandingNew() {
               <div className="price-badge">⭐ Más popular</div>
               <div className="price-name">Pro</div>
               <p className="price-desc">Para quien quiere resultados concretos y rápidos</p>
-              <div className="price-row">
-                <span className="p-amount" style={{ color: 'var(--primary)' }}>37</span><span className="p-currency">€</span>
+              <div className="price-row" style={{ margin: '0 0 24px' }}>
+                <span style={{ fontFamily: 'var(--lp-font-d)', fontWeight: 700, fontSize: '.82rem', color: 'var(--primary)', background: 'rgba(0,255,178,.15)', padding: '5px 12px', borderRadius: 100 }}>Precio especial al lanzar</span>
               </div>
-              <div className="p-before">antes 97€</div>
               <hr className="price-hr" />
               <div className="price-feats">
                 <div className="pf"><span className="pf-ok">✓</span> eBook base (200+ págs)</div>
@@ -472,7 +470,7 @@ export function LandingNew() {
                 <div className="pf"><span className="pf-ok">✓</span> Garantía de satisfacción</div>
               </div>
               <div className="price-cta">
-                <a href="/api/checkout?pack=pro" className="lp-btn lp-btn-primary lp-btn-lg" style={{ width: '100%', justifyContent: 'center' }}>Quiero el Pro →</a>
+                <a href="#waitlist" className="lp-btn lp-btn-primary lp-btn-lg" style={{ width: '100%', justifyContent: 'center' }}>Reservar plaza →</a>
               </div>
             </div>
 
@@ -480,10 +478,9 @@ export function LandingNew() {
             <div className="price-card reveal d3">
               <div className="price-name">Élite</div>
               <p className="price-desc">Para quien va en serio y quiere el nivel máximo</p>
-              <div className="price-row">
-                <span className="p-amount">97</span><span className="p-currency">€</span>
+              <div className="price-row" style={{ margin: '0 0 24px' }}>
+                <span style={{ fontFamily: 'var(--lp-font-d)', fontWeight: 700, fontSize: '.82rem', color: 'var(--lp-primary-dark)', background: 'rgba(0,255,178,.1)', padding: '5px 12px', borderRadius: 100 }}>Precio especial al lanzar</span>
               </div>
-              <div className="p-before">antes 297€</div>
               <hr className="price-hr" />
               <div className="price-feats">
                 <div className="pf"><span className="pf-ok">✓</span> Todo lo del pack Pro</div>
@@ -494,14 +491,13 @@ export function LandingNew() {
                 <div className="pf"><span className="pf-ok">✓</span> Garantía de satisfacción</div>
               </div>
               <div className="price-cta">
-                <a href="/api/checkout?pack=elite" className="lp-btn lp-btn-secondary" style={{ width: '100%', justifyContent: 'center' }}>Quiero el Élite</a>
+                <a href="#waitlist" className="lp-btn lp-btn-secondary" style={{ width: '100%', justifyContent: 'center' }}>Reservar plaza →</a>
               </div>
             </div>
           </div>
           <div className="price-trust reveal">
-            <span>🔒 Pago 100% seguro</span>
-            <span>💳 Tarjeta o PayPal</span>
-            <span>📱 Acceso inmediato</span>
+            <span>🎯 Precio de fundador exclusivo</span>
+            <span>📱 Acceso inmediato al lanzar</span>
             <span>🛡️ Garantía de satisfacción</span>
           </div>
         </div>
@@ -639,7 +635,7 @@ export function LandingNew() {
             El siguiente paso es tuyo — sin riesgos, con garantía de satisfacción.
           </p>
           <div className="reveal d3">
-            <a href="/api/checkout?pack=pro" className="lp-btn lp-btn-primary lp-btn-xl">Quiero aprender con AprendIA →</a>
+            <a href="#waitlist" className="lp-btn lp-btn-primary lp-btn-xl">Quiero aprender con AprendIA →</a>
           </div>
           <div className="cta-g reveal d4">
             🛡️ Si el contenido no cumple lo prometido, te devolvemos el dinero
@@ -669,7 +665,7 @@ export function LandingNew() {
 
       {/* ── STICKY CTA (solo mobile) ── */}
       <div className="sticky-cta" id="stickyCta">
-        <a href="#pricing">⚡ Quiero aprender — desde 17€ →</a>
+        <a href="#waitlist">⚡ Reserva tu plaza gratis →</a>
         <div className="sticky-cta-sub">🛡️ Garantía de satisfacción · Acceso inmediato</div>
       </div>
     </div>
