@@ -12,7 +12,7 @@ export const config = {
     '/api/tiktok/feedback',
     '/api/tiktok/settings',
     '/api/tiktok/zip',
-    '/api/tiktok/render',
+    '/api/tiktok/publish/:path*',
     '/api/generate',
     '/api/ebooks/:path*',
   ],

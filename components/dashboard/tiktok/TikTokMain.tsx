@@ -8,6 +8,7 @@ import { TYPE_META } from '@/lib/tiktok'
 type Props = {
   initialPosts: TikTokPost[]
   initialSettings: TikTokSettings
+  isConnected: boolean
 }
 
 function buildRenderUrl(slide: TikTokSlide, type: TikTokPostType, dl = false, bgUrl?: string): string {
@@ -32,10 +33,9 @@ function buildRenderUrl(slide: TikTokSlide, type: TikTokPostType, dl = false, bg
 }
 
 function SlideThumbnail({ slide, type, size = 120, bgUrl }: { slide: TikTokSlide; type: TikTokPostType; size?: number; bgUrl?: string }) {
-  const url = buildRenderUrl(slide, type, false, bgUrl)
   return (
     <img
-      src={url}
+      src={buildRenderUrl(slide, type, false, bgUrl)}
       alt={slide.type}
       width={size}
       height={size}
@@ -44,10 +44,12 @@ function SlideThumbnail({ slide, type, size = 120, bgUrl }: { slide: TikTokSlide
   )
 }
 
-function PostCard({ post, onDelete }: { post: TikTokPost; onDelete: (id: string) => void }) {
-  const [expanded, setExpanded] = useState(false)
-  const [deleting, setDeleting] = useState(false)
-  const meta = TYPE_META[post.type]
+function PostCard({ post, onDelete, onPublished }: { post: TikTokPost; onDelete: (id: string) => void; onPublished: (id: string) => void }) {
+  const [expanded, setExpanded]   = useState(false)
+  const [deleting, setDeleting]   = useState(false)
+  const [publishing, setPublishing] = useState(false)
+  const [pubError, setPubError]   = useState('')
+  const meta  = TYPE_META[post.type]
   const cover = post.slides[0]
   const bgUrl = cover?.type === 'cover' ? cover.background_url : undefined
 
@@ -58,17 +60,30 @@ function PostCard({ post, onDelete }: { post: TikTokPost; onDelete: (id: string)
     onDelete(post.id)
   }
 
+  const handlePublish = async () => {
+    setPublishing(true)
+    setPubError('')
+    const res = await fetch(`/api/tiktok/publish/${post.id}`, { method: 'POST' })
+    const data = await res.json()
+    if (!res.ok) {
+      setPubError(data.error ?? 'Error al publicar')
+      setPublishing(false)
+    } else {
+      onPublished(post.id)
+    }
+  }
+
   const scheduledDate = post.scheduled_at
     ? new Date(post.scheduled_at).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })
     : null
-
   const publishedDate = post.published_at
     ? new Date(post.published_at).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' })
     : null
 
+  const canPublish = ['approved', 'scheduled', 'error'].includes(post.status)
+
   return (
     <div style={{ background: '#fff', border: '1px solid #E2E8F0', borderRadius: 16, overflow: 'hidden' }}>
-      {/* Main row */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '16px 20px' }}>
         {cover && <SlideThumbnail slide={cover} type={post.type} size={72} bgUrl={bgUrl} />}
 
@@ -82,9 +97,24 @@ function PostCard({ post, onDelete }: { post: TikTokPost; onDelete: (id: string)
           <div style={{ fontSize: '.82rem', color: '#64748B' }}>
             {scheduledDate ? `Programado: ${scheduledDate}` : publishedDate ? `Publicado: ${publishedDate}` : 'Sin programar'}
           </div>
+          {pubError && <div style={{ fontSize: 11, color: '#EF4444', marginTop: 4 }}>{pubError}</div>}
+          {post.tiktok_url && (
+            <a href={post.tiktok_url} target="_blank" rel="noreferrer" style={{ fontSize: 11, color: '#3B82F6', marginTop: 4, display: 'block' }}>
+              Ver en TikTok →
+            </a>
+          )}
         </div>
 
         <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
+          {canPublish && (
+            <button
+              onClick={handlePublish}
+              disabled={publishing}
+              style={{ fontSize: 12, fontWeight: 700, color: '#fff', background: '#0F172A', border: 'none', borderRadius: 8, padding: '8px 14px', cursor: 'pointer', opacity: publishing ? 0.6 : 1 }}
+            >
+              {publishing ? '⏳...' : '▶ Publicar'}
+            </button>
+          )}
           <button
             onClick={() => setExpanded(!expanded)}
             style={{ fontSize: 12, fontWeight: 600, color: '#3B82F6', background: 'rgba(59,130,246,.08)', border: 'none', borderRadius: 8, padding: '8px 14px', cursor: 'pointer' }}
@@ -101,20 +131,13 @@ function PostCard({ post, onDelete }: { post: TikTokPost; onDelete: (id: string)
         </div>
       </div>
 
-      {/* Expanded slides */}
       {expanded && (
         <div style={{ padding: '0 20px 20px', borderTop: '1px solid #F1F5F9' }}>
           <div style={{ paddingTop: 16, overflowX: 'auto' }}>
             <div style={{ display: 'flex', gap: 10, width: 'max-content' }}>
               {post.slides.map((slide, i) => (
                 <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
-                  <a
-                    href={buildRenderUrl(slide, post.type, true, bgUrl)}
-                    target="_blank"
-                    rel="noreferrer"
-                    download
-                    title="Descargar slide"
-                  >
+                  <a href={buildRenderUrl(slide, post.type, true, bgUrl)} target="_blank" rel="noreferrer" download title="Descargar slide">
                     <SlideThumbnail slide={slide} type={post.type} size={140} bgUrl={bgUrl} />
                   </a>
                   <span style={{ fontSize: 10, color: '#94A3B8', fontWeight: 600 }}>
@@ -124,9 +147,7 @@ function PostCard({ post, onDelete }: { post: TikTokPost; onDelete: (id: string)
               ))}
             </div>
           </div>
-          <p style={{ fontSize: 11, color: '#94A3B8', marginTop: 10 }}>
-            Haz clic en cada slide para descargarla como PNG.
-          </p>
+          <p style={{ fontSize: 11, color: '#94A3B8', marginTop: 10 }}>Haz clic en cada slide para descargarla como PNG.</p>
         </div>
       )}
     </div>
@@ -149,31 +170,32 @@ function StatusBadge({ status }: { status: string }) {
   )
 }
 
-export function TikTokMain({ initialPosts, initialSettings }: Props) {
-  const [posts, setPosts] = useState<TikTokPost[]>(initialPosts)
-  const [settings, setSettings] = useState<TikTokSettings>(initialSettings)
-  const [tab, setTab] = useState<'queue' | 'history'>('queue')
+export function TikTokMain({ initialPosts, initialSettings, isConnected }: Props) {
+  const [posts, setPosts]           = useState<TikTokPost[]>(initialPosts)
+  const [settings, setSettings]     = useState<TikTokSettings>(initialSettings)
+  const [tab, setTab]               = useState<'queue' | 'history'>('queue')
   const [togglingAuto, setTogglingAuto] = useState(false)
+  const [connected, setConnected]   = useState(isConnected)
 
   const queue   = posts.filter(p => ['draft', 'approved', 'scheduled'].includes(p.status))
   const history = posts.filter(p => ['published', 'error'].includes(p.status))
 
   const toggleAuto = async () => {
     setTogglingAuto(true)
-    const newVal = !settings.auto_mode
     const res = await fetch('/api/tiktok/settings', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ auto_mode: newVal }),
+      body: JSON.stringify({ auto_mode: !settings.auto_mode }),
     })
     const { settings: updated } = await res.json()
     setSettings(updated)
     setTogglingAuto(false)
   }
 
-  const handleDelete = (id: string) => {
-    setPosts(prev => prev.filter(p => p.id !== id))
-  }
+  const handleDelete    = (id: string) => setPosts(prev => prev.filter(p => p.id !== id))
+  const handlePublished = (id: string) => setPosts(prev =>
+    prev.map(p => p.id === id ? { ...p, status: 'published' as const, published_at: new Date().toISOString() } : p)
+  )
 
   return (
     <>
@@ -184,6 +206,22 @@ export function TikTokMain({ initialPosts, initialSettings }: Props) {
           <div style={{ fontSize: '.8rem', color: '#64748B' }}>{queue.length} en cola · {history.length} publicados</div>
         </div>
         <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+
+          {/* TikTok connection status */}
+          {connected ? (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, fontWeight: 700, color: '#007A40', background: 'rgba(0,255,178,.1)', border: '1px solid rgba(0,204,143,.25)', borderRadius: 100, padding: '7px 14px' }}>
+              <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#00CC8F', display: 'inline-block' }} />
+              @aprendia.ia conectado
+            </div>
+          ) : (
+            <a
+              href="/api/auth/tiktok"
+              style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, fontWeight: 700, color: '#EF4444', background: 'rgba(239,68,68,.07)', border: '1px solid rgba(239,68,68,.2)', borderRadius: 100, padding: '7px 14px', textDecoration: 'none' }}
+            >
+              ⚠ Conectar TikTok
+            </a>
+          )}
+
           {/* Auto mode toggle */}
           <button
             onClick={toggleAuto}
@@ -198,17 +236,8 @@ export function TikTokMain({ initialPosts, initialSettings }: Props) {
               transition: 'all .2s',
             }}
           >
-            <div style={{
-              width: 28, height: 16, borderRadius: 100,
-              background: settings.auto_mode ? '#00CC8F' : '#CBD5E1',
-              position: 'relative', transition: 'background .2s', flexShrink: 0,
-            }}>
-              <div style={{
-                position: 'absolute', top: 2,
-                left: settings.auto_mode ? 14 : 2,
-                width: 12, height: 12, borderRadius: '50%', background: '#fff',
-                transition: 'left .2s',
-              }} />
+            <div style={{ width: 28, height: 16, borderRadius: 100, background: settings.auto_mode ? '#00CC8F' : '#CBD5E1', position: 'relative', transition: 'background .2s', flexShrink: 0 }}>
+              <div style={{ position: 'absolute', top: 2, left: settings.auto_mode ? 14 : 2, width: 12, height: 12, borderRadius: '50%', background: '#fff', transition: 'left .2s' }} />
             </div>
             Modo autónomo
           </button>
@@ -222,16 +251,13 @@ export function TikTokMain({ initialPosts, initialSettings }: Props) {
         </div>
       </header>
 
-      {/* Auto mode info banner */}
       {settings.auto_mode && (
         <div style={{ background: 'rgba(0,255,178,.07)', borderBottom: '1px solid rgba(0,204,143,.2)', padding: '10px 28px', fontSize: 12, color: '#007A40', fontWeight: 600 }}>
-          ⚡ Modo autónomo activado — cada día a las 8:00am se generan y programan 4 posts automáticamente (9h · 12h · 15h · 19h)
+          ⚡ Modo autónomo activado — cada día a las 8:00am se generan y publican 4 posts automáticamente (9h · 12h · 15h · 19h)
         </div>
       )}
 
-      {/* Content */}
       <div style={{ flex: 1, overflowY: 'auto', padding: '24px 28px' }}>
-        {/* Tabs */}
         <div style={{ display: 'flex', gap: 4, background: '#F1F5F9', borderRadius: 10, padding: 4, width: 'fit-content', marginBottom: 20 }}>
           {(['queue', 'history'] as const).map(t => (
             <button
@@ -251,7 +277,6 @@ export function TikTokMain({ initialPosts, initialSettings }: Props) {
           ))}
         </div>
 
-        {/* Posts list */}
         {tab === 'queue' && (
           queue.length === 0 ? (
             <EmptyState
@@ -262,7 +287,7 @@ export function TikTokMain({ initialPosts, initialSettings }: Props) {
             />
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-              {queue.map(p => <PostCard key={p.id} post={p} onDelete={handleDelete} />)}
+              {queue.map(p => <PostCard key={p.id} post={p} onDelete={handleDelete} onPublished={handlePublished} />)}
             </div>
           )
         )}
@@ -272,7 +297,7 @@ export function TikTokMain({ initialPosts, initialSettings }: Props) {
             <EmptyState icon="📊" title="Sin historial" desc="Los posts publicados aparecerán aquí" />
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-              {history.map(p => <PostCard key={p.id} post={p} onDelete={handleDelete} />)}
+              {history.map(p => <PostCard key={p.id} post={p} onDelete={handleDelete} onPublished={handlePublished} />)}
             </div>
           )
         )}
