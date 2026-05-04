@@ -52,7 +52,7 @@ export async function POST(req: NextRequest) {
 
   const zipped = zipSync(files, { level: 0 })
 
-  return new NextResponse(zipped, {
+  return new NextResponse(Buffer.from(zipped), {
     headers: {
       'Content-Type': 'application/zip',
       'Content-Disposition': 'attachment; filename="aprendia-slides.zip"',
