@@ -22,6 +22,29 @@ const FAQS = [
 export function LandingNew() {
   const [activeTab, setActiveTab] = useState<'starter' | 'pro' | 'elite'>('starter')
   const [openFaq, setOpenFaq] = useState<number | null>(null)
+  const [wlEmail, setWlEmail] = useState('')
+  const [wlPack, setWlPack] = useState('starter')
+  const [wlStatus, setWlStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
+  const [wlError, setWlError] = useState('')
+
+  const submitWaitlist = async () => {
+    if (!wlEmail.trim()) { setWlError('Introduce tu email'); return }
+    setWlStatus('loading')
+    setWlError('')
+    try {
+      const res = await fetch('/api/waitlist', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: wlEmail, pack: wlPack }),
+      })
+      const data = await res.json()
+      if (!res.ok) { setWlError(data.error || 'Error al guardar. Inténtalo de nuevo.'); setWlStatus('error'); return }
+      setWlStatus('success')
+    } catch {
+      setWlError('Error de conexión. Inténtalo de nuevo.')
+      setWlStatus('error')
+    }
+  }
 
   useEffect(() => {
     const ro = new IntersectionObserver(
@@ -513,6 +536,64 @@ export function LandingNew() {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── WAITLIST ── */}
+      <section id="waitlist">
+        <div className="wrap">
+          <div className="sec-hd">
+            <div className="lp-pill reveal"><span className="dot" />Acceso anticipado</div>
+            <h2 className="t-h2 reveal d1" style={{ color: '#fff', marginBottom: 14 }}>
+              Reserva tu plaza.<br />
+              <span style={{ color: 'var(--primary)' }}>Es completamente gratis.</span>
+            </h2>
+            <p className="t-md reveal d2" style={{ color: 'rgba(255,255,255,.5)', marginBottom: 0 }}>
+              Apúntate antes del lanzamiento y consigue precio de fundador + acceso a la comunidad.
+            </p>
+          </div>
+
+          <div className="wl-inner reveal d3">
+            {wlStatus === 'success' ? (
+              <div className="wl-success">
+                <div style={{ fontSize: '2.8rem' }}>🎉</div>
+                <h3>¡Ya estás dentro!</h3>
+                <p>Te avisaremos antes del lanzamiento con tu precio exclusivo de fundador. Únete ahora a nuestra comunidad para no perderte nada.</p>
+                <a href="https://whatsapp.com/channel/0029VbCPfkzElah0V93Ils2J" target="_blank" rel="noopener noreferrer" className="wl-wa-btn">
+                  💬 Unirse al canal de WhatsApp
+                </a>
+              </div>
+            ) : (
+              <>
+                <div className="wl-pack-grid">
+                  {[
+                    { id: 'starter', name: 'Starter', desc: 'Lo esencial para comenzar' },
+                    { id: 'pro',     name: 'Pro',     desc: 'Recursos avanzados + comunidad' },
+                    { id: 'elite',   name: 'Élite',   desc: 'Todo + Discord + mentoría' },
+                    { id: 'unsure',  name: 'No lo sé aún', desc: 'Aún estoy decidiendo' },
+                  ].map((p) => (
+                    <button key={p.id} className={`wl-pack-opt${wlPack === p.id ? ' sel' : ''}`} onClick={() => setWlPack(p.id)}>
+                      <div className="wl-pack-name">{p.name}</div>
+                      <div className="wl-pack-desc">{p.desc}</div>
+                    </button>
+                  ))}
+                </div>
+                <input
+                  type="email"
+                  className="wl-input"
+                  placeholder="tu@email.com"
+                  value={wlEmail}
+                  onChange={(e) => setWlEmail(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && submitWaitlist()}
+                />
+                {wlError && <p className="wl-err">{wlError}</p>}
+                <button className="wl-submit" onClick={submitWaitlist} disabled={wlStatus === 'loading'}>
+                  {wlStatus === 'loading' ? 'Guardando...' : 'Reservar mi plaza gratis →'}
+                </button>
+                <p className="wl-hint">Sin spam · Solo avisamos cuando sea importante</p>
+              </>
+            )}
           </div>
         </div>
       </section>

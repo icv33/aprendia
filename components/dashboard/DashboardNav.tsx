@@ -11,6 +11,7 @@ const NAV_SECTIONS = [
       { href: '/dashboard', label: 'Resumen', icon: '◧', exact: true },
       { href: '/dashboard/ebooks', label: 'Contenido', icon: '📦', exact: false },
       { href: '/dashboard/ventas', label: 'Ventas', icon: '🛒', exact: false },
+      { href: '/dashboard/waitlist', label: 'Lista de espera', icon: '📋', exact: false },
     ],
   },
   {
