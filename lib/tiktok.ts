@@ -2,11 +2,11 @@ import Anthropic from '@anthropic-ai/sdk'
 import { TikTokSlide, TikTokPostType } from './supabase'
 
 const PEXELS_QUERIES: Record<TikTokPostType, string> = {
-  truco:         'laptop workspace minimal desk tech setup',
-  vida_facil:    'morning coffee laptop lifestyle productive home',
-  mito:          'person thinking laptop focus work concentration',
-  caso_practico: 'office desk work productivity professional setup',
-  personalizado: 'professional lifestyle modern clean aesthetic',
+  truco:         'laptop screen code dark minimal tech desk',
+  vida_facil:    'smartphone laptop desk minimal clean setup',
+  mito:          'dark abstract digital technology minimal',
+  caso_practico: 'computer monitor workspace dark minimal setup',
+  personalizado: 'dark minimal tech abstract digital screen',
 }
 
 async function fetchPexelsPhoto(query: string): Promise<string | null> {
