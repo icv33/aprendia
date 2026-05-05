@@ -50,7 +50,7 @@ function PostCard({ post, onDelete, onPublished }: { post: TikTokPost; onDelete:
   const [publishing, setPublishing] = useState(false)
   const [saving, setSaving]       = useState(false)
   const [saveMsg, setSaveMsg]     = useState('')
-  const [galleryUrls, setGalleryUrls] = useState<string[]>([])
+  const [gallery, setGallery]     = useState<{ urls: string[]; files: File[] } | null>(null)
   const [pubError, setPubError]   = useState('')
   const meta  = TYPE_META[post.type]
   const cover = post.slides[0]
@@ -86,29 +86,16 @@ function PostCard({ post, onDelete, onPublished }: { post: TikTokPost; onDelete:
         if (!res.ok) throw new Error('fetch_failed')
         blobs.push(await res.blob())
       }
-
-      // Try Web Share API with files (Android Chrome / Safari iOS 15+)
-      if (typeof navigator.share === 'function') {
-        const files = blobs.map((b, i) => {
-          const s = post.slides[i]
-          const name = s.type === 'cover' ? 'portada' : s.type === 'cta' ? 'cta' : `slide-${(s as Extract<typeof s, { type: 'content' }>).num}`
-          return new File([b], `${name}.png`, { type: 'image/png' })
-        })
-        try {
-          await navigator.share({ files })
-          setSaving(false)
-          return
-        } catch (err) {
-          if (err instanceof Error && err.name === 'AbortError') {
-            setSaving(false)
-            return
-          }
-          // share with files not supported — fall through to modal
-        }
-      }
-
-      // Fallback: full-screen gallery modal — user long-presses each image to save
-      setGalleryUrls(blobs.map(b => URL.createObjectURL(b)))
+      const files = blobs.map((b, i) => {
+        const s = post.slides[i]
+        const name = s.type === 'cover' ? 'portada' : s.type === 'cta' ? 'cta' : `slide-${(s as Extract<typeof s, { type: 'content' }>).num}`
+        return new File([b], `${name}.png`, { type: 'image/png' })
+      })
+      const urls = blobs.map(b => URL.createObjectURL(b))
+      // Always show the modal with pre-loaded images + a share button inside.
+      // This way "Guardar todas" fires navigator.share() from a fresh tap,
+      // avoiding iOS Safari's user-activation timeout during the fetch.
+      setGallery({ urls, files })
     } catch {
       setSaveMsg('Error al cargar las imágenes')
     }
@@ -116,8 +103,8 @@ function PostCard({ post, onDelete, onPublished }: { post: TikTokPost; onDelete:
   }
 
   const closeGallery = () => {
-    galleryUrls.forEach(u => URL.revokeObjectURL(u))
-    setGalleryUrls([])
+    gallery?.urls.forEach(u => URL.revokeObjectURL(u))
+    setGallery(null)
   }
 
   const scheduledDate = post.scheduled_at
@@ -207,35 +194,61 @@ function PostCard({ post, onDelete, onPublished }: { post: TikTokPost; onDelete:
         </div>
       )}
 
-      {galleryUrls.length > 0 && (
-        <GalleryModal urls={galleryUrls} onClose={closeGallery} />
+      {gallery && (
+        <GalleryModal urls={gallery.urls} files={gallery.files} onClose={closeGallery} />
       )}
     </div>
   )
 }
 
-function GalleryModal({ urls, onClose }: { urls: string[]; onClose: () => void }) {
+function GalleryModal({ urls, files, onClose }: { urls: string[]; files: File[]; onClose: () => void }) {
+  const [sharing, setSharing] = useState(false)
+  const canShare = typeof navigator.share === 'function'
+
+  const handleShareAll = async () => {
+    setSharing(true)
+    try {
+      // Fresh user-tap → iOS Safari activation still valid → share fires instantly
+      await navigator.share({ files })
+    } catch (err) {
+      if (!(err instanceof Error && err.name === 'AbortError')) {
+        alert('Tu navegador no permite guardar varias fotos a la vez. Mantén pulsada cada imagen para guardarla.')
+      }
+    }
+    setSharing(false)
+  }
+
   return (
-    <div
-      style={{
-        position: 'fixed', inset: 0, background: 'rgba(0,0,0,.96)',
-        zIndex: 200, overflowY: 'auto',
-        display: 'flex', flexDirection: 'column', alignItems: 'center',
-        padding: '72px 20px 40px', gap: 20,
-      }}
-      onClick={(e) => { if (e.target === e.currentTarget) onClose() }}
-    >
-      <div style={{ position: 'fixed', top: 0, left: 0, right: 0, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 20px', background: 'rgba(0,0,0,.8)', backdropFilter: 'blur(8px)', zIndex: 201 }}>
-        <p style={{ color: 'rgba(255,255,255,.7)', fontSize: 13, margin: 0 }}>
-          Mantén pulsada cada imagen → <strong style={{ color: '#fff' }}>Guardar en Fotos</strong>
-        </p>
+    <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.96)', zIndex: 200, overflowY: 'auto', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '72px 20px 40px', gap: 20 }}>
+      {/* Fixed top bar */}
+      <div style={{ position: 'fixed', top: 0, left: 0, right: 0, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, padding: '12px 16px', background: 'rgba(0,0,0,.85)', backdropFilter: 'blur(10px)', zIndex: 201 }}>
+        {canShare ? (
+          <button
+            onClick={handleShareAll}
+            disabled={sharing}
+            style={{ flex: 1, background: '#00CC8F', border: 'none', color: '#000', borderRadius: 10, padding: '11px 16px', fontSize: 14, fontWeight: 800, cursor: 'pointer', opacity: sharing ? 0.7 : 1 }}
+          >
+            {sharing ? '⏳ Guardando...' : '📲 Guardar todas en Fotos'}
+          </button>
+        ) : (
+          <p style={{ color: 'rgba(255,255,255,.7)', fontSize: 13, margin: 0 }}>
+            Mantén pulsada cada imagen → <strong style={{ color: '#fff' }}>Guardar en Fotos</strong>
+          </p>
+        )}
         <button
           onClick={onClose}
-          style={{ background: 'rgba(255,255,255,.12)', border: 'none', color: '#fff', borderRadius: 10, padding: '8px 14px', fontSize: 13, fontWeight: 700, cursor: 'pointer' }}
+          style={{ background: 'rgba(255,255,255,.12)', border: 'none', color: '#fff', borderRadius: 10, padding: '11px 14px', fontSize: 13, fontWeight: 700, cursor: 'pointer', flexShrink: 0 }}
         >
-          ✕ Cerrar
+          ✕
         </button>
       </div>
+
+      {!canShare && (
+        <p style={{ color: 'rgba(255,255,255,.5)', fontSize: 12, textAlign: 'center', marginBottom: 4 }}>
+          Mantén pulsada cada imagen → <strong style={{ color: 'rgba(255,255,255,.8)' }}>Guardar en Fotos</strong>
+        </p>
+      )}
+
       {urls.map((src, i) => (
         <img
           key={i}
