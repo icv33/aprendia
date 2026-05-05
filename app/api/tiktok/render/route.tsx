@@ -10,9 +10,9 @@ function b64ToBuffer(b64: string): ArrayBuffer {
 
 const TYPE_COLORS: Record<string, string> = {
   truco:         '#00FFB2',
-  vida_facil:    '#3B82F6',
-  mito:          '#8B5CF6',
-  caso_practico: '#F59E0B',
+  vida_facil:    '#00FFB2',
+  mito:          '#00FFB2',
+  caso_practico: '#00FFB2',
 }
 
 const FALLBACK_BG = 'linear-gradient(160deg, #080D1A 0%, #0C1525 60%, #080D1A 100%)'
