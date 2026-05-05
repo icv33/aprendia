@@ -251,36 +251,35 @@ export const SCHEDULE_SLOTS = ['09:00', '12:00', '15:00', '19:00']
 export async function generateCustomTikTokSlides(userPrompt: string): Promise<TikTokSlide[]> {
   const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY! })
 
-  const prompt = `Genera un carrusel de TikTok sobre el siguiente tema o instrucciones:
+  const prompt = `El usuario quiere crear un carrusel de TikTok con las siguientes instrucciones:
 
 "${userPrompt}"
 
-El cover debe empezar con el beneficio o con una frase que genere tensión.
-Sigue esta estructura narrativa en los 5 slides:
-1. Problema o situación común que el lector reconoce.
-2. Idea principal o cambio de enfoque.
-3. Prompt, sistema o paso práctico concreto.
-4. Ejemplo de aplicación real.
-5. Resultado esperado realista.
+REGLAS CRÍTICAS PARA ESTE POST PERSONALIZADO:
+1. Si el usuario ha escrito frases o textos concretos, úsalos EXACTAMENTE tal como los ha escrito, palabra por palabra, en el slide que corresponda. No los parafrasees ni los reescribas.
+2. Si el usuario ha dado un guión o estructura específica, síguelo al pie de la letra. El número de slides debe adaptarse a lo que pide, no forzar siempre 5.
+3. Si el usuario solo da un tema general sin frases concretas, tú crea el contenido siguiendo su intención.
+4. El número de slides de contenido puede ser entre 3 y 7 según lo que requiera el guión.
+
+Para el título de portada: crea un hook fuerte basado en la intención del usuario.
+Para cada slide: título corto (max 5 palabras) + contenido (max 15 palabras).
+Añade marcas <<palabra>> solo donde aporte énfasis, exactamente 1 por campo.
 
 Devuelve exactamente este JSON (sin markdown, solo el objeto):
 {
-  "titulo_portada": "TÍTULO EN MAYÚSCULAS CON GANCHO, MÁXIMO 7 PALABRAS, con <<palabras clave>> marcadas",
+  "titulo_portada": "TÍTULO EN MAYÚSCULAS CON GANCHO, con <<palabra clave>>",
   "subtitulo_portada": "una línea descriptiva, max 8 palabras",
   "slides": [
-    {"titulo": "título impactante max 5 palabras con <<marca>>", "contenido": "1 idea directa, max 15 palabras, con <<palabra clave>>"},
-    {"titulo": "...", "contenido": "..."},
-    {"titulo": "...", "contenido": "..."},
-    {"titulo": "...", "contenido": "..."},
+    {"titulo": "título con <<marca>>", "contenido": "texto del slide con <<énfasis>>"},
     {"titulo": "...", "contenido": "..."}
   ]
 }
 
-IMPORTANTE: exactamente 5 slides. Tono informal (tuteo). Sin emojis en los textos.${HIGHLIGHT_RULE}`
+Tono informal (tuteo). Sin emojis en los textos.${HIGHLIGHT_RULE}`
 
   const message = await client.messages.create({
     model: 'claude-sonnet-4-6',
-    max_tokens: 1200,
+    max_tokens: 1600,
     system: SYSTEM_PROMPT,
     messages: [{ role: 'user', content: prompt }],
   })
@@ -294,7 +293,7 @@ IMPORTANTE: exactamente 5 slides. Tono informal (tuteo). Sin emojis en los texto
 
   return [
     { type: 'cover', titulo: data.titulo_portada, subtitulo: data.subtitulo_portada, background_url: bgUrl ?? undefined },
-    ...data.slides.slice(0, 5).map((s: { titulo: string; contenido: string }, i: number) => ({
+    ...data.slides.slice(0, 8).map((s: { titulo: string; contenido: string }, i: number) => ({
       type: 'content' as const, num: i + 1, titulo: s.titulo, contenido: s.contenido,
     })),
     { type: 'cta', cta: FIXED_CTA },

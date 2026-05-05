@@ -26,9 +26,9 @@ function buildRenderUrl(slide: TikTokSlide, dl = false, bgUrl?: string): string 
 }
 
 const EXAMPLES = [
-  'Publicidad de mi curso de IA para principiantes. Resalta que es gratis y que en 7 días aprenderás a usar ChatGPT',
-  'Cómo uso la IA para crear contenido para redes sociales en 30 minutos al día',
-  'Por qué deberías empezar a usar IA en tu negocio ahora mismo antes de que lo haga tu competencia',
+  'Publicidad de mi curso de IA gratuito. Cover: "Aprende IA gratis en 7 días". Slide 1: "La mayoría paga por aprender IA. Tú no tienes que hacerlo." Slide 2: "Mi curso te enseña ChatGPT desde cero, paso a paso."',
+  'Quiero 4 slides sobre cómo uso IA para crear contenido en 30 min al día. Cada slide un uso concreto distinto.',
+  'Desmonta el mito de que la IA solo es para programadores. Tono directo, que provoque debate.',
 ]
 
 export function CustomGeneratorClient() {
@@ -120,7 +120,7 @@ export function CustomGeneratorClient() {
             <textarea
               value={prompt}
               onChange={e => setPrompt(e.target.value)}
-              placeholder="Ej: Quiero hacer publicidad de mi curso de IA gratuito. El objetivo es que la gente se apunte..."
+              placeholder="Describe el post o pega el guión exacto. Si escribes frases concretas, aparecerán tal cual en los slides."
               rows={6}
               style={{
                 width: '100%', padding: '10px 12px', borderRadius: 10,
