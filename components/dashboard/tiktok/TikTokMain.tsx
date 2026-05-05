@@ -48,6 +48,7 @@ function PostCard({ post, onDelete, onPublished }: { post: TikTokPost; onDelete:
   const [expanded, setExpanded]   = useState(false)
   const [deleting, setDeleting]   = useState(false)
   const [publishing, setPublishing] = useState(false)
+  const [saving, setSaving]       = useState(false)
   const [pubError, setPubError]   = useState('')
   const meta  = TYPE_META[post.type]
   const cover = post.slides[0]
@@ -71,6 +72,39 @@ function PostCard({ post, onDelete, onPublished }: { post: TikTokPost; onDelete:
     } else {
       onPublished(post.id)
     }
+  }
+
+  const handleSaveToGallery = async () => {
+    setSaving(true)
+    try {
+      const files: File[] = []
+      for (let i = 0; i < post.slides.length; i++) {
+        const slide = post.slides[i]
+        const res = await fetch(buildRenderUrl(slide, post.type, false, bgUrl))
+        const blob = await res.blob()
+        const name = slide.type === 'cover' ? 'portada' : slide.type === 'cta' ? 'cta' : `slide-${(slide as Extract<typeof slide, { type: 'content' }>).num}`
+        files.push(new File([blob], `${name}.png`, { type: 'image/png' }))
+      }
+
+      if (navigator.canShare?.({ files })) {
+        // Native share sheet: user taps "Guardar en Fotos" / "Guardar imagen"
+        await navigator.share({ files })
+      } else {
+        // Fallback: trigger individual downloads (desktop or old browser)
+        for (const file of files) {
+          const url = URL.createObjectURL(file)
+          const a = Object.assign(document.createElement('a'), { href: url, download: file.name })
+          document.body.appendChild(a)
+          a.click()
+          document.body.removeChild(a)
+          URL.revokeObjectURL(url)
+          await new Promise(r => setTimeout(r, 350))
+        }
+      }
+    } catch {
+      // User dismissed share sheet — no action needed
+    }
+    setSaving(false)
   }
 
   const scheduledDate = post.scheduled_at
@@ -105,7 +139,7 @@ function PostCard({ post, onDelete, onPublished }: { post: TikTokPost; onDelete:
           )}
         </div>
 
-        <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
+        <div style={{ display: 'flex', gap: 8, flexShrink: 0, flexWrap: 'wrap', justifyContent: 'flex-end' }}>
           {canPublish && (
             <button
               onClick={handlePublish}
@@ -115,6 +149,14 @@ function PostCard({ post, onDelete, onPublished }: { post: TikTokPost; onDelete:
               {publishing ? '⏳...' : '▶ Publicar'}
             </button>
           )}
+          <button
+            onClick={handleSaveToGallery}
+            disabled={saving}
+            title="Guardar todas las slides en tu galería/fotos"
+            style={{ fontSize: 12, fontWeight: 700, color: '#7C3AED', background: 'rgba(124,58,237,.09)', border: 'none', borderRadius: 8, padding: '8px 14px', cursor: 'pointer', opacity: saving ? 0.6 : 1 }}
+          >
+            {saving ? '⏳...' : '📸 Galería'}
+          </button>
           <button
             onClick={() => setExpanded(!expanded)}
             style={{ fontSize: 12, fontWeight: 600, color: '#3B82F6', background: 'rgba(59,130,246,.08)', border: 'none', borderRadius: 8, padding: '8px 14px', cursor: 'pointer' }}
