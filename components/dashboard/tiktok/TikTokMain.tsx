@@ -49,6 +49,7 @@ function PostCard({ post, onDelete, onPublished }: { post: TikTokPost; onDelete:
   const [deleting, setDeleting]   = useState(false)
   const [publishing, setPublishing] = useState(false)
   const [saving, setSaving]       = useState(false)
+  const [saveMsg, setSaveMsg]     = useState('')
   const [pubError, setPubError]   = useState('')
   const meta  = TYPE_META[post.type]
   const cover = post.slides[0]
@@ -76,35 +77,49 @@ function PostCard({ post, onDelete, onPublished }: { post: TikTokPost; onDelete:
 
   const handleSaveToGallery = async () => {
     setSaving(true)
+    setSaveMsg('')
     try {
+      // Fetch all slides as PNG blobs
       const files: File[] = []
       for (let i = 0; i < post.slides.length; i++) {
         const slide = post.slides[i]
         const res = await fetch(buildRenderUrl(slide, post.type, false, bgUrl))
+        if (!res.ok) throw new Error('fetch_failed')
         const blob = await res.blob()
         const name = slide.type === 'cover' ? 'portada' : slide.type === 'cta' ? 'cta' : `slide-${(slide as Extract<typeof slide, { type: 'content' }>).num}`
         files.push(new File([blob], `${name}.png`, { type: 'image/png' }))
       }
 
-      if (navigator.canShare?.({ files })) {
-        // Native share sheet: user taps "Guardar en Fotos" / "Guardar imagen"
-        await navigator.share({ files })
-      } else {
-        // Fallback: trigger individual downloads (desktop or old browser)
-        for (const file of files) {
-          const url = URL.createObjectURL(file)
-          const a = Object.assign(document.createElement('a'), { href: url, download: file.name })
-          document.body.appendChild(a)
-          a.click()
-          document.body.removeChild(a)
-          URL.revokeObjectURL(url)
-          await new Promise(r => setTimeout(r, 350))
+      // Try native share sheet (Android Chrome + Safari iOS 15+)
+      if (typeof navigator.share === 'function') {
+        try {
+          await navigator.share({ files })
+          // success — share sheet opened
+        } catch (err) {
+          if (err instanceof Error && err.name !== 'AbortError') {
+            // share not supported with files — open in new tabs as fallback
+            openInTabs(files)
+          }
+          // AbortError = user cancelled = no message needed
         }
+      } else {
+        openInTabs(files)
       }
     } catch {
-      // User dismissed share sheet — no action needed
+      setSaveMsg('Error al cargar las imágenes')
     }
     setSaving(false)
+  }
+
+  function openInTabs(files: File[]) {
+    // Fallback: open each image in a new tab so user can long-press → Save
+    files.forEach(file => {
+      const url = URL.createObjectURL(file)
+      window.open(url, '_blank')
+      // revoke after a delay to allow the tab to load
+      setTimeout(() => URL.revokeObjectURL(url), 60_000)
+    })
+    setSaveMsg(`Se abrieron ${files.length} imágenes en nuevas pestañas — mantén pulsada cada una para guardarla`)
   }
 
   const scheduledDate = post.scheduled_at
@@ -132,6 +147,7 @@ function PostCard({ post, onDelete, onPublished }: { post: TikTokPost; onDelete:
             {scheduledDate ? `Programado: ${scheduledDate}` : publishedDate ? `Publicado: ${publishedDate}` : 'Sin programar'}
           </div>
           {pubError && <div style={{ fontSize: 11, color: '#EF4444', marginTop: 4 }}>{pubError}</div>}
+          {saveMsg && <div style={{ fontSize: 11, color: '#7C3AED', marginTop: 4 }}>{saveMsg}</div>}
           {post.tiktok_url && (
             <a href={post.tiktok_url} target="_blank" rel="noreferrer" style={{ fontSize: 11, color: '#3B82F6', marginTop: 4, display: 'block' }}>
               Ver en TikTok →
