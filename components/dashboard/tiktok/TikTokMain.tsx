@@ -368,6 +368,12 @@ export function TikTokMain({ initialPosts, initialSettings, isConnected }: Props
           </button>
 
           <Link
+            href="/dashboard/tiktok/custom"
+            style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'rgba(236,72,153,.1)', color: '#EC4899', fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 13, padding: '9px 16px', borderRadius: 10, textDecoration: 'none' }}
+          >
+            ✏️ Post personalizado
+          </Link>
+          <Link
             href="/dashboard/tiktok/new"
             style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#0F172A', color: '#fff', fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 13, padding: '9px 16px', borderRadius: 10, textDecoration: 'none' }}
           >

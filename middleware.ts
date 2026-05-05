@@ -8,6 +8,7 @@ export const config = {
   matcher: [
     '/dashboard/:path*',
     '/api/tiktok/generate',
+    '/api/tiktok/generate-custom',
     '/api/tiktok/posts/:path*',
     '/api/tiktok/feedback',
     '/api/tiktok/settings',

@@ -158,22 +158,18 @@ export async function GET(req: Request) {
         <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.80)', display: 'flex' }} />
         <div style={{ position: 'absolute', top: '50%', left: '50%', width: 600, height: 600, borderRadius: '50%', background: `radial-gradient(circle, ${accent}15 0%, transparent 65%)`, display: 'flex', transform: 'translate(-50%,-50%)' }} />
 
-        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 52, padding: '0 80px' }}>
+        <div style={{ position: 'absolute', bottom: 160, left: 64, right: 64, display: 'flex', flexDirection: 'column', gap: 0 }}>
           <HighlightText
             text={cta}
             accent={accent}
-            fontSize={rawLength(cta) > 40 ? 54 : 64}
+            fontSize={rawLength(cta) > 50 ? 58 : 68}
             fontWeight={800}
-            center={true}
           />
+        </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 18 }}>
-            <span style={{ fontSize: 28, fontWeight: 700, color: 'rgba(255,255,255,0.65)', display: 'flex' }}>Si quieres aprender mas sobre esto GRATIS,</span>
-            <div style={{ display: 'flex', alignItems: 'center', background: accent, borderRadius: 100, padding: '20px 52px' }}>
-              <span style={{ fontSize: 28, fontWeight: 800, color: '#080D1A' }}>Comenta APRENDE y SIGUEME</span>
-            </div>
-            <span style={{ fontSize: 28, fontWeight: 700, color: 'rgba(255,255,255,0.65)', display: 'flex' }}>y te lo mando por privado</span>
-          </div>
+        <div style={{ position: 'absolute', bottom: 52, left: 64, display: 'flex', alignItems: 'center', gap: 10 }}>
+          <div style={{ width: 6, height: 6, borderRadius: '50%', background: accent, display: 'flex' }} />
+          <span style={{ fontSize: 22, fontWeight: 700, color: 'rgba(255,255,255,0.38)', letterSpacing: 1 }}>aprendia.store</span>
         </div>
       </div>
     )

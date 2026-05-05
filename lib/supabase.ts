@@ -34,7 +34,7 @@ export type Ebook = {
 
 // ── TikTok ────────────────────────────────────────────────────────────────────
 
-export type TikTokPostType = 'truco' | 'vida_facil' | 'mito' | 'caso_practico'
+export type TikTokPostType = 'truco' | 'vida_facil' | 'mito' | 'caso_practico' | 'personalizado'
 export type TikTokPostStatus = 'draft' | 'approved' | 'scheduled' | 'published' | 'error'
 
 export type TikTokSlide =
