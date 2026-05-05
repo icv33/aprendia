@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { generateTikTokSlides } from '@/lib/tiktok'
-import { createServerSupabase, TikTokPostType, TikTokSlide } from '@/lib/supabase'
+import { TikTokPostType } from '@/lib/supabase'
 import { rateLimit, ipKey } from '@/lib/ratelimit'
 
 const VALID_TYPES: TikTokPostType[] = ['truco', 'vida_facil', 'mito', 'caso_practico']
@@ -21,18 +21,7 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const supabase = createServerSupabase()
-    const { data: liked } = await supabase
-      .from('tiktok_feedback')
-      .select('slides')
-      .eq('type', type)
-      .eq('rating', 'like')
-      .order('created_at', { ascending: false })
-      .limit(3)
-
-    const likedExamples: TikTokSlide[][] = (liked ?? []).map((r: { slides: TikTokSlide[] }) => r.slides)
-
-    const slides = await generateTikTokSlides(type, likedExamples)
+    const slides = await generateTikTokSlides(type)
     return NextResponse.json({ slides })
   } catch (err) {
     console.error('Error generating TikTok slides:', err)
