@@ -23,7 +23,6 @@ export function LandingNew() {
   const [activeTab, setActiveTab] = useState<'starter' | 'pro' | 'elite'>('starter')
   const [openFaq, setOpenFaq] = useState<number | null>(null)
   const [wlEmail, setWlEmail] = useState('')
-  const [wlPack, setWlPack] = useState('starter')
   const [wlStatus, setWlStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const [wlError, setWlError] = useState('')
 
@@ -35,7 +34,7 @@ export function LandingNew() {
       const res = await fetch('/api/waitlist', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: wlEmail, pack: wlPack }),
+        body: JSON.stringify({ email: wlEmail }),
       })
       const data = await res.json()
       if (!res.ok) { setWlError(data.error || 'Error al guardar. Inténtalo de nuevo.'); setWlStatus('error'); return }
@@ -555,19 +554,6 @@ export function LandingNew() {
               </div>
             ) : (
               <>
-                <div className="wl-pack-grid">
-                  {[
-                    { id: 'starter', name: 'Starter', desc: 'Lo esencial para comenzar' },
-                    { id: 'pro',     name: 'Pro',     desc: 'Recursos avanzados + comunidad' },
-                    { id: 'elite',   name: 'Élite',   desc: 'Todo + Discord + mentoría' },
-                    { id: 'unsure',  name: 'No lo sé aún', desc: 'Aún estoy decidiendo' },
-                  ].map((p) => (
-                    <button key={p.id} className={`wl-pack-opt${wlPack === p.id ? ' sel' : ''}`} onClick={() => setWlPack(p.id)}>
-                      <div className="wl-pack-name">{p.name}</div>
-                      <div className="wl-pack-desc">{p.desc}</div>
-                    </button>
-                  ))}
-                </div>
                 <input
                   type="email"
                   className="wl-input"
