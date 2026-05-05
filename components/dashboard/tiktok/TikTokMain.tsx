@@ -76,6 +76,16 @@ function PostCard({ post, onDelete, onPublished }: { post: TikTokPost; onDelete:
     }
   }
 
+  const handleMarkManual = async () => {
+    if (!confirm('¿Marcar como publicado manualmente?')) return
+    await fetch(`/api/tiktok/posts/${post.id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: 'published', published_at: new Date().toISOString() }),
+    })
+    onPublished(post.id)
+  }
+
   const handleSaveToGallery = async () => {
     setSaving(true)
     setSaveMsg('')
@@ -142,13 +152,21 @@ function PostCard({ post, onDelete, onPublished }: { post: TikTokPost; onDelete:
 
         <div style={{ display: 'flex', gap: 8, flexShrink: 0, flexWrap: 'wrap', justifyContent: 'flex-end' }}>
           {canPublish && (
-            <button
-              onClick={handlePublish}
-              disabled={publishing}
-              style={{ fontSize: 12, fontWeight: 700, color: '#fff', background: '#0F172A', border: 'none', borderRadius: 8, padding: '8px 14px', cursor: 'pointer', opacity: publishing ? 0.6 : 1 }}
-            >
-              {publishing ? '⏳...' : '▶ Publicar'}
-            </button>
+            <>
+              <button
+                onClick={handleMarkManual}
+                style={{ fontSize: 12, fontWeight: 600, color: '#64748B', background: '#F1F5F9', border: 'none', borderRadius: 8, padding: '8px 14px', cursor: 'pointer' }}
+              >
+                ✓ Manual
+              </button>
+              <button
+                onClick={handlePublish}
+                disabled={publishing}
+                style={{ fontSize: 12, fontWeight: 700, color: '#fff', background: '#0F172A', border: 'none', borderRadius: 8, padding: '8px 14px', cursor: 'pointer', opacity: publishing ? 0.6 : 1 }}
+              >
+                {publishing ? '⏳...' : '▶ Publicar'}
+              </button>
+            </>
           )}
           <button
             onClick={handleSaveToGallery}
