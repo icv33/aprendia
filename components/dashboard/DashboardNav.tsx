@@ -33,6 +33,7 @@ export function DashboardNav({ userName, userEmail }: Props) {
     <aside style={{
       width: 228, background: '#0F172A',
       display: 'flex', flexDirection: 'column', flexShrink: 0,
+      height: '100%',
       position: 'relative', overflow: 'hidden',
     }}>
       <div style={{

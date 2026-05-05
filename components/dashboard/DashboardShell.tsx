@@ -34,7 +34,7 @@ export function DashboardShell({ children, userName, userEmail }: Props) {
       />
 
       {/* Sidebar wrapper */}
-      <div className={`dash-sidebar${open ? ' is-open' : ''}`}>
+      <div className={`dash-sidebar${open ? ' is-open' : ''}`} style={{ height: '100%' }}>
         <DashboardNav userName={userName} userEmail={userEmail} />
       </div>
 
