@@ -2,11 +2,11 @@ import Anthropic from '@anthropic-ai/sdk'
 import { TikTokSlide, TikTokPostType } from './supabase'
 
 const PEXELS_QUERIES: Record<TikTokPostType, string> = {
-  truco:         'laptop screen code dark minimal tech desk',
-  vida_facil:    'smartphone laptop desk minimal clean setup',
-  mito:          'dark abstract digital technology minimal',
-  caso_practico: 'computer monitor workspace dark minimal setup',
-  personalizado: 'dark minimal tech abstract digital screen',
+  truco:         'laptop black dark minimal desk closeup',
+  vida_facil:    'keyboard laptop dark minimal overhead flat lay',
+  mito:          'laptop screen dark black minimal desk',
+  caso_practico: 'dark monitor workspace laptop minimal black',
+  personalizado: 'laptop keyboard dark minimal black desk',
 }
 
 async function fetchPexelsPhoto(query: string): Promise<string | null> {
@@ -55,6 +55,8 @@ ESTRUCTURA NARRATIVA (seguir este orden en los 5 slides):
 3. Prompt, sistema o paso práctico concreto.
 4. Ejemplo de aplicación real.
 5. Resultado esperado realista.
+
+MARCAS: Puedes nombrar ChatGPT o Claude como herramientas concretas, pero NUNCA menciones nombres de empresas (OpenAI, Anthropic, Google, Microsoft). Si necesitas referirte a la IA en general, di "la IA" o "ChatGPT".
 
 HOOKS PROHIBIDOS (nunca uses estos):
 - "Truco de ChatGPT", "Caso práctico de IA", "Mito sobre IA"
