@@ -96,7 +96,6 @@ export async function GET(req: Request) {
           <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: FALLBACK_BG, display: 'flex' }} />
         )}
         <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.45) 40%, rgba(0,0,0,0.88) 100%)', display: 'flex' }} />
-        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 5, background: accent, display: 'flex' }} />
 
         <div style={{ position: 'absolute', bottom: 160, left: 64, right: 64, display: 'flex', flexDirection: 'column', gap: 24 }}>
           <HighlightText
@@ -129,7 +128,6 @@ export async function GET(req: Request) {
           <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: FALLBACK_BG, display: 'flex' }} />
         )}
         <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'linear-gradient(to bottom, rgba(0,0,0,0.08) 0%, rgba(0,0,0,0.4) 45%, rgba(0,0,0,0.88) 100%)', display: 'flex' }} />
-        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 5, background: accent, display: 'flex' }} />
 
         <div style={{ position: 'absolute', bottom: 130, left: 64, right: 64, display: 'flex', flexDirection: 'column', gap: 24 }}>
           <HighlightText
@@ -158,7 +156,6 @@ export async function GET(req: Request) {
           <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: FALLBACK_BG, display: 'flex' }} />
         )}
         <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.80)', display: 'flex' }} />
-        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 5, background: accent, display: 'flex' }} />
         <div style={{ position: 'absolute', top: '50%', left: '50%', width: 600, height: 600, borderRadius: '50%', background: `radial-gradient(circle, ${accent}15 0%, transparent 65%)`, display: 'flex', transform: 'translate(-50%,-50%)' }} />
 
         <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 52, padding: '0 80px' }}>
@@ -170,12 +167,11 @@ export async function GET(req: Request) {
             center={true}
           />
 
-          <div style={{ display: 'flex', alignItems: 'center', background: accent, borderRadius: 100, padding: '20px 56px' }}>
-            <span style={{ fontSize: 30, fontWeight: 800, color: '#080D1A' }}>↓ Link en bio</span>
-          </div>
-
-          <div style={{ fontSize: 24, fontWeight: 700, color: 'rgba(255,255,255,0.32)', display: 'flex', letterSpacing: 0.5 }}>
-            Aprende IA de verdad. Empieza hoy
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
+            <div style={{ display: 'flex', alignItems: 'center', background: accent, borderRadius: 100, padding: '20px 56px' }}>
+              <span style={{ fontSize: 30, fontWeight: 800, color: '#080D1A' }}>Comenta APRENDE</span>
+            </div>
+            <span style={{ fontSize: 26, fontWeight: 700, color: 'rgba(255,255,255,0.55)', display: 'flex' }}>y te lo mando por privado</span>
           </div>
         </div>
       </div>
