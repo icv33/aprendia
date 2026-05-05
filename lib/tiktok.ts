@@ -1,17 +1,48 @@
 import Anthropic from '@anthropic-ai/sdk'
 import { TikTokSlide, TikTokPostType } from './supabase'
 
-const PEXELS_QUERIES: Record<TikTokPostType, string> = {
-  truco:         'laptop black dark minimal desk closeup',
-  vida_facil:    'keyboard laptop dark minimal overhead flat lay',
-  mito:          'laptop screen dark black minimal desk',
-  caso_practico: 'dark monitor workspace laptop minimal black',
-  personalizado: 'laptop keyboard dark minimal black desk',
+const PEXELS_QUERIES: Record<TikTokPostType, string[]> = {
+  truco: [
+    'laptop black dark minimal desk closeup',
+    'dark keyboard tech minimal flat lay',
+    'laptop screen glowing dark night',
+    'black desk setup minimal tech',
+    'dark computer workspace minimal aesthetic',
+  ],
+  vida_facil: [
+    'laptop keyboard dark overhead minimal',
+    'flatlay laptop dark background minimal',
+    'dark desk tech clean setup',
+    'laptop earphones dark minimal black',
+    'minimal workspace dark aesthetic laptop',
+  ],
+  mito: [
+    'laptop screen dark black minimal desk',
+    'dark monitor screen workspace minimal',
+    'abstract dark tech digital screen',
+    'laptop dark night minimal glow',
+    'black keyboard dark minimal tech',
+  ],
+  caso_practico: [
+    'dark monitor workspace laptop minimal black',
+    'dual monitor dark setup minimal',
+    'laptop desk dark professional minimal',
+    'dark tech workspace screen setup',
+    'computer screen dark minimal workspace',
+  ],
+  personalizado: [
+    'laptop keyboard dark minimal black desk',
+    'dark minimal tech flat lay',
+    'black desk laptop minimal aesthetic',
+    'dark workspace laptop screen minimal',
+    'minimal dark tech setup laptop',
+  ],
 }
 
-async function fetchPexelsPhoto(query: string): Promise<string | null> {
+async function fetchPexelsPhoto(queries: string[]): Promise<string | null> {
   const apiKey = process.env.PEXELS_API_KEY
   if (!apiKey) return null
+  const query = queries[Math.floor(Math.random() * queries.length)]
   try {
     const page = Math.floor(Math.random() * 5) + 1
     const res = await fetch(
