@@ -167,11 +167,12 @@ export async function GET(req: Request) {
             center={true}
           />
 
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
-            <div style={{ display: 'flex', alignItems: 'center', background: accent, borderRadius: 100, padding: '20px 56px' }}>
-              <span style={{ fontSize: 30, fontWeight: 800, color: '#080D1A' }}>Comenta APRENDE</span>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 18 }}>
+            <span style={{ fontSize: 28, fontWeight: 700, color: 'rgba(255,255,255,0.65)', display: 'flex' }}>Si quieres aprender mas sobre esto GRATIS,</span>
+            <div style={{ display: 'flex', alignItems: 'center', background: accent, borderRadius: 100, padding: '20px 52px' }}>
+              <span style={{ fontSize: 28, fontWeight: 800, color: '#080D1A' }}>Comenta APRENDE y SIGUEME</span>
             </div>
-            <span style={{ fontSize: 26, fontWeight: 700, color: 'rgba(255,255,255,0.55)', display: 'flex' }}>y te lo mando por privado</span>
+            <span style={{ fontSize: 28, fontWeight: 700, color: 'rgba(255,255,255,0.65)', display: 'flex' }}>y te lo mando por privado</span>
           </div>
         </div>
       </div>
