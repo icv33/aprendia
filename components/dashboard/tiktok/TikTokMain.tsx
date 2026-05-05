@@ -50,6 +50,7 @@ function PostCard({ post, onDelete, onPublished }: { post: TikTokPost; onDelete:
   const [publishing, setPublishing] = useState(false)
   const [saving, setSaving]       = useState(false)
   const [saveMsg, setSaveMsg]     = useState('')
+  const [galleryUrls, setGalleryUrls] = useState<string[]>([])
   const [pubError, setPubError]   = useState('')
   const meta  = TYPE_META[post.type]
   const cover = post.slides[0]
@@ -79,47 +80,44 @@ function PostCard({ post, onDelete, onPublished }: { post: TikTokPost; onDelete:
     setSaving(true)
     setSaveMsg('')
     try {
-      // Fetch all slides as PNG blobs
-      const files: File[] = []
-      for (let i = 0; i < post.slides.length; i++) {
-        const slide = post.slides[i]
+      const blobs: Blob[] = []
+      for (const slide of post.slides) {
         const res = await fetch(buildRenderUrl(slide, post.type, false, bgUrl))
         if (!res.ok) throw new Error('fetch_failed')
-        const blob = await res.blob()
-        const name = slide.type === 'cover' ? 'portada' : slide.type === 'cta' ? 'cta' : `slide-${(slide as Extract<typeof slide, { type: 'content' }>).num}`
-        files.push(new File([blob], `${name}.png`, { type: 'image/png' }))
+        blobs.push(await res.blob())
       }
 
-      // Try native share sheet (Android Chrome + Safari iOS 15+)
+      // Try Web Share API with files (Android Chrome / Safari iOS 15+)
       if (typeof navigator.share === 'function') {
+        const files = blobs.map((b, i) => {
+          const s = post.slides[i]
+          const name = s.type === 'cover' ? 'portada' : s.type === 'cta' ? 'cta' : `slide-${(s as Extract<typeof s, { type: 'content' }>).num}`
+          return new File([b], `${name}.png`, { type: 'image/png' })
+        })
         try {
           await navigator.share({ files })
-          // success — share sheet opened
+          setSaving(false)
+          return
         } catch (err) {
-          if (err instanceof Error && err.name !== 'AbortError') {
-            // share not supported with files — open in new tabs as fallback
-            openInTabs(files)
+          if (err instanceof Error && err.name === 'AbortError') {
+            setSaving(false)
+            return
           }
-          // AbortError = user cancelled = no message needed
+          // share with files not supported — fall through to modal
         }
-      } else {
-        openInTabs(files)
       }
+
+      // Fallback: full-screen gallery modal — user long-presses each image to save
+      setGalleryUrls(blobs.map(b => URL.createObjectURL(b)))
     } catch {
       setSaveMsg('Error al cargar las imágenes')
     }
     setSaving(false)
   }
 
-  function openInTabs(files: File[]) {
-    // Fallback: open each image in a new tab so user can long-press → Save
-    files.forEach(file => {
-      const url = URL.createObjectURL(file)
-      window.open(url, '_blank')
-      // revoke after a delay to allow the tab to load
-      setTimeout(() => URL.revokeObjectURL(url), 60_000)
-    })
-    setSaveMsg(`Se abrieron ${files.length} imágenes en nuevas pestañas — mantén pulsada cada una para guardarla`)
+  const closeGallery = () => {
+    galleryUrls.forEach(u => URL.revokeObjectURL(u))
+    setGalleryUrls([])
   }
 
   const scheduledDate = post.scheduled_at
@@ -208,6 +206,44 @@ function PostCard({ post, onDelete, onPublished }: { post: TikTokPost; onDelete:
           <p style={{ fontSize: 11, color: '#94A3B8', marginTop: 10 }}>Haz clic en cada slide para descargarla como PNG.</p>
         </div>
       )}
+
+      {galleryUrls.length > 0 && (
+        <GalleryModal urls={galleryUrls} onClose={closeGallery} />
+      )}
+    </div>
+  )
+}
+
+function GalleryModal({ urls, onClose }: { urls: string[]; onClose: () => void }) {
+  return (
+    <div
+      style={{
+        position: 'fixed', inset: 0, background: 'rgba(0,0,0,.96)',
+        zIndex: 200, overflowY: 'auto',
+        display: 'flex', flexDirection: 'column', alignItems: 'center',
+        padding: '72px 20px 40px', gap: 20,
+      }}
+      onClick={(e) => { if (e.target === e.currentTarget) onClose() }}
+    >
+      <div style={{ position: 'fixed', top: 0, left: 0, right: 0, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 20px', background: 'rgba(0,0,0,.8)', backdropFilter: 'blur(8px)', zIndex: 201 }}>
+        <p style={{ color: 'rgba(255,255,255,.7)', fontSize: 13, margin: 0 }}>
+          Mantén pulsada cada imagen → <strong style={{ color: '#fff' }}>Guardar en Fotos</strong>
+        </p>
+        <button
+          onClick={onClose}
+          style={{ background: 'rgba(255,255,255,.12)', border: 'none', color: '#fff', borderRadius: 10, padding: '8px 14px', fontSize: 13, fontWeight: 700, cursor: 'pointer' }}
+        >
+          ✕ Cerrar
+        </button>
+      </div>
+      {urls.map((src, i) => (
+        <img
+          key={i}
+          src={src}
+          alt={`Slide ${i + 1}`}
+          style={{ width: '100%', maxWidth: 420, borderRadius: 14, display: 'block', boxShadow: '0 8px 32px rgba(0,0,0,.4)' }}
+        />
+      ))}
     </div>
   )
 }
