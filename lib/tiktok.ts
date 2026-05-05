@@ -272,7 +272,8 @@ Devuelve exactamente este JSON (sin markdown, solo el objeto):
   "slides": [
     {"titulo": "título con <<marca>>", "contenido": "texto del slide con <<énfasis>>"},
     {"titulo": "...", "contenido": "..."}
-  ]
+  ],
+  "cta": "si el usuario especificó un CTA concreto úsalo exactamente; si no, usa: Comenta <<CLUB>> y sígueme para que pueda mandarte el acceso gratis por MD."
 }
 
 Tono informal (tuteo). Sin emojis en los textos.${HIGHLIGHT_RULE}`
@@ -296,6 +297,6 @@ Tono informal (tuteo). Sin emojis en los textos.${HIGHLIGHT_RULE}`
     ...data.slides.slice(0, 8).map((s: { titulo: string; contenido: string }, i: number) => ({
       type: 'content' as const, num: i + 1, titulo: s.titulo, contenido: s.contenido,
     })),
-    { type: 'cta', cta: FIXED_CTA },
+    { type: 'cta', cta: data.cta ?? FIXED_CTA },
   ]
 }
