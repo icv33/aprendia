@@ -12,9 +12,9 @@ async function fetchPexelsPhoto(query: string): Promise<string | null> {
   const apiKey = process.env.PEXELS_API_KEY
   if (!apiKey) return null
   try {
-    const page = Math.floor(Math.random() * 3) + 1
+    const page = Math.floor(Math.random() * 5) + 1
     const res = await fetch(
-      `https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&per_page=15&page=${page}`,
+      `https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&per_page=80&page=${page}`,
       { headers: { Authorization: apiKey } }
     )
     if (!res.ok) return null
