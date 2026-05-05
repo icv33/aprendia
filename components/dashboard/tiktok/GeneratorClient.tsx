@@ -30,7 +30,7 @@ export function GeneratorClient() {
   const [postType, setPostType] = useState<TikTokPostType | null>(null)
   const [slides, setSlides] = useState<TikTokSlide[] | null>(null)
   const [status, setStatus] = useState<'idle' | 'generating' | 'ready' | 'saving' | 'saved'>('idle')
-  const [scheduleTime, setScheduleTime] = useState<string>(SCHEDULE_SLOTS[0])
+  const [scheduleTime, setScheduleTime] = useState<string | null>(null)
   const [error, setError] = useState('')
   const [activeSlide, setActiveSlide] = useState(0)
   const [feedback, setFeedback] = useState<'like' | 'dislike' | null>(null)
@@ -100,15 +100,19 @@ export function GeneratorClient() {
     setStatus('saving')
     setError('')
 
-    const today = new Date()
-    const [hours, minutes] = scheduleTime.split(':').map(Number)
-    today.setHours(hours, minutes, 0, 0)
+    let scheduled_at: string | null = null
+    if (scheduleTime) {
+      const today = new Date()
+      const [hours, minutes] = scheduleTime.split(':').map(Number)
+      today.setHours(hours, minutes, 0, 0)
+      scheduled_at = today.toISOString()
+    }
 
     try {
       const res = await fetch('/api/tiktok/posts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ type: postType, slides, scheduled_at: today.toISOString() }),
+        body: JSON.stringify({ type: postType, slides, scheduled_at }),
       })
       const data = await res.json()
       if (!res.ok) { setError(data.error || 'Error al guardar'); setStatus('ready'); return }
@@ -192,8 +196,33 @@ export function GeneratorClient() {
           {status === 'ready' || status === 'saving' || status === 'saved' ? (
             <div style={{ background: '#fff', border: '1px solid #E2E8F0', borderRadius: 16, padding: 20 }}>
               <div style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: '.88rem', color: '#0F172A', marginBottom: 14 }}>
-                3 · Programar publicación
+                3 · Guardar post
               </div>
+
+              {/* Solo en cola */}
+              <button
+                onClick={() => setScheduleTime(null)}
+                style={{
+                  width: '100%', padding: '11px 14px', borderRadius: 8, border: 'none',
+                  background: scheduleTime === null ? '#0F172A' : '#F8FAFC',
+                  color: scheduleTime === null ? '#fff' : '#64748B',
+                  fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 13,
+                  cursor: 'pointer', transition: 'all .15s', marginBottom: 10,
+                  display: 'flex', alignItems: 'center', gap: 8,
+                }}
+              >
+                <span style={{ fontSize: 15 }}>📥</span>
+                Solo en cola <span style={{ fontWeight: 400, opacity: .7 }}>(subo yo manualmente)</span>
+              </button>
+
+              {/* Separator */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
+                <div style={{ flex: 1, height: 1, background: '#E2E8F0' }} />
+                <span style={{ fontSize: 11, color: '#94A3B8', fontWeight: 600 }}>O programar para hoy a las</span>
+                <div style={{ flex: 1, height: 1, background: '#E2E8F0' }} />
+              </div>
+
+              {/* Time slots */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 14 }}>
                 {SCHEDULE_SLOTS.map(slot => (
                   <button
@@ -227,7 +256,11 @@ export function GeneratorClient() {
                     cursor: 'pointer',
                   }}
                 >
-                  {status === 'saving' ? 'Guardando...' : '✓ Aprobar y programar →'}
+                  {status === 'saving'
+                    ? 'Guardando...'
+                    : scheduleTime
+                      ? `✓ Programar para las ${scheduleTime} →`
+                      : '✓ Añadir a la cola →'}
                 </button>
               )}
             </div>

@@ -15,14 +15,14 @@ export async function GET() {
 export async function POST(req: NextRequest) {
   const { type, slides, scheduled_at } = await req.json()
 
-  if (!type || !slides || !scheduled_at) {
+  if (!type || !slides) {
     return NextResponse.json({ error: 'Faltan campos requeridos' }, { status: 400 })
   }
 
   const supabase = createServerSupabase()
   const { data, error } = await supabase
     .from('tiktok_posts')
-    .insert({ type, slides, status: 'approved', scheduled_at })
+    .insert({ type, slides, status: 'approved', scheduled_at: scheduled_at ?? null })
     .select()
     .single()
 
