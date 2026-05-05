@@ -30,15 +30,24 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: true, skipped: true, reason: 'already generated today' })
   }
 
+  // Helper: convert a "HH:MM" slot (in Europe/Madrid) to a UTC Date for today
+  const madridOffset = (
+    new Date(now.toLocaleString('en-US', { timeZone: 'Europe/Madrid' })).getTime() - now.getTime()
+  )
+  function slotToUTC(slot: string): Date {
+    const [h, m] = slot.split(':').map(Number)
+    const d = new Date(now)
+    d.setHours(h, m, 0, 0)           // treat as UTC first
+    return new Date(d.getTime() - madridOffset) // shift to real UTC
+  }
+
   // Generate 1 post of each type, scheduled at the 4 daily slots
   const generated: string[] = []
   const errors: string[] = []
 
   for (let i = 0; i < 4; i++) {
     const type = POST_TYPES[i]
-    const [h, m] = SCHEDULE_SLOTS[i].split(':').map(Number)
-    const scheduledAt = new Date(now)
-    scheduledAt.setHours(h, m, 0, 0)
+    const scheduledAt = slotToUTC(SCHEDULE_SLOTS[i])
 
     try {
       const slides = await generateTikTokSlides(type)
