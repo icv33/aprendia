@@ -31,7 +31,11 @@ const PEXELS_QUERIES: Record<TikTokPostType, string[]> = {
     'computer screen dark minimal workspace',
   ],
   personalizado: [
-    'laptop dark background elegant bokeh',
+    'laptop keyboard dark minimal black desk',
+    'dark minimal tech flat lay',
+    'black desk laptop minimal aesthetic',
+    'dark workspace laptop screen minimal',
+    'minimal dark tech setup laptop',
   ],
 }
 
