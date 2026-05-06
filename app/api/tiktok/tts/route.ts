@@ -5,7 +5,7 @@ export async function POST(req: Request) {
 
   try {
     const audio = await generateSpeech(text)
-    return new Response(audio, {
+    return new Response(new Uint8Array(audio), {
       headers: {
         'Content-Type': 'audio/mpeg',
         'Content-Length': String(audio.byteLength),
