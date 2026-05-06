@@ -119,6 +119,8 @@ async function callPublishAPI(accessToken: string, photoUrls: string[], caption:
     post_info: {
       title: caption,
       privacy_level: 'PUBLIC_TO_EVERYONE',
+      disable_comment: false,
+      auto_add_music: false,
     },
     source_info: {
       source: 'PULL_FROM_URL',
@@ -126,7 +128,7 @@ async function callPublishAPI(accessToken: string, photoUrls: string[], caption:
       photo_cover_index: 0,
     },
     media_type: 'PHOTO',
-    post_mode: 'MEDIA_UPLOAD',
+    post_mode: 'DIRECT_POST',
   }
   console.log('[TikTok] request body:', JSON.stringify(body))
 
