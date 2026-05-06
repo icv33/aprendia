@@ -118,7 +118,7 @@ async function callPublishAPI(accessToken: string, photoUrls: string[], caption:
   const body = {
     post_info: {
       title: caption,
-      privacy_level: 'SELF_ONLY',
+      privacy_level: 'PUBLIC_TO_EVERYONE',
     },
     source_info: {
       source: 'PULL_FROM_URL',
