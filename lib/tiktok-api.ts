@@ -109,18 +109,19 @@ async function uploadSlidesToStorage(
 
 function buildCaption(slides: TikTokSlide[]): string {
   const cover = slides.find(s => s.type === 'cover') as Extract<TikTokSlide, { type: 'cover' }> | undefined
-  const title = (cover?.titulo ?? '').replace(/<<|>>/g, '').slice(0, 80)
-  const tags = '#IA #InteligenciaArtificial #ChatGPT #Productividad #AprendeIA'
-  return `${title} ${tags}`.slice(0, 150)
+  const title = (cover?.titulo ?? '').replace(/<<|>>/g, '').slice(0, 60)
+  const cta = 'Comenta CLUB y SÍGUEME 🚀'
+  const tags = '#AprendIA #Futuro #Negocio #IA #ChatGPT'
+  return `${title}\n\n${cta}\n${tags}`.slice(0, 2200)
 }
 
 async function callPublishAPI(accessToken: string, photoUrls: string[], caption: string): Promise<string> {
   const body = {
     post_info: {
       title: caption,
-      privacy_level: 'PUBLIC_TO_EVERYONE',
+      privacy_level: 'SELF_ONLY',
       disable_comment: false,
-      auto_add_music: false,
+      auto_add_music: true,
     },
     source_info: {
       source: 'PULL_FROM_URL',
