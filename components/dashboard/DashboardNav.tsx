@@ -13,6 +13,7 @@ const NAV_SECTIONS = [
       { href: '/dashboard/ventas', label: 'Ventas', icon: '🛒', exact: false },
       { href: '/dashboard/waitlist', label: 'Lista de espera', icon: '📋', exact: false },
       { href: '/dashboard/tiktok', label: 'TikTok', icon: '🎵', exact: false },
+      { href: '/dashboard/finanzas', label: 'Finanzas', icon: '💰', exact: false },
     ],
   },
   {

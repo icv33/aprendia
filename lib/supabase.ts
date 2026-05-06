@@ -84,3 +84,15 @@ export type Order = {
   pdf_sent: boolean
   created_at: string
 }
+
+// ── Finanzas ──────────────────────────────────────────────────────────────────
+
+export type FinanceTransaction = {
+  id: string
+  type: 'income' | 'expense'
+  amount: number
+  description: string
+  category: string
+  date: string
+  created_at: string
+}
