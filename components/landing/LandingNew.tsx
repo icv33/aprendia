@@ -3,24 +3,26 @@
 import { useState, useEffect } from 'react'
 
 const TICKS = [
-  'ChatGPT para negocios', 'Automatización con Zapier', 'Prompts que convierten',
-  'Ingresos con IA sin código', 'Make & n8n para principiantes', 'Claude y Gemini en la práctica',
-  'Contenido automatizado', 'Atención al cliente con IA', 'Copywriting inteligente',
-  'Flujos en piloto automático', 'Monetiza con IA hoy', 'Cero programación',
+  'Prompts prácticos', 'IA para ahorrar tiempo', 'Automatizaciones simples',
+  'Club AprendIA', 'Comunidad privada', 'Recursos desde cero',
+  'Sin programar', 'Sin humo', 'Ideas realistas con IA',
+  'ChatGPT desde cero', 'Claude en tu día a día', 'Cero programación',
 ]
 
 const FAQS = [
-  { q: '¿Necesito saber programar para usar AprendIA?', a: 'No. Todo el contenido está diseñado para personas sin conocimientos técnicos. Las herramientas que se enseñan son no-code — las manejas desde interfaces visuales, como cualquier app del móvil.' },
-  { q: '¿Cuándo se lanza? ¿Cuándo recibiré el acceso?', a: 'Estamos en fase de acceso anticipado. Al apuntarte a la lista de espera, serás de los primeros en recibir el aviso de lanzamiento junto con tu precio de acceso anticipado exclusivo.' },
-  { q: '¿Qué incluye exactamente cada pack?', a: 'El Starter incluye el eBook base y 30 prompts esenciales para empezar. El Pro añade dos eBooks especializados, una biblioteca de 80+ prompts y acceso a la comunidad de WhatsApp. El Élite incluye todo lo anterior más comunidad privada, mentoría directa por email y templates de negocio listos.' },
-  { q: '¿Qué es la mentoría directa del pack Élite?', a: 'Es acceso directo por email al autor del contenido. Puedes enviar tus dudas, compartir lo que estás construyendo y recibir orientación personalizada. La respuesta está garantizada en menos de 48h.' },
-  { q: '¿La comunidad es activa? ¿Qué se comparte?', a: 'Sí. En la comunidad (WhatsApp para Pro, Discord privado para Élite) se comparten prompts nuevos, casos reales de uso, estrategias que funcionan y novedades de herramientas. No es un grupo de noticias: es un espacio de aprendizaje activo.' },
-  { q: '¿El contenido se actualiza con el tiempo?', a: 'Sí. La IA avanza rápido y el contenido evoluciona con ella. Los planes Pro y Élite incluyen actualizaciones vitalicias y gratuitas. Cuando se publique nuevo contenido, lo recibirás automáticamente sin coste adicional.' },
-  { q: '¿Hay alguna garantía si no me convence?', a: 'Sí. Si el contenido no cumple lo que prometemos, te devolvemos el 100% del importe, sin preguntas y sin plazos. Queremos que estés dentro porque te aporta valor, no por obligación.' },
+  { q: '¿Qué es Club AprendIA?', a: 'Es una comunidad gratuita para aprender a aplicar IA de forma práctica: prompts, recursos, ebooks, sistemas y ejemplos reales para ahorrar tiempo y detectar oportunidades.' },
+  { q: '¿Entrar es gratis?', a: 'Sí. La entrada al Club AprendIA es gratuita en esta primera fase.' },
+  { q: '¿Qué recibiré dentro?', a: 'Recibirás acceso al grupo privado de WhatsApp, recursos iniciales, prompts, avisos prioritarios y acceso anticipado a futuros materiales.' },
+  { q: '¿Necesito saber programar?', a: 'No. AprendIA está pensado para empezar desde cero y aplicar IA sin necesidad de saber código.' },
+  { q: '¿Habrá grupo de WhatsApp?', a: 'Sí. El Club AprendIA tendrá un grupo privado de WhatsApp para compartir recursos, avisos y novedades.' },
+  { q: '¿Cuándo estarán los recursos completos?', a: 'Estamos preparando ebooks, bibliotecas de prompts y sistemas más completos. Los miembros del Club tendrán prioridad cuando se publiquen.' },
+  { q: '¿Esto es otro curso más de IA?', a: 'No. La idea es crear una comunidad práctica, clara y sin humo. No prometemos dinero fácil ni resultados mágicos.' },
+  { q: '¿Puedo salir cuando quiera?', a: 'Sí. Puedes salir del grupo o dejar de recibir comunicaciones cuando quieras.' },
 ]
 
+const WA_URL = 'https://whatsapp.com/channel/0029VbCPfkzElah0V93Ils2J'
+
 export function LandingNew() {
-  const [activeTab, setActiveTab] = useState<'starter' | 'pro' | 'elite'>('starter')
   const [openFaq, setOpenFaq] = useState<number | null>(null)
   const [wlEmail, setWlEmail] = useState('')
   const [wlStatus, setWlStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
@@ -63,8 +65,8 @@ export function LandingNew() {
 
   useEffect(() => {
     const stickyEl = document.getElementById('stickyCta')
-    const pricingEl = document.getElementById('pricing')
-    if (!stickyEl || !pricingEl) return
+    const waitlistEl = document.getElementById('waitlist')
+    if (!stickyEl || !waitlistEl) return
     const obs = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {
@@ -74,7 +76,7 @@ export function LandingNew() {
       },
       { threshold: 0.3 }
     )
-    obs.observe(pricingEl)
+    obs.observe(waitlistEl)
     return () => obs.disconnect()
   }, [])
 
@@ -87,10 +89,10 @@ export function LandingNew() {
         <div className="lp-nav-brand brand">Aprend<span className="ia">IA</span></div>
         <ul className="lp-nav-links">
           <li><a href="#problem">El problema</a></li>
-          <li><a href="#benefits">Beneficios</a></li>
-          <li><a href="#pricing">Precios</a></li>
+          <li><a href="#included">Qué incluye</a></li>
+          <li><a href="#waitlist">Club AprendIA</a></li>
           <li><a href="#faq">FAQ</a></li>
-          <li><a href="#waitlist" className="lp-nav-cta">Quiero aprender →</a></li>
+          <li><a href="#waitlist" className="lp-nav-cta">Entrar gratis →</a></li>
         </ul>
       </nav>
 
@@ -101,7 +103,7 @@ export function LandingNew() {
             <div>
               <div className="reveal">
                 <div className="hero-kicker">
-                  <span>🚀 Únete a los primeros en AprendIA</span>
+                  <span>🚀 Únete gratis a Club AprendIA</span>
                 </div>
               </div>
               <div className="reveal d1">
@@ -113,13 +115,13 @@ export function LandingNew() {
               </div>
               <div className="reveal d2">
                 <p className="t-lg hero-sub">
-                  La guía definitiva para usar Inteligencia Artificial en tu día a día — automatiza tareas, recupera horas y crea nuevas fuentes de ingresos. <strong>Cero código. 100% práctico.</strong>
+                  Únete gratis a Club AprendIA: una comunidad práctica con prompts, ebooks, sistemas y recursos para aplicar IA desde cero, <strong>sin humo y sin cursos carísimos.</strong>
                 </p>
               </div>
               <div className="reveal d3">
                 <div className="hero-actions">
-                  <a href="#waitlist" className="lp-btn lp-btn-primary lp-btn-lg">Quiero aprender ahora →</a>
-                  <a href="#how" className="lp-btn lp-btn-secondary">Ver cómo funciona</a>
+                  <a href="#waitlist" className="lp-btn lp-btn-primary lp-btn-lg">Entrar gratis al Club AprendIA →</a>
+                  <a href="#included" className="lp-btn lp-btn-secondary">Ver qué incluye</a>
                 </div>
               </div>
               <div className="reveal d4">
@@ -131,7 +133,7 @@ export function LandingNew() {
                     <div className="av av4">R</div>
                     <div className="av av5">L</div>
                   </div>
-                  <span className="t-sm muted">Sé de los <strong style={{ color: 'var(--lp-text)' }}>primeros</strong> en acceder al lanzamiento</span>
+                  <span className="t-sm muted">Sé de los <strong style={{ color: 'var(--lp-text)' }}>primeros</strong> en unirte al Club</span>
                 </div>
               </div>
             </div>
@@ -141,32 +143,32 @@ export function LandingNew() {
                 <div className="book-glow" />
                 <div className="book-spine" />
                 <div className="book-cover">
-                  <div><div className="book-tag">eBook Digital</div></div>
+                  <div><div className="book-tag">Club AprendIA</div></div>
                   <div>
                     <div className="book-tit">Aprend<span className="ia">IA</span></div>
-                    <div className="book-sub">Automatiza tareas y genera ingresos con IA — sin escribir una sola línea de código</div>
+                    <div className="book-sub">Comunidad práctica · Prompts · Ebooks · Sistemas · WhatsApp</div>
                   </div>
-                  <div style={{ fontSize: '.65rem', color: 'rgba(255,255,255,.2)', fontFamily: "'Courier New',monospace" }}>v2.0 — 2025 Edition</div>
+                  <div style={{ fontSize: '.65rem', color: 'rgba(255,255,255,.2)', fontFamily: "'Courier New',monospace" }}>Fase 1 — 2025</div>
                 </div>
                 <div className="fb fb1">
                   <div className="bi" style={{ background: 'rgba(0,255,178,.12)' }}>⚡</div>
                   <div>
-                    <div style={{ fontSize: '.76rem', fontWeight: 700 }}>2h ahorradas</div>
-                    <div style={{ fontSize: '.68rem', color: 'var(--lp-text-muted)' }}>al día de media</div>
+                    <div style={{ fontSize: '.76rem', fontWeight: 700 }}>Tiempo ahorrado</div>
+                    <div style={{ fontSize: '.68rem', color: 'var(--lp-text-muted)' }}>con IA en tu día a día</div>
                   </div>
                 </div>
                 <div className="fb fb2">
-                  <div className="bi" style={{ background: 'rgba(59,130,246,.1)' }}>💰</div>
+                  <div className="bi" style={{ background: 'rgba(59,130,246,.1)' }}>💬</div>
                   <div>
-                    <div style={{ fontSize: '.76rem', fontWeight: 700 }}>+800€/mes</div>
-                    <div style={{ fontSize: '.68rem', color: 'var(--lp-text-muted)' }}>ingresos extra de media</div>
+                    <div style={{ fontSize: '.76rem', fontWeight: 700 }}>Comunidad</div>
+                    <div style={{ fontSize: '.68rem', color: 'var(--lp-text-muted)' }}>grupo privado WhatsApp</div>
                   </div>
                 </div>
                 <div className="fb fb3">
-                  <div className="bi" style={{ background: 'rgba(245,158,11,.1)' }}>⭐</div>
+                  <div className="bi" style={{ background: 'rgba(245,158,11,.1)' }}>📦</div>
                   <div>
-                    <div style={{ fontSize: '.76rem', fontWeight: 700 }}>4.9 / 5.0</div>
-                    <div style={{ fontSize: '.68rem', color: 'var(--lp-text-muted)' }}>valoración media</div>
+                    <div style={{ fontSize: '.76rem', fontWeight: 700 }}>Recursos</div>
+                    <div style={{ fontSize: '.68rem', color: 'var(--lp-text-muted)' }}>prompts, ebooks y más</div>
                   </div>
                 </div>
               </div>
@@ -192,18 +194,47 @@ export function LandingNew() {
           <div className="sec-hd">
             <div className="lp-pill reveal"><span className="dot" />El Problema</div>
             <h2 className="t-h2 reveal d1">Trabajas demasiado.<br />Pero la IA todavía no trabaja <em>por ti</em>.</h2>
-            <p className="t-md reveal d2">Mientras otros automatizan con IA y facturan casi en piloto automático, la mayoría sigue perdiendo horas en tareas que no aportan valor real.</p>
+            <p className="t-md reveal d2">Entre cursos caros, vídeos sueltos y promesas exageradas, mucha gente sigue sin saber cómo aplicar la IA de verdad en su día a día.</p>
           </div>
           <div className="prob-grid">
             {[
-              { ico: '⏳', title: 'Las tareas repetitivas devoran tu tiempo', desc: 'Responder emails, hacer informes, buscar datos, formatear documentos... 3 a 5 horas al día que desaparecen sin generar valor real.' },
-              { ico: '😰', title: 'Sientes que te estás quedando atrás', desc: 'La IA avanza rapidísimo y parece complicada. Sin una guía clara, es difícil saber por dónde empezar cuando no sabes programar.' },
-              { ico: '💸', title: 'Oportunidades de ingresos que se escapan', desc: 'Freelancers y emprendedores que dominan la IA cobran 3× más por el mismo trabajo. Tú todavía no eres uno de ellos.' },
-              { ico: '🤯', title: 'Demasiada información, poca claridad', desc: 'YouTube, Twitter, cursos de pago… contenido desperdigado por todas partes, sin un camino estructurado y práctico que seguir.' },
+              { ico: '⏳', title: 'Las tareas repetitivas devoran tu tiempo', desc: 'Emails, informes, búsquedas, resúmenes y contenido siguen quitándote horas cada semana.' },
+              { ico: '😰', title: 'Demasiada información, poca claridad', desc: 'Hay miles de vídeos, herramientas y prompts sueltos, pero casi ningún camino claro para empezar.' },
+              { ico: '💸', title: 'Cursos caros que prometen demasiado', desc: 'Muchos venden la IA como si fuera magia, pero luego entregan contenido básico o poco aplicable.' },
+              { ico: '🤯', title: 'Oportunidades que otros ya están aprovechando', desc: 'Quien aprende a usar IA bien puede trabajar más rápido, crear mejores sistemas y detectar nuevas oportunidades.' },
             ].map((c, i) => (
               <div key={i} className={`prob-card reveal d${i + 1}`}>
                 <div className="prob-ico">{c.ico}</div>
                 <div><h3>{c.title}</h3><p>{c.desc}</p></div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── POR QUÉ ── */}
+      <section id="why">
+        <div className="wrap">
+          <div className="sec-hd">
+            <div className="lp-pill reveal"><span className="dot" />Nuestra razón</div>
+            <h2 className="t-h2 reveal d1">Por qué he creado <span className="brand" style={{ fontSize: 'inherit' }}>Aprend<span className="ia">IA</span></span></h2>
+            <p className="t-md reveal d2" style={{ maxWidth: 640, margin: '0 auto' }}>
+              AprendIA nace al ver cómo muchas personas pagaban cursos carísimos de IA que prometían ingresos rápidos y entregaban contenido básico. Queremos crear una alternativa más práctica, clara y accesible: recursos útiles, comunidad y ejemplos reales para aplicar IA desde cero.
+            </p>
+          </div>
+          <div className="ben-grid" style={{ marginTop: 40 }}>
+            {[
+              { ico: '🚫', bg: 'bg-g', title: 'Sin cursos carísimos', desc: 'Acceso gratuito a recursos prácticos desde el primer día.' },
+              { ico: '🚫', bg: 'bg-b', title: 'Sin promesas de dinero fácil', desc: 'Hablamos de formas realistas de ahorrar tiempo y crear oportunidades.' },
+              { ico: '🚫', bg: 'bg-p', title: 'Sin tecnicismos innecesarios', desc: 'Todo está explicado para alguien que empieza desde cero.' },
+              { ico: '✅', bg: 'bg-g', title: 'Con recursos prácticos', desc: 'Prompts, ebooks, sistemas y ejemplos aplicables desde hoy.' },
+              { ico: '✅', bg: 'bg-b', title: 'Con comunidad real', desc: 'Un espacio donde compartir avances, recursos y dudas.' },
+              { ico: '✅', bg: 'bg-p', title: 'Con enfoque en aplicar', desc: 'Menos teoría, más resultados concretos en tu día a día.' },
+            ].map((b, i) => (
+              <div key={i} className={`ben-card reveal d${(i % 3) + 1}`}>
+                <div className={`ben-ico ${b.bg}`}>{b.ico}</div>
+                <h3>{b.title}</h3>
+                <p>{b.desc}</p>
               </div>
             ))}
           </div>
@@ -215,16 +246,18 @@ export function LandingNew() {
         <div className="wrap">
           <div className="sec-hd">
             <div className="lp-pill reveal"><span className="dot" />La Solución</div>
-            <h2 className="t-h2 reveal d1">Una guía directa al grano.<br />De cero a la <span style={{ color: 'var(--lp-primary-dark)' }}>automatización real</span>.</h2>
-            <p className="t-md reveal d2"><strong>Aprend<span style={{ color: 'var(--lp-primary-dark)' }}>IA</span></strong> te da el mapa completo: las herramientas adecuadas, prompts listos para usar y estrategias probadas para que automatices y monetices desde hoy.</p>
+            <h2 className="t-h2 reveal d1">Club AprendIA:<br /><span style={{ color: 'var(--lp-primary-dark)' }}>IA práctica, sin humo y desde cero.</span></h2>
+            <p className="t-md reveal d2">Recursos, prompts, ebooks y sistemas para ahorrar tiempo, automatizar tareas y descubrir formas realistas de generar ingresos con IA.</p>
           </div>
           <div className="sol-grid">
             <div className="sol-list">
               {[
-                { title: 'Sin necesidad de saber programar', desc: 'Todas las automatizaciones usan herramientas no-code. Si sabes usar el móvil y el ordenador, puedes hacerlo.' },
-                { title: 'Prompts listos para copiar y usar', desc: 'Más de 80 prompts probados para tareas del día a día: copywriting, atención al cliente, finanzas, contenido y más.' },
-                { title: 'Estrategias reales para generar ingresos', desc: '7 modelos de negocio probados que cualquier persona puede poner en marcha usando la IA como palanca.' },
-                { title: 'Actualizado con las herramientas de 2025', desc: 'ChatGPT, Gemini, Claude, Make, Zapier, n8n — todo lo que funciona ahora, no lo que funcionaba en 2023.' },
+                { title: 'Sin necesidad de saber programar', desc: 'Aprende a usar herramientas de IA y automatización sin tocar código.' },
+                { title: 'Prompts listos para copiar y usar', desc: 'Recursos prácticos para tareas del día a día: emails, resúmenes, contenido, organización y más.' },
+                { title: 'Sistemas prácticos para ahorrar tiempo', desc: 'Ideas y métodos para reducir tareas repetitivas y trabajar mejor.' },
+                { title: 'Ideas realistas para generar ingresos', desc: 'Formas posibles de aplicar IA a servicios, contenido o pequeños proyectos.' },
+                { title: 'Comunidad privada de WhatsApp', desc: 'Un espacio inicial para compartir recursos, avances y oportunidades.' },
+                { title: 'Acceso anticipado a futuros recursos', desc: 'Los miembros del Club tendrán prioridad cuando lancemos nuevos materiales.' },
               ].map((item, i) => (
                 <div key={i} className={`sol-item reveal d${i + 1}`}>
                   <div className="sol-chk">
@@ -241,16 +274,16 @@ export function LandingNew() {
                 <div className="mkp-dot" style={{ background: '#EF4444' }} />
                 <div className="mkp-dot" style={{ background: '#F59E0B' }} />
                 <div className="mkp-dot" style={{ background: '#10B981' }} />
-                <span className="mkp-title">aprend-ia-automatizacion.ai</span>
+                <span className="mkp-title">club.aprendia.store</span>
               </div>
-              <div className="mkp-line"><span className="c-pr">$</span><span className="c-tx">tarea: &quot;redactar propuesta comercial&quot;</span></div>
-              <div className="mkp-line"><span className="c-pr">→</span><span className="c-tx">herramienta: ChatGPT-4</span></div>
-              <div className="mkp-line"><span className="c-pr">→</span><span className="c-tx">prompt: [template_propuesta]</span></div>
-              <div className="mkp-line"><span className="c-pr">→</span><span className="c-tx">formato: PDF profesional</span></div>
-              <div className="mkp-line"><span className="c-cm">// Tiempo: 2 min (antes: 2 horas)</span></div>
+              <div className="mkp-line"><span className="c-pr">$</span><span className="c-tx">tarea: &quot;resumir este PDF de 30 páginas&quot;</span></div>
+              <div className="mkp-line"><span className="c-pr">→</span><span className="c-tx">herramienta: ChatGPT</span></div>
+              <div className="mkp-line"><span className="c-pr">→</span><span className="c-tx">prompt: [template_resumen]</span></div>
+              <div className="mkp-line"><span className="c-pr">→</span><span className="c-tx">formato: bullet points claros</span></div>
+              <div className="mkp-line"><span className="c-cm">// Tiempo: 1 min (antes: 45 min)</span></div>
               <div className="mkp-res">
-                <div className="mkp-lbl">✓ Resultado generado</div>
-                <div className="mkp-txt">Propuesta de 4 páginas, con análisis del cliente, pricing y storytelling — lista para enviar.<span className="cursor" /></div>
+                <div className="mkp-lbl">✓ Resumen generado</div>
+                <div className="mkp-txt">5 puntos clave, sin perderte nada importante.<span className="cursor" /></div>
               </div>
             </div>
           </div>
@@ -262,16 +295,16 @@ export function LandingNew() {
         <div className="wrap">
           <div className="sec-hd">
             <div className="lp-pill reveal"><span className="dot" />Beneficios</div>
-            <h2 className="t-h2 reveal d1">Lo que cambia en tu vida<br />después de <span className="brand" style={{ fontSize: 'inherit' }}>Aprend<span className="ia">IA</span></span></h2>
+            <h2 className="t-h2 reveal d1">Lo que puedes empezar a cambiar<br />con <span className="brand" style={{ fontSize: 'inherit' }}>Aprend<span className="ia">IA</span></span></h2>
           </div>
           <div className="ben-grid">
             {[
-              { ico: '⚡', bg: 'bg-g', title: '2–4h recuperadas cada día', desc: 'Automatiza emails, informes, búsquedas y creación de contenido. Recupera tu tiempo para lo que de verdad importa.' },
-              { ico: '💰', bg: 'bg-b', title: 'Nueva fuente de ingresos', desc: 'Aprende 7 modelos de negocio probados. Desde freelancing con IA hasta productos digitales — partiendo desde cero.' },
-              { ico: '🧠', bg: 'bg-p', title: 'Ventaja competitiva real', desc: 'Quien domina la IA hoy entrega 10× más rápido. Posiciónate por delante antes de que el mercado te lo exija.' },
-              { ico: '🎯', bg: 'bg-g', title: 'Resultados desde la primera hora', desc: 'Prompts y flujos listos para usar de inmediato. Sin curva de aprendizaje larga, sin configuraciones técnicas.' },
-              { ico: '🔁', bg: 'bg-b', title: 'Automatizaciones que trabajan por ti', desc: 'Crea flujos que funcionan solos: captación de leads, atención al cliente, publicaciones, facturación — en piloto automático.' },
-              { ico: '🔄', bg: 'bg-p', title: 'Acceso vitalicio + actualizaciones', desc: 'El eBook evoluciona con la IA. Recibes todas las actualizaciones futuras sin pagar nada más. Una vez, para siempre.' },
+              { ico: '⚡', bg: 'bg-g', title: 'Horas recuperadas', desc: 'Automatiza tareas repetitivas y aprende a usar IA para ahorrar tiempo cada semana.' },
+              { ico: '🎯', bg: 'bg-b', title: 'Nuevas oportunidades', desc: 'Descubre formas realistas de usar IA para crear servicios, contenido o sistemas útiles.' },
+              { ico: '🧠', bg: 'bg-p', title: 'Ventaja competitiva', desc: 'Aprende herramientas que cada vez serán más importantes en trabajo, estudio y negocios.' },
+              { ico: '🚀', bg: 'bg-g', title: 'Aplicación desde el primer día', desc: 'Prompts y recursos simples para empezar sin configuraciones complicadas.' },
+              { ico: '🔁', bg: 'bg-b', title: 'Automatizaciones útiles', desc: 'Ideas y sistemas para dejar de hacer siempre las mismas tareas manualmente.' },
+              { ico: '💬', bg: 'bg-p', title: 'Comunidad y recursos', desc: 'Accede a una comunidad con ganas, recursos prácticos y futuras actualizaciones.' },
             ].map((b, i) => (
               <div key={i} className={`ben-card reveal d${(i % 3) + 1}`}>
                 <div className={`ben-ico ${b.bg}`}>{b.ico}</div>
@@ -296,11 +329,11 @@ export function LandingNew() {
               <div className="fw-list">
                 {[
                   'Quieres ahorrar tiempo en tu trabajo o negocio con herramientas de IA',
-                  'Buscas generar ingresos extra sin necesidad de saber programar',
+                  'Buscas formas realistas de generar ingresos o mejorar tu situación laboral',
                   'Eres freelancer, emprendedor o trabajas por cuenta ajena y quieres diferenciarte',
                   'Has intentado entender la IA pero no sabes por dónde empezar',
-                  'Prefieres resultados prácticos e inmediatos, no teoría ni formación interminable',
-                  'Quieres estar por delante del mercado antes de que te lo exija',
+                  'Prefieres recursos prácticos e inmediatos, no teoría ni formación interminable',
+                  'Quieres estar por delante antes de que el mercado te lo exija',
                 ].map((txt, i) => (
                   <div key={i} className="fw-item"><span className="fw-ico">→</span><span>{txt}</span></div>
                 ))}
@@ -312,7 +345,7 @@ export function LandingNew() {
                 {[
                   'Buscas un curso técnico de programación o desarrollo de software',
                   'Esperas hacerte rico de la noche a la mañana sin esfuerzo',
-                  'No estás dispuesto a dedicar al menos 1 hora a aplicar lo aprendido',
+                  'No estás dispuesto a dedicar tiempo a aplicar lo aprendido',
                 ].map((txt, i) => (
                   <div key={i} className="fw-item"><span className="fw-ico">✗</span><span>{txt}</span></div>
                 ))}
@@ -327,14 +360,14 @@ export function LandingNew() {
         <div className="wrap">
           <div className="sec-hd">
             <div className="lp-pill reveal"><span className="dot" />Cómo funciona</div>
-            <h2 className="t-h2 reveal d1">De la descarga al<br /><span style={{ color: 'var(--lp-primary-dark)' }}>resultado en 3 pasos</span></h2>
+            <h2 className="t-h2 reveal d1">Empieza en<br /><span style={{ color: 'var(--lp-primary-dark)' }}>3 pasos simples</span></h2>
             <p className="t-md reveal d2">Sin tecnicismos, sin configuraciones complejas. Funciona desde el primer día.</p>
           </div>
           <div className="how-steps">
             {[
-              { n: '1', title: 'Elige tu pack y compra', desc: 'Descarga instantánea tras la compra. Accede desde cualquier dispositivo — móvil, tablet u ordenador. Sin esperas.' },
-              { n: '2', title: 'Aplica los prompts y templates', desc: 'Copia los prompts y flujos preconfigurados de tu pack. Solo adáptalos a tu contexto — sin configuraciones técnicas.' },
-              { n: '3', title: 'Automatiza, escala y gana', desc: 'Comprueba los resultados desde el primer día. Ahorra horas cada semana y empieza a generar tus primeros ingresos con IA.' },
+              { n: '1', title: 'Reserva tu plaza gratis', desc: 'Introduce tu email y reserva tu sitio en Club AprendIA. Es completamente gratuito en esta primera fase.' },
+              { n: '2', title: 'Únete al grupo de WhatsApp', desc: 'Accede al grupo privado donde compartimos recursos, prompts y novedades antes que nadie.' },
+              { n: '3', title: 'Aplica desde el primer día', desc: 'Usa los prompts y recursos desde el inicio. Sin curva de aprendizaje larga, sin configuraciones técnicas.' },
             ].map((s, i) => (
               <div key={i} className={`how-step reveal d${i + 1}`}>
                 <div className="step-num">{s.n}</div>
@@ -351,28 +384,18 @@ export function LandingNew() {
         <div className="wrap" style={{ position: 'relative', zIndex: 1 }}>
           <div className="sec-hd">
             <div className="lp-pill reveal"><span className="dot" />Qué incluye</div>
-            <h2 className="t-h2 reveal d1" style={{ color: '#fff' }}>Todo lo que necesitas.<br /><span style={{ color: 'var(--primary)' }}>Nada que no necesitas.</span></h2>
-            <p className="t-md reveal d2" style={{ color: 'rgba(255,255,255,.5)' }}>Elige tu pack y descubre exactamente qué llevas.</p>
-          </div>
-          <div className="inc-tabs reveal d1">
-            {(['starter', 'pro', 'elite'] as const).map((tab) => (
-              <button
-                key={tab}
-                className={`inc-tab${activeTab === tab ? ' active' : ''}`}
-                onClick={() => setActiveTab(tab)}
-              >
-                {tab === 'starter' ? 'Starter' : tab === 'pro' ? 'Pro ⭐' : 'Élite'}
-              </button>
-            ))}
+            <h2 className="t-h2 reveal d1" style={{ color: '#fff' }}>Todo lo que incluye<br /><span style={{ color: 'var(--primary)' }}>Club AprendIA.</span></h2>
+            <p className="t-md reveal d2" style={{ color: 'rgba(255,255,255,.5)' }}>Acceso gratuito. Sin compromiso. Empieza cuando quieras.</p>
           </div>
           <div className="inc-panels">
-            {/* STARTER */}
-            <div className={`inc-panel${activeTab === 'starter' ? ' active' : ''}`}>
+            <div className="inc-panel active">
               {[
-                { ico: '📘', title: 'eBook base — AprendIA (200+ páginas)', desc: 'Fundamentos, herramientas clave, primeros pasos con IA. De cero a productivo en un fin de semana.' },
-                { ico: '🧩', title: '30 prompts esenciales', desc: 'Los prompts más utilizados para tareas cotidianas: emails, resúmenes, contenido y más.' },
-                { ico: '🔄', title: 'Acceso vitalicio', desc: 'Una vez dentro, el contenido es tuyo para siempre. Sin suscripciones ni costes ocultos.' },
-                { ico: '🛡️', title: 'Garantía de satisfacción', desc: 'Si el contenido no cumple lo prometido, te devolvemos el dinero. Sin preguntas.' },
+                { ico: '💬', title: 'Grupo privado de WhatsApp', desc: 'Comunidad inicial para compartir recursos, avances, prompts y oportunidades.' },
+                { ico: '🧩', title: 'Prompts listos para usar', desc: 'Recursos prácticos para tareas del día a día: emails, resúmenes, contenido y organización.' },
+                { ico: '📘', title: 'Ebooks iniciales', desc: 'Materiales descargables para empezar a aplicar IA desde cero.' },
+                { ico: '🔔', title: 'Avisos prioritarios', desc: 'Serás el primero en recibir nuevos recursos, actualizaciones y futuros lanzamientos.' },
+                { ico: '🚀', title: 'Acceso anticipado a futuros materiales', desc: 'Los miembros del Club tendrán prioridad cuando publiquemos nuevos contenidos.' },
+                { ico: '🛡️', title: 'Sin spam. Sin compromiso.', desc: 'Puedes salir del grupo o dejar de recibir comunicaciones cuando quieras.' },
               ].map((item, i) => (
                 <div key={i} className="inc-item">
                   <div className="inc-ico">{item.ico}</div>
@@ -380,148 +403,63 @@ export function LandingNew() {
                 </div>
               ))}
             </div>
-
-            {/* PRO */}
-            <div className={`inc-panel${activeTab === 'pro' ? ' active' : ''}`}>
-              {[
-                { ico: '📘', title: 'eBook base — AprendIA (200+ páginas)', desc: 'Fundamentos, herramientas clave y primeros pasos con IA incluidos.' },
-                { ico: '🤖', title: 'eBook — Tu Secretario IA', desc: 'Cómo montar un asistente personal que gestione emails, agenda, recordatorios y tareas repetitivas por ti.' },
-                { ico: '🚀', title: 'eBook — Negocio en 7 Días', desc: 'Cómo lanzar un negocio digital usando IA desde cero: idea, validación, producto y primeras ventas.' },
-                { ico: '🧩', title: 'Biblioteca de 80+ prompts', desc: 'Templates listos por categorías: negocios, contenido, atención al cliente, copywriting y más.' },
-                { ico: '💬', title: 'Comunidad de WhatsApp', desc: 'Grupo exclusivo con actualizaciones, nuevos prompts, casos reales y acceso directo a la comunidad.' },
-                { ico: '🛡️', title: 'Garantía de satisfacción', desc: 'Si el contenido no cumple lo prometido, te devolvemos el dinero. Sin preguntas.' },
-              ].map((item, i) => (
-                <div key={i} className="inc-item">
-                  <div className="inc-ico">{item.ico}</div>
-                  <div><h4>{item.title}</h4><p>{item.desc}</p></div>
-                </div>
-              ))}
-            </div>
-
-            {/* ÉLITE */}
-            <div className={`inc-panel${activeTab === 'elite' ? ' active' : ''}`}>
-              {[
-                { ico: '📦', title: 'Todo lo del pack Pro', desc: 'eBook base + Tu Secretario IA + Negocio en 7 Días + 80+ prompts + comunidad WhatsApp.' },
-                { ico: '👑', title: 'Comunidad privada exclusiva', desc: 'Acceso a un grupo más pequeño y selecto (Discord o Telegram) donde se comparten estrategias avanzadas.' },
-                { ico: '📧', title: 'Mentoría directa por email', desc: 'Consulta tus dudas directamente al autor. Respuesta garantizada en menos de 48h.' },
-                { ico: '🗂️', title: 'Templates de negocio listos', desc: 'Plantillas de propuestas, contratos, emails de ventas y procesos — listas para adaptar a tu sector.' },
-                { ico: '⚡', title: 'Actualizaciones priority', desc: 'Eres el primero en recibir nuevo contenido, herramientas y estrategias cuando se publican.' },
-                { ico: '🛡️', title: 'Garantía de satisfacción', desc: 'Si el contenido no cumple lo prometido, te devolvemos el dinero. Sin preguntas.' },
-              ].map((item, i) => (
-                <div key={i} className="inc-item">
-                  <div className="inc-ico">{item.ico}</div>
-                  <div><h4>{item.title}</h4><p>{item.desc}</p></div>
-                </div>
-              ))}
-            </div>
+          </div>
+          <div style={{ textAlign: 'center', marginTop: 36 }} className="reveal">
+            <a href="#waitlist" className="lp-btn lp-btn-primary lp-btn-lg">Entrar gratis al Club →</a>
           </div>
         </div>
       </section>
 
-      {/* ── PRICING ── */}
-      <section id="pricing">
+      {/* ── PRÓXIMAMENTE ── */}
+      <section id="coming-soon">
         <div className="wrap">
           <div className="sec-hd">
             <div className="lp-pill reveal"><span className="dot" />Próximamente</div>
-            <h2 className="t-h2 reveal d1">Elige tu nivel.<br /><span style={{ color: 'var(--lp-primary-dark)' }}>Empieza cuando quieras.</span></h2>
-            <p className="t-md reveal d2">Reserva tu plaza gratis hoy y consigue precio de acceso anticipado en el lanzamiento.</p>
+            <h2 className="t-h2 reveal d1">Próximamente dentro<br /><span style={{ color: 'var(--lp-primary-dark)' }}>de Club AprendIA</span></h2>
+            <p className="t-md reveal d2" style={{ maxWidth: 600, margin: '0 auto' }}>
+              Estamos preparando recursos más completos para los miembros del Club: ebooks, bibliotecas de prompts, sistemas prácticos y futuras formaciones. Los miembros tendrán acceso prioritario cuando se abran.
+            </p>
           </div>
-          <div className="price-cards">
-            {/* STARTER */}
-            <div className="price-card reveal d1">
-              <div className="price-name">Starter</div>
-              <p className="price-desc">Para quien quiere empezar a usar IA desde cero</p>
-              <div className="price-row" style={{ margin: '0 0 24px' }}>
-                <span style={{ fontFamily: 'var(--lp-font-d)', fontWeight: 700, fontSize: '.82rem', color: 'var(--lp-primary-dark)', background: 'rgba(0,255,178,.1)', padding: '5px 12px', borderRadius: 100 }}>Precio especial al lanzar</span>
+          <div className="ben-grid" style={{ marginTop: 40 }}>
+            {[
+              { ico: '📘', bg: 'bg-g', title: 'Ebooks prácticos', desc: 'Guías completas para aplicar IA en áreas concretas de tu vida o negocio.' },
+              { ico: '🧩', bg: 'bg-b', title: 'Biblioteca de prompts', desc: 'Colección organizada de prompts probados por categorías y casos de uso.' },
+              { ico: '🔁', bg: 'bg-p', title: 'Sistemas de automatización', desc: 'Flujos y plantillas para automatizar tareas sin necesidad de programar.' },
+              { ico: '💬', bg: 'bg-g', title: 'Comunidad privada', desc: 'Espacio activo para aprender, compartir y crecer junto a otros miembros.' },
+              { ico: '🔄', bg: 'bg-b', title: 'Recursos actualizados', desc: 'El contenido evoluciona con la IA. Los miembros siempre tienen lo más reciente.' },
+              { ico: '🎓', bg: 'bg-p', title: 'Futuras formaciones', desc: 'Materiales más completos para quien quiera profundizar en áreas específicas.' },
+            ].map((b, i) => (
+              <div key={i} className={`ben-card reveal d${(i % 3) + 1}`}>
+                <div className={`ben-ico ${b.bg}`}>{b.ico}</div>
+                <h3>{b.title}</h3>
+                <p>{b.desc}</p>
               </div>
-              <hr className="price-hr" />
-              <div className="price-feats">
-                <div className="pf"><span className="pf-ok">✓</span> eBook base (200+ págs)</div>
-                <div className="pf"><span className="pf-ok">✓</span> 30 prompts esenciales</div>
-                <div className="pf"><span className="pf-ok">✓</span> Acceso vitalicio</div>
-                <div className="pf"><span className="pf-ok">✓</span> Garantía de satisfacción</div>
-                <div className="pf pf-off"><span>✗</span> eBooks especializados</div>
-                <div className="pf pf-off"><span>✗</span> Biblioteca 80+ prompts</div>
-                <div className="pf pf-off"><span>✗</span> Comunidad WhatsApp</div>
-              </div>
-              <div className="price-cta">
-                <a href="#waitlist" className="lp-btn lp-btn-secondary" style={{ width: '100%', justifyContent: 'center' }}>Reservar plaza →</a>
-              </div>
-            </div>
-
-            {/* PRO (FEATURED) */}
-            <div className="price-card feat reveal d2">
-              <div className="price-badge">⭐ Más popular</div>
-              <div className="price-name">Pro</div>
-              <p className="price-desc">Para quien quiere resultados concretos y rápidos</p>
-              <div className="price-row" style={{ margin: '0 0 24px' }}>
-                <span style={{ fontFamily: 'var(--lp-font-d)', fontWeight: 700, fontSize: '.82rem', color: 'var(--primary)', background: 'rgba(0,255,178,.15)', padding: '5px 12px', borderRadius: 100 }}>Precio especial al lanzar</span>
-              </div>
-              <hr className="price-hr" />
-              <div className="price-feats">
-                <div className="pf"><span className="pf-ok">✓</span> eBook base (200+ págs)</div>
-                <div className="pf"><span className="pf-ok">✓</span> eBook Tu Secretario IA</div>
-                <div className="pf"><span className="pf-ok">✓</span> eBook Negocio en 7 Días</div>
-                <div className="pf"><span className="pf-ok">✓</span> Biblioteca 80+ prompts</div>
-                <div className="pf"><span className="pf-ok">✓</span> Comunidad WhatsApp</div>
-                <div className="pf"><span className="pf-ok">✓</span> Garantía de satisfacción</div>
-              </div>
-              <div className="price-cta">
-                <a href="#waitlist" className="lp-btn lp-btn-primary lp-btn-lg" style={{ width: '100%', justifyContent: 'center' }}>Reservar plaza →</a>
-              </div>
-            </div>
-
-            {/* ÉLITE */}
-            <div className="price-card reveal d3">
-              <div className="price-name">Élite</div>
-              <p className="price-desc">Para quien va en serio y quiere el nivel máximo</p>
-              <div className="price-row" style={{ margin: '0 0 24px' }}>
-                <span style={{ fontFamily: 'var(--lp-font-d)', fontWeight: 700, fontSize: '.82rem', color: 'var(--lp-primary-dark)', background: 'rgba(0,255,178,.1)', padding: '5px 12px', borderRadius: 100 }}>Precio especial al lanzar</span>
-              </div>
-              <hr className="price-hr" />
-              <div className="price-feats">
-                <div className="pf"><span className="pf-ok">✓</span> Todo lo del pack Pro</div>
-                <div className="pf"><span className="pf-ok">✓</span> Comunidad privada exclusiva</div>
-                <div className="pf"><span className="pf-ok">✓</span> Mentoría directa por email</div>
-                <div className="pf"><span className="pf-ok">✓</span> Templates de negocio listos</div>
-                <div className="pf"><span className="pf-ok">✓</span> Actualizaciones priority</div>
-                <div className="pf"><span className="pf-ok">✓</span> Garantía de satisfacción</div>
-              </div>
-              <div className="price-cta">
-                <a href="#waitlist" className="lp-btn lp-btn-secondary" style={{ width: '100%', justifyContent: 'center' }}>Reservar plaza →</a>
-              </div>
-            </div>
+            ))}
           </div>
-          <div className="price-trust reveal">
-            <span>🎯 Precio de acceso anticipado</span>
-            <span>📱 Acceso inmediato al lanzar</span>
-            <span>🛡️ Garantía de satisfacción</span>
+          <div style={{ textAlign: 'center', marginTop: 40 }} className="reveal">
+            <a href="#waitlist" className="lp-btn lp-btn-primary lp-btn-lg">Entrar gratis al Club →</a>
           </div>
         </div>
       </section>
 
-      {/* ── TESTIMONIALS ── */}
-      <section id="testimonials">
+      {/* ── DIFERENTE ── */}
+      <section id="diferente">
         <div className="wrap">
           <div className="sec-hd">
-            <div className="lp-pill reveal"><span className="dot" />Testimonios</div>
-            <h2 className="t-h2 reveal d1">Quienes lo probaron<br /><span style={{ color: 'var(--lp-primary-dark)' }}>no dan marcha atrás</span></h2>
+            <div className="lp-pill reveal"><span className="dot" />Sin humo</div>
+            <h2 className="t-h2 reveal d1">Qué hace diferente<br /><span style={{ color: 'var(--lp-primary-dark)' }}>a AprendIA</span></h2>
+            <p className="t-md reveal d2">AprendIA no nace para ser otro curso más de IA. Nace como una comunidad práctica para aprender, aplicar y compartir recursos útiles desde el primer día.</p>
           </div>
-          <div className="testi-grid">
+          <div className="prob-grid" style={{ marginTop: 40 }}>
             {[
-              { txt: 'Llevaba meses viendo vídeos sueltos sobre IA sin saber por dónde empezar. Con AprendIA tuve un camino claro desde el día uno. Apliqué los prompts a mi trabajo de community manager y ahora tardo la mitad en preparar el contenido de cada semana.', av: 'S', color: '#6366F1', name: 'Sara M.', role: 'Community Manager, Madrid' },
-              { txt: 'Soy asesor fiscal y pensé que la IA no era para mí. Me equivocaba. Automaticé los informes mensuales y el resumen de contratos con los flujos del pack Pro. Mis clientes notan la diferencia y yo tengo las tardes libres.', av: 'D', color: '#10B981', name: 'Diego F.', role: 'Asesor Fiscal, Bilbao' },
-              { txt: 'Lo que más me gustó es que no hay promesas vacías. El contenido es concreto, va al grano y puedes aplicarlo ese mismo día. La mentoría del pack Élite fue clave para enfocar bien mi proyecto desde el principio.', av: 'P', color: '#F59E0B', name: 'Paula R.', role: 'Emprendedora, Valencia' },
-            ].map((t, i) => (
-              <div key={i} className={`testi-card reveal d${i + 1}`}>
-                <p className="testi-txt">{t.txt}</p>
-                <div className="testi-author">
-                  <div className="testi-av" style={{ background: t.color }}>{t.av}</div>
-                  <div>
-                    <div className="testi-name">{t.name}</div>
-                    <div className="testi-role">{t.role}</div>
-                  </div>
-                </div>
+              { ico: '✅', title: 'No vendemos humo', desc: 'Prometemos lo que podemos entregar: recursos prácticos, comunidad y acceso anticipado.' },
+              { ico: '✅', title: 'No prometemos dinero fácil', desc: 'Hablamos de formas realistas de ahorrar tiempo, crear oportunidades y trabajar mejor.' },
+              { ico: '✅', title: 'No necesitas saber programar', desc: 'Todo está pensado para alguien que empieza desde cero, sin conocimientos técnicos.' },
+              { ico: '✅', title: 'No tendrás que pagar cursos absurdos', desc: 'El acceso al Club es gratuito. Los recursos son prácticos y aplicables desde el inicio.' },
+            ].map((c, i) => (
+              <div key={i} className={`prob-card reveal d${i + 1}`}>
+                <div className="prob-ico">{c.ico}</div>
+                <div><h3>{c.title}</h3><p>{c.desc}</p></div>
               </div>
             ))}
           </div>
@@ -532,13 +470,13 @@ export function LandingNew() {
       <section id="waitlist">
         <div className="wrap">
           <div className="sec-hd">
-            <div className="lp-pill reveal"><span className="dot" />Acceso anticipado</div>
+            <div className="lp-pill reveal"><span className="dot" />Club AprendIA</div>
             <h2 className="t-h2 reveal d1" style={{ color: '#fff', marginBottom: 14 }}>
-              Reserva tu plaza.<br />
-              <span style={{ color: 'var(--primary)' }}>Es completamente gratis.</span>
+              Entra gratis a<br />
+              <span style={{ color: 'var(--primary)' }}>Club AprendIA</span>
             </h2>
             <p className="t-md reveal d2" style={{ color: 'rgba(255,255,255,.5)', marginBottom: 0 }}>
-              Apúntate antes del lanzamiento y consigue precio de acceso anticipado + acceso a la comunidad.
+              Reserva tu plaza y recibe acceso al grupo privado de WhatsApp, recursos iniciales y aviso prioritario del lanzamiento.
             </p>
           </div>
 
@@ -546,10 +484,10 @@ export function LandingNew() {
             {wlStatus === 'success' ? (
               <div className="wl-success">
                 <div style={{ fontSize: '2.8rem' }}>🎉</div>
-                <h3>¡Ya estás dentro!</h3>
-                <p>Te avisaremos antes del lanzamiento con tu precio exclusivo de fundador. Únete ahora a nuestra comunidad para no perderte nada.</p>
-                <a href="https://whatsapp.com/channel/0029VbCPfkzElah0V93Ils2J" target="_blank" rel="noopener noreferrer" className="wl-wa-btn">
-                  💬 Unirse al canal de WhatsApp
+                <h3>Plaza reservada.</h3>
+                <p>Ahora únete al grupo privado de WhatsApp para recibir los primeros recursos.</p>
+                <a href={WA_URL} target="_blank" rel="noopener noreferrer" className="wl-wa-btn">
+                  💬 Unirme al grupo de WhatsApp
                 </a>
               </div>
             ) : (
@@ -566,7 +504,7 @@ export function LandingNew() {
                 <button className="wl-submit" onClick={submitWaitlist} disabled={wlStatus === 'loading'}>
                   {wlStatus === 'loading' ? 'Guardando...' : 'Reservar mi plaza gratis →'}
                 </button>
-                <p className="wl-hint">Sin spam · Solo avisamos cuando sea importante</p>
+                <p className="wl-hint">Sin spam. Sin compromiso. Podrás salir cuando quieras.</p>
               </>
             )}
           </div>
@@ -604,20 +542,19 @@ export function LandingNew() {
       <section id="final-cta">
         <div className="cta-glow" />
         <div className="wrap cta-inner">
-          <div className="lp-pill reveal" style={{ margin: '0 auto 22px', display: 'table' }}>⏰ Oferta por tiempo limitado</div>
+          <div className="lp-pill reveal" style={{ margin: '0 auto 22px', display: 'table' }}>🚀 Acceso gratuito</div>
           <h2 className="t-hero reveal d1" style={{ marginBottom: '18px' }}>
-            Empieza hoy.<br />
-            <span className="grad">Ya habrá valido la pena en la primera hora.</span>
+            Entra hoy al Club AprendIA.<br />
+            <span className="grad">Es gratis.</span>
           </h2>
           <p className="t-lg reveal d2" style={{ color: 'var(--lp-text-muted)', marginBottom: '44px', maxWidth: '560px', marginLeft: 'auto', marginRight: 'auto' }}>
-            Únete a los primeros en AprendIA y transforma tu forma de trabajar.<br />
-            El siguiente paso es tuyo — sin riesgos, con garantía de satisfacción.
+            Reserva tu plaza, accede a la comunidad y recibe los primeros recursos antes del lanzamiento.
           </p>
           <div className="reveal d3">
-            <a href="#waitlist" className="lp-btn lp-btn-primary lp-btn-xl">Quiero aprender con AprendIA →</a>
+            <a href="#waitlist" className="lp-btn lp-btn-primary lp-btn-xl">Entrar gratis al Club →</a>
           </div>
           <div className="cta-g reveal d4">
-            🛡️ Si el contenido no cumple lo prometido, te devolvemos el dinero
+            Sin spam. Sin compromiso. Podrás salir cuando quieras.
           </div>
         </div>
       </section>
@@ -634,18 +571,18 @@ export function LandingNew() {
             </div>
           </div>
           <div className="foot-guarantee">
-            <strong>🛡️ Garantía de satisfacción:</strong> Si el contenido no cumple lo prometido, te devolvemos el dinero. Sin plazos, sin preguntas, sin burocracia.
+            <strong>Club AprendIA:</strong> recursos prácticos, comunidad y acceso anticipado a futuros lanzamientos.
           </div>
           <div style={{ textAlign: 'center', marginTop: '20px', fontSize: '.75rem', color: 'rgba(255,255,255,.2)' }}>
-            © 2025 AprendIA. Todos los derechos reservados. Producto digital entregado mediante descarga inmediata.
+            © 2025 AprendIA. Todos los derechos reservados.
           </div>
         </div>
       </footer>
 
       {/* ── STICKY CTA (solo mobile) ── */}
       <div className="sticky-cta" id="stickyCta">
-        <a href="#waitlist">⚡ Reserva tu plaza gratis →</a>
-        <div className="sticky-cta-sub">🛡️ Garantía de satisfacción · Acceso inmediato</div>
+        <a href="#waitlist">🚀 Entrar gratis al Club →</a>
+        <div className="sticky-cta-sub">Sin spam · Sin compromiso · Gratis</div>
       </div>
     </div>
   )
