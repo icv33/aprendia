@@ -4,7 +4,6 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { TikTokPost, TikTokSettings, TikTokSlide, TikTokPostType } from '@/lib/supabase'
 import { TYPE_META } from '@/lib/tiktok'
-import { VideoExportModal } from './VideoExportModal'
 
 type Props = {
   initialPosts: TikTokPost[]
@@ -53,7 +52,6 @@ function PostCard({ post, onDelete, onPublished }: { post: TikTokPost; onDelete:
   const [saveMsg, setSaveMsg]     = useState('')
   const [gallery, setGallery]     = useState<{ urls: string[]; files: File[] } | null>(null)
   const [pubError, setPubError]   = useState('')
-  const [showVideo, setShowVideo] = useState(false)
   const meta  = TYPE_META[post.type]
   const cover = post.slides[0]
   const bgUrl = cover?.type === 'cover' ? cover.background_url : undefined
@@ -170,14 +168,7 @@ function PostCard({ post, onDelete, onPublished }: { post: TikTokPost; onDelete:
               </button>
             </>
           )}
-          <button
-            onClick={() => setShowVideo(true)}
-            title="Exportar como vídeo para TikTok Ads"
-            style={{ fontSize: 12, fontWeight: 700, color: '#F59E0B', background: 'rgba(245,158,11,.09)', border: 'none', borderRadius: 8, padding: '8px 14px', cursor: 'pointer' }}
-          >
-            🎬 Vídeo
-          </button>
-          <button
+<button
             onClick={handleSaveToGallery}
             disabled={saving}
             title="Guardar todas las slides en tu galería/fotos"
@@ -223,9 +214,6 @@ function PostCard({ post, onDelete, onPublished }: { post: TikTokPost; onDelete:
 
       {gallery && (
         <GalleryModal urls={gallery.urls} files={gallery.files} onClose={closeGallery} />
-      )}
-      {showVideo && (
-        <VideoExportModal postId={post.id} slides={post.slides} type={post.type} onClose={() => setShowVideo(false)} />
       )}
     </div>
   )
