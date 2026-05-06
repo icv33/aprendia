@@ -116,7 +116,7 @@ function buildCaption(slides: TikTokSlide[]): string {
 async function callPublishAPI(accessToken: string, photoUrls: string[], caption: string): Promise<string> {
   const body = {
     post_info: {
-      title: caption,
+      description: caption,
       privacy_level: 'SELF_ONLY',
       disable_comment: false,
     },
