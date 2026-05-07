@@ -37,6 +37,13 @@ const PEXELS_QUERIES: Record<TikTokPostType, string[]> = {
     'dark workspace laptop screen minimal',
     'minimal dark tech setup laptop',
   ],
+  guia_premium: [
+    'laptop keyboard dark overhead minimal',
+    'dark desk tech clean setup',
+    'notebook laptop workspace minimal',
+    'dark minimal tech flat lay',
+    'laptop screen glowing dark night',
+  ],
 }
 
 async function fetchPexelsPhoto(queries: string[]): Promise<string | null> {
@@ -60,6 +67,7 @@ async function fetchPexelsPhoto(queries: string[]): Promise<string | null> {
 }
 
 const FIXED_CTA = 'Comenta <<CLUB>> y sígueme para que pueda mandarte el acceso gratis por MD.'
+const PREMIUM_CTA = 'Guarda este post. Comenta <<CLUB>> y sígueme para recibir más recursos.'
 
 const SYSTEM_PROMPT = `Eres experto en marketing de contenido viral para TikTok en español.
 Generas contenido sobre IA aplicada que sea directo, útil y práctico.
@@ -203,14 +211,61 @@ Devuelve exactamente este JSON (sin markdown, solo el objeto):
 IMPORTANTE: exactamente 5 slides. Tono informal (tuteo). Sin emojis en los textos.${HIGHLIGHT_RULE}`,
 
   personalizado: '',
+
+  guia_premium: `Genera una mini guía premium para TikTok sobre IA práctica.
+
+Debe parecer un recurso de pago entregado gratis. Estructurada como plan, sistema, checklist o guía paso a paso.
+El usuario debe querer guardarlo. Contenido concreto y aplicable desde el primer slide.
+
+Elige uno de estos temas o crea uno similar:
+- Plan de 7 días para ahorrar tiempo con IA
+- Plan de 7 días para usar ChatGPT como asistente personal
+- Sistema de 10 pasos para dejar de repetir tareas
+- Plan de 7 días para crear tu primer servicio con IA
+- Checklist para usar Claude como herramienta de trabajo
+- Guía para organizar tu semana con IA
+- Sistema para crear contenido con IA desde una idea
+- Plan para automatizar emails, apuntes y tareas
+- Cómo montar tu primer sistema IA sin programar
+- Checklist para no usar ChatGPT como un principiante
+
+Reglas:
+- Entre 7 y 9 slides de contenido (total 9-11 con cover y CTA)
+- El primer slide introduce el problema o contexto
+- Los slides intermedios son pasos concretos (Día X / Paso X / Sistema X / Checklist X)
+- El último slide de contenido muestra el resultado esperado
+- Cada slide = una sola acción concreta. Sin teoría.
+- Máximo 18 palabras por campo de contenido
+- Exactamente 1 marca <<palabra>> por campo
+
+Hooks de ejemplo:
+- "Plan de <<7 días>> para ahorrar tiempo con IA"
+- "Sistema de <<10 pasos>> para usar ChatGPT mejor"
+- "Checklist para usar <<Claude>> como herramienta de trabajo"
+- "Guía rápida para automatizar tu <<semana>> con IA"
+
+Devuelve exactamente este JSON (sin markdown, solo el objeto):
+{
+  "titulo_portada": "TÍTULO EN MAYÚSCULAS, MÁXIMO 7 PALABRAS, con <<palabra clave>>",
+  "subtitulo_portada": "descripción del recurso, max 8 palabras",
+  "slides": [
+    {"titulo": "El <<problema>>", "contenido": "situación real que reconoce el lector, max 18 palabras"},
+    {"titulo": "Día 1 / Paso 1 / ...", "contenido": "acción concreta, max 18 palabras"},
+    {"titulo": "...", "contenido": "..."},
+    {"titulo": "<<Resultado>>", "contenido": "resultado esperado realista, max 18 palabras"}
+  ]
+}
+
+IMPORTANTE: entre 7 y 9 objetos en slides. Sin emojis en los textos.${HIGHLIGHT_RULE}`,
 }
 
 export async function generateTikTokSlides(type: TikTokPostType): Promise<TikTokSlide[]> {
   const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY! })
+  const isPremium = type === 'guia_premium'
 
   const message = await client.messages.create({
     model: 'claude-sonnet-4-6',
-    max_tokens: 1200,
+    max_tokens: isPremium ? 2400 : 1200,
     system: SYSTEM_PROMPT,
     messages: [{ role: 'user', content: PROMPTS[type] }],
   })
@@ -221,18 +276,19 @@ export async function generateTikTokSlides(type: TikTokPostType): Promise<TikTok
   if (!jsonMatch) throw new Error('No JSON in response')
 
   const data = JSON.parse(jsonMatch[0])
-
   const bgUrl = await fetchPexelsPhoto(PEXELS_QUERIES[type])
+  const maxSlides = isPremium ? 9 : 5
+  const ctaText = isPremium ? (data.cta ?? PREMIUM_CTA) : FIXED_CTA
 
   const slides: TikTokSlide[] = [
     { type: 'cover', titulo: data.titulo_portada, subtitulo: data.subtitulo_portada, background_url: bgUrl ?? undefined },
-    ...data.slides.slice(0, 5).map((s: { titulo: string; contenido: string }, i: number) => ({
+    ...data.slides.slice(0, maxSlides).map((s: { titulo: string; contenido: string }, i: number) => ({
       type: 'content' as const,
       num: i + 1,
       titulo: s.titulo,
       contenido: s.contenido,
     })),
-    { type: 'cta', cta: FIXED_CTA },
+    { type: 'cta', cta: ctaText },
   ]
 
   return slides
@@ -244,6 +300,7 @@ export const TYPE_META: Record<TikTokPostType, { label: string; icon: string; co
   mito:          { label: 'Mito',          icon: '💥', color: '#00E5A0', desc: 'Una creencia falsa sobre IA desmontada' },
   caso_practico: { label: 'Caso real',     icon: '🎯', color: '#00E5A0', desc: 'Un caso realista de uso de IA' },
   personalizado: { label: 'Personalizado', icon: '✏️', color: '#EC4899', desc: 'Post con tema y contenido personalizado' },
+  guia_premium:  { label: 'Guía premium',  icon: '📚', color: '#6366F1', desc: 'Mini guía paso a paso de 9-11 slides para generar guardados' },
 }
 
 export const SCHEDULE_SLOTS = ['09:00', '12:00', '15:00', '19:00']
