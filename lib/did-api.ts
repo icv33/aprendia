@@ -2,7 +2,7 @@ const DID_BASE = 'https://api.d-id.com'
 
 // Public presenter from D-ID — female professional look
 const PRESENTER_URL = 'https://d-id-public-bucket.s3.amazonaws.com/alice.jpg'
-const VOICE_ID = 'es-ES-AlvaroNeural'
+const VOICE_ID = 'es-ES-ElviraNeural'
 
 function authHeader() {
   // DID_API_KEY must be "email:api_key" (unencoded) in Vercel env vars
