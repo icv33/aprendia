@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { DidVideo } from '@/lib/supabase'
+import { AnimatedVideoCreator } from './AnimatedVideoCreator'
 
 const TOPICS = [
   { key: 'historia',  label: 'Historia de éxito',        desc: 'Un caso real de alguien que mejoró con IA' },
@@ -273,11 +274,12 @@ function GenerateModal({ onClose, onCreated }: { onClose: () => void; onCreated:
 type Props = { initialVideos: DidVideo[] }
 
 export function VideoMain({ initialVideos }: Props) {
-  const [videos, setVideos] = useState<DidVideo[]>(initialVideos)
-  const [showModal, setShowModal] = useState(false)
+  const [videos, setVideos]           = useState<DidVideo[]>(initialVideos)
+  const [showDIDModal, setShowDIDModal]   = useState(false)
+  const [showAnimModal, setShowAnimModal] = useState(false)
 
   const handleCreated = (v: DidVideo) => setVideos(prev => [v, ...prev])
-  const handleDelete  = (id: string) => setVideos(prev => prev.filter(v => v.id !== id))
+  const handleDelete  = (id: string)  => setVideos(prev => prev.filter(v => v.id !== id))
 
   return (
     <>
@@ -287,19 +289,32 @@ export function VideoMain({ initialVideos }: Props) {
       <header style={{ flexShrink: 0, background: '#fff', borderBottom: '1px solid #E2E8F0', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 28px', height: 60 }}>
         <div>
           <div style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: '1.05rem', color: '#0F172A' }}>Vídeos IA</div>
-          <div style={{ fontSize: '.8rem', color: '#64748B' }}>Avatar generado con D-ID · guión de Claude</div>
+          <div style={{ fontSize: '.8rem', color: '#64748B' }}>Vídeo animado con emojis · voz IA</div>
         </div>
-        <button
-          onClick={() => setShowModal(true)}
-          style={{
-            display: 'flex', alignItems: 'center', gap: 8,
-            background: 'linear-gradient(135deg, #6366F1, #8B5CF6)',
-            color: '#fff', fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 13,
-            padding: '9px 18px', borderRadius: 10, border: 'none', cursor: 'pointer',
-          }}
-        >
-          🎭 Generar vídeo
-        </button>
+        <div style={{ display: 'flex', gap: 10 }}>
+          <button
+            onClick={() => setShowAnimModal(true)}
+            style={{
+              display: 'flex', alignItems: 'center', gap: 8,
+              background: 'linear-gradient(135deg, #6366F1, #8B5CF6)',
+              color: '#fff', fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 13,
+              padding: '9px 18px', borderRadius: 10, border: 'none', cursor: 'pointer',
+            }}
+          >
+            🎬 Vídeo animado
+          </button>
+          <button
+            onClick={() => setShowDIDModal(true)}
+            style={{
+              display: 'flex', alignItems: 'center', gap: 8,
+              background: '#F1F5F9', border: '1px solid #E2E8F0',
+              color: '#64748B', fontFamily: "'Syne', sans-serif", fontWeight: 600, fontSize: 13,
+              padding: '9px 16px', borderRadius: 10, cursor: 'pointer',
+            }}
+          >
+            🎭 Avatar D-ID
+          </button>
+        </div>
       </header>
 
       {/* List */}
@@ -310,10 +325,10 @@ export function VideoMain({ initialVideos }: Props) {
             <p style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, color: '#64748B', marginBottom: 6 }}>Sin vídeos todavía</p>
             <p style={{ fontSize: 13, color: '#94A3B8', marginBottom: 20 }}>Genera tu primer vídeo con avatar IA</p>
             <button
-              onClick={() => setShowModal(true)}
+              onClick={() => setShowAnimModal(true)}
               style={{ background: 'linear-gradient(135deg, #6366F1, #8B5CF6)', color: '#fff', border: 'none', borderRadius: 10, padding: '11px 24px', fontSize: 13, fontWeight: 700, cursor: 'pointer' }}
             >
-              🎭 Generar primer vídeo
+              🎬 Generar primer vídeo animado
             </button>
           </div>
         ) : (
@@ -323,7 +338,8 @@ export function VideoMain({ initialVideos }: Props) {
         )}
       </div>
 
-      {showModal && <GenerateModal onClose={() => setShowModal(false)} onCreated={handleCreated} />}
+      {showDIDModal  && <GenerateModal onClose={() => setShowDIDModal(false)} onCreated={handleCreated} />}
+      {showAnimModal && <AnimatedVideoCreator onClose={() => setShowAnimModal(false)} />}
     </>
   )
 }
