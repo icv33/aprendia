@@ -85,6 +85,18 @@ export type Order = {
   created_at: string
 }
 
+// ── Vídeos IA (D-ID) ─────────────────────────────────────────────────────────
+
+export type DidVideo = {
+  id: string
+  did_id: string
+  topic: string
+  script: string
+  status: 'pending' | 'processing' | 'done' | 'error'
+  result_url: string | null
+  created_at: string
+}
+
 // ── Finanzas ──────────────────────────────────────────────────────────────────
 
 export type FinanceTransaction = {
