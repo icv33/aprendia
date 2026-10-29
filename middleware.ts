@@ -16,5 +16,7 @@ export const config = {
     '/api/tiktok/publish/:path*',
     '/api/generate',
     '/api/ebooks/:path*',
+    '/api/finance/:path*',
+    '/api/video/:path*',
   ],
 }
