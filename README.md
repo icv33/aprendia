@@ -10,7 +10,7 @@ Editorial digital de guías sobre inteligencia artificial, con un panel que auto
 - **Landing de venta por producto** (`/productos/[slug]`) con pago por Stripe Checkout y entrega por correo (Resend).
 - **Panel privado** (`/dashboard`, NextAuth):
   - Resumen, contenido, ventas y lista de espera.
-  - **TikTok**: genera ideas y carruseles, los renderiza como imágenes, las genera solas con un cron y tiene en cuenta tu feedback.
+  - **TikTok**: genera ideas y carruseles (también solos, con un cron), los renderiza como imágenes y tiene en cuenta tu feedback.
   - **Vídeos**: guion con IA, voz (ElevenLabs), avatar (D-ID) e imágenes de Pexels.
   - **Finanzas**: ingresos y gastos; se pueden pegar en texto libre y la IA los clasifica.
 
